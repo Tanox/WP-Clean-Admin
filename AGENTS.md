@@ -22,7 +22,7 @@
 - `composer.json`、`phpunit.xml.dist`（依赖与测试配置）
 
 **以下项目级文件禁止放入 `/wpcleanadmin`，统一放在项目根目录**：
-- 原型：`/prototype`（高保真 UI 原型、模块演示 PHP）
+- 原型：`/prototype`（高保真 UI 静态原型，仅 `ui/index.html` + `wpca-components.css` + `app.js` 静态展示，无后端 PHP）
 - 文档：`/docs`（审计报告、设计规范等）
 - 规范：`/openspec`（OpenSpec 提案与规范）
 - 项目文档：`CHANGELOG.md`、`DEVELOPMENT.md`、`README.*`、`AGENTS.md`、`LICENSE`
