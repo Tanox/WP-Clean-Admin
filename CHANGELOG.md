@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.8.6] - 2026-09-12
+### Chore
+- 清理死代码: 删除未接线的清理重构残留文件（根 `class-wpca-cleanup-*` 子模块与 `modules/core/classes/` 下未实例化的 Media/Content/Comments/Database Cleanup 簇及重复 `Cleanup_Helpers` trait），统一以 legacy 根 `Cleanup` 类为唯一清理实现，消除双轨冗余
+
 ## [1.8.5] - 2026-09-12
 ### Chore
 - 作者署名统一: 全项目 PHP/JS 文件头 `@author Sut` 更正为 `Tanox`，与 composer.json 及仓库归属一致（排除 languages/ 翻译者历史署名）
