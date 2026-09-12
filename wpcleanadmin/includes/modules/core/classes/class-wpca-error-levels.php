@@ -6,7 +6,7 @@
  * 从 Error_Handler 中抽取，保持单一职责。
  *
  * @package WPCleanAdmin\Modules\Core\Classes
- * @version  1.8.4
+ * @version 1.8.9
  * @author Tanox
  * @since 1.8.0
  */
@@ -25,7 +25,7 @@ trait Error_Levels {
     /**
      * 日志级别
      */
-    const LOG_LEVELS = array(
+    public static $LOG_LEVELS = array(
         'debug'    => 0,
         'info'     => 1,
         'notice'   => 2,

@@ -5,7 +5,7 @@
  * 承载错误日志级别的管理与判定，从 Error_Handler 主类抽取。
  *
  * @package WPCleanAdmin\Modules\Core\Classes
- * @version  1.8.4
+ * @version 1.8.9
  * @author Tanox
  * @since 1.8.0
  */
@@ -37,7 +37,7 @@ class Error_Config {
         $settings = ( function_exists( 'get_option' ) ? \get_option( 'wpca_settings', array() ) : array() );
         if ( isset( $settings['general'] ) && isset( $settings['general']['log_level'] ) ) {
             $log_level = $settings['general']['log_level'];
-            if ( isset( self::LOG_LEVELS[ $log_level ] ) ) {
+            if ( isset( self::$LOG_LEVELS[ $log_level ] ) ) {
                 $this->log_level = $log_level;
             }
         }
@@ -49,7 +49,7 @@ class Error_Config {
      * @param string $log_level
      */
     public function set_log_level( string $log_level ): void {
-        if ( isset( self::LOG_LEVELS[ $log_level ] ) ) {
+        if ( isset( self::$LOG_LEVELS[ $log_level ] ) ) {
             $this->log_level = $log_level;
         }
     }
@@ -70,8 +70,8 @@ class Error_Config {
      * @return bool
      */
     public function should_log( string $log_level ): bool {
-        $current_level = self::LOG_LEVELS[ $this->log_level ] ?? 2;
-        $message_level = self::LOG_LEVELS[ $log_level ] ?? 0;
+        $current_level = self::$LOG_LEVELS[ $this->log_level ] ?? 2;
+        $message_level = self::$LOG_LEVELS[ $log_level ] ?? 0;
 
         return $message_level >= $current_level;
     }
