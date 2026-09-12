@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+
+jobs:
+  php-lint:
+    name: PHP Syntax Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+      - name: Lint PHP files
+        # php -l catches parse errors across the whole plugin tree
+        run: find wpcleanadmin -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+  phpcs:
+    name: PHP_CodeSniffer
+    runs-on: ubuntu-latest
+    # Mark non-blocking until the ruleset is tuned against the codebase.
+    # Remove `continue-on-error` once the reported issues are triaged.
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+      - name: Install dependencies
+        working-directory: wpcleanadmin
+        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Register WordPress standard
+        working-directory: wpcleanadmin
+        run: vendor/bin/phpcs --config-set installed_paths "$(pwd)/vendor/wp-coding-standards/wpcs"
+      - name: Run phpcs
+        working-directory: wpcleanadmin
+        run: vendor/bin/phpcs
+
+  phpunit:
+    name: PHPUnit (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
+          extensions: mysqli
+      - name: Install dependencies
+        working-directory: wpcleanadmin
+        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Run PHPUnit
+        working-directory: wpcleanadmin
+        run: composer test

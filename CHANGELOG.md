@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.8.7] - 2026-09-12
+### Chore
+- 完善 CI/CD: 新增 `.github/workflows/ci.yml`（PHP 语法检查 + PHP_CodeSniffer + 多版本 PHPUnit 测试矩阵），新增 `wpcleanadmin/phpcs.xml.dist` 规则集（基于 WordPress 标准，排除与 PSR-4/现代 PHP 冲突的命名与格式规则，保留安全相关 sniff）
+
 ## [1.8.6] - 2026-09-12
 ### Chore
 - 清理死代码: 删除未接线的清理重构残留文件（根 `class-wpca-cleanup-*` 子模块与 `modules/core/classes/` 下未实例化的 Media/Content/Comments/Database Cleanup 簇及重复 `Cleanup_Helpers` trait），统一以 legacy 根 `Cleanup` 类为唯一清理实现，消除双轨冗余

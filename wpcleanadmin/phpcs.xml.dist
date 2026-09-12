@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<ruleset name="WPCleanAdmin">
+    <description>WPCleanAdmin coding standards (WordPress + PSR-4 hybrid)</description>
+
+    <file>includes</file>
+    <file>tests</file>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+    <arg value="sp"/>
+    <arg name="colors"/>
+    <arg name="parallel" value="8"/>
+
+    <!--
+        The plugin mixes the WordPress coding style with PSR-4 autoloading and
+        modern PHP (camelCase methods, PascalCase classes). The WordPress standard
+        is used as the base, but the naming/formatting rules that conflict with
+        PSR-4 are disabled. Security-relevant sniffs stay enabled on purpose.
+    -->
+    <rule ref="WordPress">
+        <exclude name="WordPress.Files.FileName"/>
+        <exclude name="WordPress.NamingConventions.ValidFunctionName"/>
+        <exclude name="WordPress.NamingConventions.ValidVariableName"/>
+        <exclude name="WordPress.NamingConventions.ValidClassName"/>
+        <exclude name="WordPress.Functions.FunctionDeclarationArgumentSpacing"/>
+        <exclude name="WordPress.WhiteSpace.ScopeIndent"/>
+        <exclude name="WordPress.WhiteSpace.ControlStructureSpacing"/>
+        <exclude name="WordPress.WhiteSpace.OperatorSpacing"/>
+        <exclude name="WordPress.Arrays.ArrayIndentation"/>
+        <exclude name="WordPress.Arrays.MultipleStatementAlignment"/>
+        <exclude name="WordPress.PHP.DisallowShortTernary"/>
+        <exclude name="WordPress.PHP.DisallowInlineTernary"/>
+    </rule>
+
+    <!-- Keep security-relevant sniffs enabled -->
+    <rule ref="WordPress.Security.EscapeOutput"/>
+    <rule ref="WordPress.Security.NonceVerification"/>
+    <rule ref="WordPress.Security.SafeRedirect"/>
+</ruleset>
