@@ -10,6 +10,7 @@
 
 ### Docs
 - 完善 Community Health Files: 在 `.github/` 新增 `CODE_OF_CONDUCT.md`、`CONTRIBUTING.md`、`SECURITY.md`、`SUPPORT.md`、`FUNDING.yml`、`ISSUE_TEMPLATE/`（bug_report / feature_request / config）、`PULL_REQUEST_TEMPLATE.md`，对齐项目提交规范、安全红线与版本管理约定（遵循全局规则，未创建 `.github/readme.md`）
+- README 配图: 新增品牌化矢量配图 `assets/hero-banner.svg`（顶部横幅）与 `assets/features.svg`（核心功能五卡片），嵌入仓库根 `README.md` 顶部与核心功能区，替代纯 emoji 排版，提升可读性（SVG 矢量、可版本化，可随时替换为真实后台截图）
 
 ## [1.8.4] - 2026-08-12
 ### Refactor

@@ -2,6 +2,10 @@
 
 让您的 WordPress 后台变得更简洁、更快、更安全！**版本 1.8.5**
 
+<p align="center">
+  <img src="assets/hero-banner.svg" alt="WP Clean Admin 横幅" width="100%">
+</p>
+
 ✨ **主要优势**：
 - ✨ 一键清理后台杂乱内容
 - 🚀 显著提升后台加载速度
@@ -54,6 +58,10 @@
 - **一键优化**：自动优化数据库表
 - **备份恢复**：轻松创建和下载数据库备份，随时恢复
 - **智能清理**：清理临时数据、孤立元数据和过期计划任务
+
+<p align="center">
+  <img src="assets/features.svg" alt="WP Clean Admin 核心功能" width="100%">
+</p>
 
 ---
 
