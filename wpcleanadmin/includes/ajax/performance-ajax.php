@@ -14,26 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Declare WordPress functions for IDE compatibility
-if ( ! function_exists( '\\wp_send_json_error' ) ) {
-    function \wp_send_json_error() {}
-}
-if ( ! function_exists( '\\wp_send_json_success' ) ) {
-    function \wp_send_json_success() {}
-}
-if ( ! function_exists( '\get_option' ) ) {
-    function \get_option() {}
-}
-if ( ! function_exists( '\update_option' ) ) {
-    function \update_option() {}
-}
-if ( ! function_exists( '\wp_unslash' ) ) {
-    function \wp_unslash() {}
-}
-if ( ! function_exists( '\__' ) ) {
-    function \__() {}
-}
-
 /**
  * WPCleanAdmin Performance AJAX Handler
  *

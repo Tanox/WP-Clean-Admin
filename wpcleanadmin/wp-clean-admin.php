@@ -3,7 +3,7 @@
  * Plugin Name: WP Clean Admin
  * Plugin URI: https://github.com/Tanox/WP-Clean-Admin
  * Description: A comprehensive WordPress admin cleanup and optimization plugin
- * Version: 1.8.7
+ * Version: 1.8.8
  * Author: Tanox
  * Author URI: https://github.com/Tanox
  * License: GPL v2 or later
@@ -20,64 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Declare WordPress functions for IDE compatibility
-if ( ! function_exists( '\plugin_dir_path' ) ) {
-    function \plugin_dir_path() {}
-}
-if ( ! function_exists( '\plugin_dir_url' ) ) {
-    function \plugin_dir_url() {}
-}
-if ( ! function_exists( '\load_plugin_textdomain' ) ) {
-    function \load_plugin_textdomain() {}
-}
-if ( ! function_exists( '\add_action' ) ) {
-    function \add_action() {}
-}
-if ( ! function_exists( '\deactivate_plugins' ) ) {
-    function \deactivate_plugins() {}
-}
-if ( ! function_exists( '\wp_die' ) ) {
-    function \wp_die() {}
-}
-if ( ! function_exists( '\esc_html__' ) ) {
-    function \esc_html__() {}
-}
-if ( ! function_exists( '\register_activation_hook' ) ) {
-    function \register_activation_hook() {}
-}
-if ( ! function_exists( '\register_deactivation_hook' ) ) {
-    function \register_deactivation_hook() {}
-}
-if ( ! function_exists( '\get_option' ) ) {
-    function \get_option() {}
-}
-if ( ! function_exists( '\update_option' ) ) {
-    function \update_option() {}
-}
-if ( ! function_exists( '\flush_rewrite_rules' ) ) {
-    function \flush_rewrite_rules() {}
-}
-if ( ! function_exists( '\admin_url' ) ) {
-    function \admin_url() {}
-}
-if ( ! function_exists( '\esc_url' ) ) {
-    function \esc_url() {}
-}
-if ( ! function_exists( '\esc_html' ) ) {
-    function \esc_html() {}
-}
-if ( ! function_exists( '\__' ) ) {
-    function \__() {}
-}
-if ( ! function_exists( '\add_filter' ) ) {
-    function \add_filter() {}
-}
-if ( ! function_exists( '\plugin_basename' ) ) {
-    function \plugin_basename() {}
-}
-
 // Define plugin constants
-define( 'WPCA_VERSION', '1.8.7' );
+define( 'WPCA_VERSION', '1.8.8' );
 define( 'WPCA_PLUGIN_DIR', ( \function_exists( '\plugin_dir_path' ) ? \plugin_dir_path( __FILE__ ) : \dirname( __FILE__ ) . '/' ) );
 define( 'WPCA_PLUGIN_URL', ( \function_exists( '\plugin_dir_url' ) ? \plugin_dir_url( __FILE__ ) : '' ) );
 define( 'WPCA_TEXT_DOMAIN', 'wp-clean-admin' );

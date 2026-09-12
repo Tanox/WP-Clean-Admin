@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.8.8] - 2026-09-12
+### Fixed
+- CI 阻塞修复: `composer.json` 的 `name` 字段 `Tanox/wp-clean-admin` 首字母大写，不符合 Composer 包名 schema（要求全小写），导致 `composer install` 失败；改为 `tanox/wp-clean-admin`
+- 移除非法的 WordPress 函数 IDE stub 声明（`wp-clean-admin.php` 与 `includes/ajax/performance-ajax.php` 中的 `function \wp_...() {}`）：该写法语法非法（`function` 关键字后不能带命名空间前缀），导致 `php -l` 解析失败、CI 中断；WP 函数在运行时由核心提供，stub 属冗余死代码，删除后主文件常量段（`WPCA_PLUGIN_DIR`/`WPCA_PLUGIN_URL`）仍通过 `function_exists` + fallback 正常工作
+
 ## [1.8.7] - 2026-09-12
 ### Chore
 - 完善 CI/CD: 新增 `.github/workflows/ci.yml`（PHP 语法检查 + PHP_CodeSniffer + 多版本 PHPUnit 测试矩阵），新增 `wpcleanadmin/phpcs.xml.dist` 规则集（基于 WordPress 标准，排除与 PSR-4/现代 PHP 冲突的命名与格式规则，保留安全相关 sniff）
