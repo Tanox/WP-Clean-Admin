@@ -3,9 +3,9 @@
  * WPCleanAdmin Cleanup AJAX Handler
  *
  * @package WPCleanAdmin
- * @version 1.8.4
+ * @version 1.8.5
  * @update_date 2026-01-30
- * @author Sut
+ * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
  */

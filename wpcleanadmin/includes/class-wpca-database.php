@@ -3,8 +3,8 @@
  * WPCleanAdmin Database Class
  *
  * @package WPCleanAdmin
- * @version 1.8.4
- * @author Sut
+ * @version 1.8.5
+ * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
  */
@@ -199,13 +199,20 @@ class Database {
         
         // Backup each table
         foreach ( $tables as $table ) {
+            // Table names are SQL identifiers and cannot be passed through $wpdb->prepare()
+            // (it would wrap them in quotes, breaking the query). Validate against a safe
+            // pattern and wrap with backticks instead.
+            if ( ! preg_match( '/^[A-Za-z0-9_]+$/', $table ) ) {
+                continue;
+            }
+
             // Get table structure
-            $create_table = $wpdb->get_var( $wpdb->prepare( "SHOW CREATE TABLE %s", $table ) );
+            $create_table = $wpdb->get_var( "SHOW CREATE TABLE `{$table}`" );
             $backup_content .= "-- Table structure for table `{$table}`\n";
             $backup_content .= "{$create_table};\n\n";
             
             // Get table data
-            $rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %s", $table ), ARRAY_A );
+            $rows = $wpdb->get_results( "SELECT * FROM `{$table}`", ARRAY_A );
             if ( count( $rows ) > 0 ) {
                 $backup_content .= "-- Dumping data for table `{$table}`\n";
                 $backup_content .= "INSERT INTO `{$table}` VALUES\n";

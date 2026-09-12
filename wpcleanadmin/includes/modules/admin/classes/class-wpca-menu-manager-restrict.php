@@ -6,7 +6,7 @@
  *
  * @package WPCleanAdmin
  * @version  1.8.4
- * @author Sut
+ * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
  */

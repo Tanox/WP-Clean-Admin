@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.5] - 2026-09-12
+### Chore
+- 作者署名统一: 全项目 PHP/JS 文件头 `@author Sut` 更正为 `Tanox`，与 composer.json 及仓库归属一致（排除 languages/ 翻译者历史署名）
+- 版本头修正: 主文件 `Version:` 头双空格修正，`WPCA_VERSION` 常量同步至 1.8.5
+
+### Fixed
+- 数据库备份表名参数化: `class-wpca-database.php` 的 `SHOW CREATE TABLE %s` 与 `SELECT * FROM %s` 改用反引号安全拼接表名（SQL 标识符不可经 `prepare()` 参数化，原写法会使备份导出失败），并增加表名白名单校验
+
 ## [1.8.4] - 2026-08-12
 ### Refactor
 - 模块拆分: 将 core/admin/settings 三簇超 200 行类拆分为单一职责子模块（抽离 data/queries/renderer/helper/trait 等），主类保留公开 API 转发，行为契约不变

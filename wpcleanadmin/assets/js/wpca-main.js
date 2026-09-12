@@ -2,8 +2,8 @@
  * WP Clean Admin Main JavaScript
  *
  * @package WPCA
- * @version 1.8.4
- * @author Sut
+ * @version 1.8.5
+ * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
  */

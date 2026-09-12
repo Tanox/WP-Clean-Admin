@@ -3,9 +3,9 @@
  * WPCleanAdmin Settings Validation Class
  *
  * @package WPCleanAdmin
- * @version 1.8.4
+ * @version 1.8.5
  * @update_date 2026-01-28
- * @author Sut
+ * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
  */

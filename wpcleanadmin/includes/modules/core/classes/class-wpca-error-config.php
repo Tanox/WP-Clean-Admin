@@ -6,7 +6,7 @@
  *
  * @package WPCleanAdmin\Modules\Core\Classes
  * @version  1.8.4
- * @author Sut
+ * @author Tanox
  * @since 1.8.0
  */
 
