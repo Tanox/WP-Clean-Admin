@@ -8,11 +8,11 @@
  * @since 1.8.0
  */
 
+
+namespace WPCleanAdmin\Modules\Core\Classes;
 require_once __DIR__ . '/class-wpca-error-levels.php';
 require_once __DIR__ . '/class-wpca-file-logger.php';
 require_once __DIR__ . '/class-wpca-error-config.php';
-
-namespace WPCleanAdmin\Modules\Core\Classes;
 
 use WPCleanAdmin\Modules\Core\Classes\Error_Levels;
 use WPCleanAdmin\Modules\Core\Classes\File_Logger;

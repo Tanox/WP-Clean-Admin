@@ -9,11 +9,11 @@
  * @since 1.7.15
  */
 
+
+namespace WPCleanAdmin;
 require_once __DIR__ . '/class-wpca-menu-customizer-options.php';
 require_once __DIR__ . '/class-wpca-menu-customizer-tree.php';
 require_once __DIR__ . '/class-wpca-menu-customizer-render.php';
-
-namespace WPCleanAdmin;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

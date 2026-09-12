@@ -9,9 +9,9 @@
  * @since 1.7.15
  */
 
-require_once __DIR__ . '/class-wpca-settings-field-renderers.php';
 
 namespace WPCleanAdmin\Modules\Admin\Settings;
+require_once __DIR__ . '/class-wpca-settings-field-renderers.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

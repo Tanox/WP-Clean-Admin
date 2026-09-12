@@ -9,10 +9,10 @@
  * @since 1.7.15
  */
 
-require_once __DIR__ . '/class-wpca-menu-manager-data.php';
-require_once __DIR__ . '/class-wpca-menu-manager-restrict.php';
 
 namespace WPCleanAdmin;
+require_once __DIR__ . '/class-wpca-menu-manager-data.php';
+require_once __DIR__ . '/class-wpca-menu-manager-restrict.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

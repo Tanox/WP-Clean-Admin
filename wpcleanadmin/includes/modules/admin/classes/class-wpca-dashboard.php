@@ -9,9 +9,9 @@
  * @since 1.7.15
  */
 
-require_once __DIR__ . '/class-wpca-dashboard-data.php';
 
 namespace WPCleanAdmin;
+require_once __DIR__ . '/class-wpca-dashboard-data.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

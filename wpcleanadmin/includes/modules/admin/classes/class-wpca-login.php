@@ -9,12 +9,12 @@
  * @since 1.7.15
  */
 
+
+namespace WPCleanAdmin;
 require_once __DIR__ . '/class-wpca-login-captcha.php';
 require_once __DIR__ . '/class-wpca-login-two-factor.php';
 require_once __DIR__ . '/class-wpca-login-style.php';
 require_once __DIR__ . '/class-wpca-login-attempts.php';
-
-namespace WPCleanAdmin;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

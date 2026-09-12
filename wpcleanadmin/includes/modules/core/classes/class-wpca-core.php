@@ -8,11 +8,11 @@
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
  */
+
+namespace WPCleanAdmin\Modules\Core\Classes;
 require_once __DIR__ . '/class-wpca-security-headers.php';
 require_once __DIR__ . '/class-wpca-module-loader.php';
 require_once __DIR__ . '/class-wpca-core-settings.php';
-
-namespace WPCleanAdmin\Modules\Core\Classes;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
