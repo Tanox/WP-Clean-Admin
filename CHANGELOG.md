@@ -8,6 +8,9 @@
 ### Fixed
 - 数据库备份表名参数化: `class-wpca-database.php` 的 `SHOW CREATE TABLE %s` 与 `SELECT * FROM %s` 改用反引号安全拼接表名（SQL 标识符不可经 `prepare()` 参数化，原写法会使备份导出失败），并增加表名白名单校验
 
+### Docs
+- 完善 Community Health Files: 在 `.github/` 新增 `CODE_OF_CONDUCT.md`、`CONTRIBUTING.md`、`SECURITY.md`、`SUPPORT.md`、`FUNDING.yml`、`ISSUE_TEMPLATE/`（bug_report / feature_request / config）、`PULL_REQUEST_TEMPLATE.md`，对齐项目提交规范、安全红线与版本管理约定（遵循全局规则，未创建 `.github/readme.md`）
+
 ## [1.8.4] - 2026-08-12
 ### Refactor
 - 模块拆分: 将 core/admin/settings 三簇超 200 行类拆分为单一职责子模块（抽离 data/queries/renderer/helper/trait 等），主类保留公开 API 转发，行为契约不变
