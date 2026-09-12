@@ -3,7 +3,7 @@
  * WPCleanAdmin Error Handler
  *
  * @package WPCleanAdmin\Modules\Core\Classes
- * @version  1.8.4
+ * @version 1.8.9
  * @author Tanox
  * @since 1.8.0
  */

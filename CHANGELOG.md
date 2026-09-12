@@ -6,6 +6,7 @@
 - 删除 `tests/PrototypeTest.php`：其 `setUp()` 仍 require 已被清理的 `prototype/php/` 目录文件，导致 PHPUnit 致命错误
 - 重写 `tests/bootstrap.php`：在非 WordPress 环境提供最小 WP 函数 polyfill（`sanitize_text_field` 等正确实现）+ 加载过程式核心函数文件，使单元测试在无 WP 环境下可运行
 - `phpcs.xml.dist` 增加 `installed_paths` 配置，注册 Composer 安装的外部标准（WPCS/Universal 等），消除 "Referenced sniff does not exist" 噪声
+- 修复 `includes/modules/` 下 12 个类文件在 `namespace` 声明前 `require` 依赖导致的 `php -l` 语法错误（`Namespace declaration has to be the very first statement`），将依赖加载移至 `namespace` 之后
 
 ## [1.8.8] - 2026-09-12
 ### Fixed

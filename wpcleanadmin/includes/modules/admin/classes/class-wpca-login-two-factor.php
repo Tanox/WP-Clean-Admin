@@ -5,7 +5,7 @@
  * 承载双因素认证的逻辑（密钥生成、OTP、QR、校验与表单），从 Login 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.8.4
+ * @version 1.8.9
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

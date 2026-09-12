@@ -3,7 +3,7 @@
  * WPCleanAdmin User Roles Class
  *
  * @package WPCleanAdmin
- * @version  1.8.4
+ * @version 1.8.9
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
