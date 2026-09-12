@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.9] - 2026-09-13
+### Fixed
+- 修复 `performance-ajax.php` 中 WP 函数调用处的双反斜杠（`\\wp_send_json_error` / `\\__` 非法语法），该错误此前被已删除的 IDE stub 声明掩盖，导致 `php -l` 解析失败
+- 删除 `tests/PrototypeTest.php`：其 `setUp()` 仍 require 已被清理的 `prototype/php/` 目录文件，导致 PHPUnit 致命错误
+- 重写 `tests/bootstrap.php`：在非 WordPress 环境提供最小 WP 函数 polyfill（`sanitize_text_field` 等正确实现）+ 加载过程式核心函数文件，使单元测试在无 WP 环境下可运行
+- `phpcs.xml.dist` 增加 `installed_paths` 配置，注册 Composer 安装的外部标准（WPCS/Universal 等），消除 "Referenced sniff does not exist" 噪声
+
 ## [1.8.8] - 2026-09-12
 ### Fixed
 - CI 阻塞修复: `composer.json` 的 `name` 字段 `Tanox/wp-clean-admin` 首字母大写，不符合 Composer 包名 schema（要求全小写），导致 `composer install` 失败；改为 `tanox/wp-clean-admin`
