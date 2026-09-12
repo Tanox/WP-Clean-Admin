@@ -1,0 +1,80 @@
+name: Bug 报告（Bug Report）
+description: 报告 WP Clean Admin 的缺陷或异常行为
+title: "fix: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈！请尽量完整地填写以下信息，便于我们快速复现与定位问题。
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 简明描述你遇到的异常现象
+      placeholder: 例如：启用「菜单精简」后，某自定义文章类型的菜单消失且无法恢复
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 一步步列出如何触发该问题
+      placeholder: |
+        1. 进入 设置 → WP Clean Admin
+        2. 开启 XX 选项
+        3. 保存并刷新后台
+        4. 观察到 XX
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+      description: 你认为正确的行为应该是什么
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为
+      description: 实际发生了什么（可附截图）
+    validations:
+      required: true
+  - type: input
+    id: wp-version
+    attributes:
+      label: WordPress 版本
+      placeholder: "例如 6.6.1"
+    validations:
+      required: true
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP 版本
+      placeholder: "例如 8.1.2"
+    validations:
+      required: true
+  - type: input
+    id: plugin-version
+    attributes:
+      label: 插件版本
+      description: 见插件主文件或后台「版本」信息
+      placeholder: "例如 1.8.5"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境与上下文
+      description: 主题、相关插件、服务器环境、是否多站点等
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关日志 / 错误信息
+      description: 调试日志、PHP 报错、浏览器控制台输出等
+      render: shell
+    validations:
+      required: false
