@@ -97,6 +97,7 @@
 
 ### 相关文件
 - `includes/class-wpca-cleanup.php` - 后台清理核心类
+- `includes/class-wpca-cleanup-media-task.php` - 媒体清理任务类（从 class-wpca-cleanup 抽离，复用 Cleanup_Helpers trait，覆盖孤儿/未使用/重复媒体清理）
 - `includes/class-wpca-menu-manager.php` - 菜单管理类
 - `includes/class-wpca-dashboard.php` - 仪表盘优化类
 - `includes/class-wpca-login.php` - 登录页面优化类

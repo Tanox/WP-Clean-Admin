@@ -3,7 +3,7 @@
 
 ## 1. 项目概述
 
-WP Clean Admin 是一个 WordPress 插件，用于管理后台清理和优化，版本 1.8.3。插件采用模块化设计（以 `WPCleanAdmin\Modules\*` 为权威实现），遵循 WordPress 最佳实践，注重安全性、性能和用户体验。
+WP Clean Admin 是一个 WordPress 插件，用于管理后台清理和优化，版本 1.8.5。插件采用模块化设计（以 `WPCleanAdmin\Modules\*` 为权威实现），遵循 WordPress 最佳实践，注重安全性、性能和用户体验。
 
 **项目特点**：
 - 模块化设计，便于扩展和维护
@@ -82,11 +82,11 @@ wpcleanadmin/
 <?php
 /**
  * Plugin Name: WP Clean Admin
- * Plugin URI: https://github.com/sutchan/WP-Clean-Admin
+ * Plugin URI: https://github.com/Tanox/WP-Clean-Admin
  * Description: A comprehensive WordPress admin cleanup and optimization plugin
- * Version: 1.8.3
- * Author: Sut
- * Author URI: https://github.com/sutchan
+ * Version: 1.8.5
+ * Author: Tanox
+ * Author URI: https://github.com/Tanox
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wp-clean-admin
@@ -170,7 +170,7 @@ if ( ! function_exists( 'plugin_basename' ) ) {
 
 ```php
 // Define plugin constants
-define( 'WPCA_VERSION', '1.8.3' );
+define( 'WPCA_VERSION', '1.8.5' );
 define( 'WPCA_PLUGIN_DIR', ( function_exists( 'plugin_dir_path' ) ? plugin_dir_path( __FILE__ ) : dirname( __FILE__ ) . '/' ) );
 define( 'WPCA_PLUGIN_URL', ( function_exists( 'plugin_dir_url' ) ? plugin_dir_url( __FILE__ ) : '' ) );
 define( 'WPCA_TEXT_DOMAIN', 'wp-clean-admin' );
@@ -415,7 +415,7 @@ if ( function_exists( '\add_filter' ) && function_exists( '\plugin_basename' ) )
  * WPCleanAdmin PSR-4 Autoloader
  *
  * @package WPCleanAdmin
- * @version 1.8.3
+ * @version 1.8.5
  * @author Sut
  * @author URI: https://github.com/sutchan
  * @since 1.7.15
@@ -537,7 +537,7 @@ spl_autoload_register( function( $class ) {
  * WPCleanAdmin Core Class（适配层，逐步迁移至 WPCleanAdmin\Modules\*）
  *
  * @package WPCleanAdmin
- * @version 1.8.3
+ * @version 1.8.5
  * @author Sut
  * @author URI: https://github.com/sutchan
  * @since 1.7.15
