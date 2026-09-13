@@ -3,13 +3,17 @@
  * WPCleanAdmin Error Handler
  *
  * @package WPCleanAdmin\Modules\Core\Classes
- * @version 1.8.9
+ * @version 1.9.0
  * @author Tanox
  * @since 1.8.0
  */
 
 
 namespace WPCleanAdmin\Modules\Core\Classes;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 require_once __DIR__ . '/class-wpca-error-levels.php';
 require_once __DIR__ . '/class-wpca-file-logger.php';
 require_once __DIR__ . '/class-wpca-error-config.php';

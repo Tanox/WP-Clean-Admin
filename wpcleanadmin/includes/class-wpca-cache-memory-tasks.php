@@ -5,11 +5,15 @@
  * In-memory cache read/write/delete/clear implementations.
  *
  * @package WPCleanAdmin
- * @version 1.8.16
+ * @version 1.9.0
  * @author Tanox
  * @since 1.8.0
  */
 namespace WPCleanAdmin;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 /**
  * Memory cache backend tasks for the Cache class.

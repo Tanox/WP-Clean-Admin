@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.9.0] - 2026-09-13
+
+- fix(core): 修正 modules/admin/classes 与 modules/utilities/classes 共 24 个文件的命名空间（原误写为根命名空间，与根版同名类 FQCN 冲突导致 Cannot declare class 致命错误）
+- fix(core): 移除 modules/utilities/helpers.php 中指向不存在文件的 wpca-wordpress-stubs.php require
+- fix(security): 修复 2FA 认证绕过（启用 2FA 的用户未提交验证码即通过认证；改为阻止认证并提供验证码表单链接），根版与 modules 版同步修复
+- fix(security): 为 modules 版 menu-customizer 的 4 个 wp_ajax_* 处理器补齐 nonce + manage_options 权限校验（新增 ajax_save/reset/export/import 包装处理器）
+- fix(security): 为 8 个缺失 ABSPATH 守卫的生产 PHP 文件补齐直接访问守卫（缓存 5 个、错误处理器 2 个、utilities 缓存 1 个），测试文件同步补齐
+- fix(compat): 插件头 Requires PHP 7.0 → 7.4（与代码中 void/可空类型声明一致），composer.json 同步 >=7.4
+- feat(uninstall): 新增 uninstall.php，卸载时清理插件选项、瞬态与用户元数据
+- feat(wporg): 新增 WP.org 标准格式 readme.txt
+- chore: 移除插件头 Network: true 声明（未实现多站点专用处理）
+- test: 新增 PluginAutoloadSmokeTest，对根命名空间与 modules 子命名空间关键类做 autoload 冒烟校验，防止命名空间回归
+
 ## [1.8.20] - 2026-09-13
 
 - fix(ci): 修正 phpcs 依赖包名（phpcsstandards/phpcsextra 提供 NormalizedArrays/Modernize）

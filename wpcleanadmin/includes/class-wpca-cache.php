@@ -6,11 +6,15 @@
  * implementations and the public API live in the traits composed below.
  *
  * @package WPCleanAdmin
- * @version 1.8.16
+ * @version 1.9.0
  * @author Tanox
  * @since 1.8.0
  */
 namespace WPCleanAdmin;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 /**
  * Cache manager class

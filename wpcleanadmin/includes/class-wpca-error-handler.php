@@ -3,12 +3,16 @@
  * WPCleanAdmin Error Handler
  *
  * @package WPCleanAdmin
- * @version 1.8.5
+ * @version 1.9.0
  * @author Tanox
  * @since 1.8.0
  */
 
 namespace WPCleanAdmin;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 /**
  * Error handler class

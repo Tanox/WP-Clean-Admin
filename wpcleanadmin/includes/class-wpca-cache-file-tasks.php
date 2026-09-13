@@ -5,11 +5,15 @@
  * File cache backend, cache-directory resolution and expired-cache cleanup.
  *
  * @package WPCleanAdmin
- * @version 1.8.16
+ * @version 1.9.0
  * @author Tanox
  * @since 1.8.0
  */
 namespace WPCleanAdmin;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 /**
  * File cache backend tasks for the Cache class.

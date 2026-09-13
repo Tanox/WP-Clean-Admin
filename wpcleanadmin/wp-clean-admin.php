@@ -3,16 +3,15 @@
  * Plugin Name: WP Clean Admin
  * Plugin URI: https://github.com/Tanox/WP-Clean-Admin
  * Description: A comprehensive WordPress admin cleanup and optimization plugin
- * Version: 1.8.20
+ * Version: 1.9.0
  * Author: Tanox
  * Author URI: https://github.com/Tanox
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wp-clean-admin
  * Domain Path: /languages
- * Network: true
  * Requires at least: 5.0
- * Requires PHP: 7.0
+ * Requires PHP: 7.4
  */
 
 // Exit if accessed directly
@@ -21,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'WPCA_VERSION', '1.8.20' );
+define( 'WPCA_VERSION', '1.9.0' );
 define( 'WPCA_PLUGIN_DIR', ( \function_exists( '\plugin_dir_path' ) ? \plugin_dir_path( __FILE__ ) : \dirname( __FILE__ ) . '/' ) );
 define( 'WPCA_PLUGIN_URL', ( \function_exists( '\plugin_dir_url' ) ? \plugin_dir_url( __FILE__ ) : '' ) );
 define( 'WPCA_TEXT_DOMAIN', 'wp-clean-admin' );

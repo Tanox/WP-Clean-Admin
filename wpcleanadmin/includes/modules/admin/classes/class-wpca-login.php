@@ -3,14 +3,14 @@
  * WPCleanAdmin Login Class
  *
  * @package WPCleanAdmin
- * @version 1.8.9
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
  */
 
 
-namespace WPCleanAdmin;
+namespace WPCleanAdmin\Modules\Admin\Classes;
 require_once __DIR__ . '/class-wpca-login-captcha.php';
 require_once __DIR__ . '/class-wpca-login-two-factor.php';
 require_once __DIR__ . '/class-wpca-login-style.php';

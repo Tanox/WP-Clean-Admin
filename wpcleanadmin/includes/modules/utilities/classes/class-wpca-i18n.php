@@ -3,7 +3,7 @@
  * WPCleanAdmin I18n Class
  *
  * @package WPCleanAdmin
- * @version  1.8.4
+ * @version  1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -11,7 +11,7 @@
  * @function get_available_languages(string $plugin_path) WordPress core function to get available languages
  * @function is_rtl() WordPress core function to check if current language is RTL
  */
-namespace WPCleanAdmin;
+namespace WPCleanAdmin\Modules\Utilities\Classes;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

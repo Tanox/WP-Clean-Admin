@@ -3,12 +3,16 @@
  * WPCleanAdmin Cache Manager
  *
  * @package WPCleanAdmin
- * @version  1.8.4
+ * @version  1.9.0
  * @author Tanox
  * @since 1.8.0
  */
 
-namespace WPCleanAdmin;
+namespace WPCleanAdmin\Modules\Utilities\Classes;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 /**
  * Cache manager class

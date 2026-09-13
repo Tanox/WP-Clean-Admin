@@ -5,11 +5,15 @@
  * Public cache API (get/set/delete/clear) and cache configuration accessors.
  *
  * @package WPCleanAdmin
- * @version 1.8.16
+ * @version 1.9.0
  * @author Tanox
  * @since 1.8.0
  */
 namespace WPCleanAdmin;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 /**
  * Public cache API and accessor tasks for the Cache class.

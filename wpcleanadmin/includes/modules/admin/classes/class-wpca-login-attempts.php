@@ -5,13 +5,13 @@
  * 承载登录尝试限制与失败记录逻辑，从 Login 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.8.4
+ * @version  1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
  */
 
-namespace WPCleanAdmin;
+namespace WPCleanAdmin\Modules\Admin\Classes;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

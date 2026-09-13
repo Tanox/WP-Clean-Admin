@@ -6,7 +6,7 @@
  * 从 class-wpca-login.php 按职责抽离，公开方法契约不变。
  *
  * @package WPCleanAdmin
- * @version 1.8.10
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.10
@@ -278,16 +278,21 @@ trait LoginTwoFactorTasks {
             $two_factor_enabled = function_exists( '\get_user_meta' ) ? \get_user_meta( $user->ID, 'wpca_two_factor_enabled', true ) : false;
 
             if ( $two_factor_enabled ) {
-                // Redirect to two-factor form
-                if ( function_exists( '\add_filter' ) ) {
-                    \add_filter( 'login_redirect', function( $redirect_to, $requested_redirect_to, $user ) {
-                        return \add_query_arg( array(
-                            'wpca_two_factor' => '1',
-                            'wpca_user_id' => $user->ID,
-                            'wpca_nonce' => \wp_create_nonce( 'wpca_two_factor' )
-                        ), \wp_login_url( $redirect_to ) );
-                    }, 10, 3 );
+                // Block authentication until a valid code is submitted. The 2FA
+                // form is rendered by render_two_factor_form() when the login
+                // screen is requested with wpca_two_factor=1.
+                $message = \__( 'Two-factor authentication is required for this account.', \WPCA_TEXT_DOMAIN );
+
+                if ( function_exists( '\add_query_arg' ) && function_exists( '\wp_login_url' ) && function_exists( '\wp_create_nonce' ) && function_exists( '\esc_url' ) ) {
+                    $form_url = \add_query_arg( array(
+                        'wpca_two_factor' => '1',
+                        'wpca_user_id' => $user->ID,
+                        'wpca_nonce' => \wp_create_nonce( 'wpca_two_factor' )
+                    ), \wp_login_url() );
+                    $message .= ' <a href="' . \esc_url( $form_url ) . '">' . \__( 'Enter your authentication code.', \WPCA_TEXT_DOMAIN ) . '</a>';
                 }
+
+                return new \WP_Error( 'wpca_two_factor_required', $message );
             }
         }
 
