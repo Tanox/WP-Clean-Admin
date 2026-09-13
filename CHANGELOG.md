@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.14] - 2026-09-13
+
+- refactor: 拆分 Helpers 核心类为 5 个职责 trait
+- 主类 613→88 行，抽离 Format/Env/Response/ErrorHandling/Log 职责
+- 吸收 1.8.9 遗留的 WPCA_TEXT_DOMAIN 双保险逻辑
+
 ## [1.8.13] - 2026-09-13
 
 - docs: 新增开发任务清单 TASKS.md（代码治理/功能提案/原型收尾/测试）
