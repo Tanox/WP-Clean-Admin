@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.12] - 2026-09-13
+
+- ci: 修复 phpcs 外部标准注册缺失（Universal/Modernize/NormalizedArrays sniff 报错）
+- CI 注册全部 4 个标准绝对路径，移除 ruleset 相对象避免覆盖
+- 本地仍由 composer-installer 自动注册标准
+
 ## [1.8.11] - 2026-09-13
 
 - refactor: 拆分 Settings 核心类为单一职责 trait（设置注册 / 设置页渲染）

@@ -37,9 +37,9 @@ jobs:
       - name: Install dependencies
         working-directory: wpcleanadmin
         run: composer install --no-interaction --prefer-dist --no-progress
-      - name: Register WordPress standard
+      - name: Register coding standards
         working-directory: wpcleanadmin
-        run: vendor/bin/phpcs --config-set installed_paths "$(pwd)/vendor/wp-coding-standards/wpcs"
+        run: vendor/bin/phpcs --config-set installed_paths "$(pwd)/vendor/wp-coding-standards/wpcs,$(pwd)/vendor/phpcsstandards/phpcsutils,$(pwd)/vendor/phpcsstandards/normalizedarrays,$(pwd)/vendor/phpcsstandards/modernize"
       - name: Run phpcs
         working-directory: wpcleanadmin
         run: vendor/bin/phpcs

@@ -37,6 +37,4 @@
     <rule ref="WordPress.Security.NonceVerification"/>
     <rule ref="WordPress.Security.SafeRedirect"/>
 
-    <!-- Register external standards installed via Composer so their sniffs resolve -->
-    <config name="installed_paths" value="vendor/wp-coding-standards/wpcs,vendor/phpcsstandards/phpcsutils,vendor/phpcsstandards/normalizedarrays,vendor/phpcsstandards/modernize"/>
 </ruleset>
