@@ -1,0 +1,154 @@
+/* ============================================================
+   WP Clean Admin 原型 · WP 后台外壳样式（忠实还原默认主题）
+   仅还原管理工具条 / 左侧菜单 / 内容区 / 原生表单控件外观
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #f0f0f1;
+    color: #1d2327;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+a { color: #2271b1; text-decoration: none; }
+a:hover { color: #135e96; }
+
+/* ---------- 顶部管理工具条 ---------- */
+#wpadminbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 32px;
+    background: #1d2327;
+    color: #f0f0f1;
+    z-index: 99999;
+    font-size: 13px;
+}
+#wp-toolbar { display: flex; justify-content: space-between; height: 32px; }
+#wp-toolbar ul { list-style: none; margin: 0; padding: 0; display: flex; height: 32px; }
+#wp-toolbar .ab-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 10px;
+    color: #f0f0f1;
+}
+#wp-toolbar .ab-item:hover { background: #2c3338; color: #72aee6; }
+.ab-icon, .ab-avatar { width: 18px; height: 18px; flex: none; }
+.ab-avatar { border-radius: 50%; background: #2c3338; fill: #f0f0f1; }
+
+/* ---------- 左侧管理菜单 ---------- */
+#wpbody { margin-top: 32px; }
+#adminmenumain { position: absolute; top: 32px; bottom: 0; left: 0; width: 160px; }
+#adminmenuwrap { background: #1d2327; height: 100%; overflow-y: auto; }
+#adminmenu { list-style: none; margin: 0; padding: 0; }
+#adminmenu .separator { border-bottom: 1px solid #2c3338; margin: 0; }
+#adminmenu .menu-top > a, #adminmenu .wp-submenu a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    color: #f0f0f1;
+    font-size: 14px;
+}
+#adminmenu .menu-top > a:hover, #adminmenu .wp-submenu a:hover { color: #72aee6; background: #2c3338; }
+#adminmenu .wp-menu-icon { width: 18px; height: 18px; flex: none; }
+#adminmenu .wp-has-current-submenu > a { background: #2271b1; color: #fff; }
+#adminmenu .wp-submenu {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 8px;
+    background: #1d2327;
+}
+#adminmenu .wp-submenu .wp-submenu-head { display: none; }
+#adminmenu .wp-submenu a { padding: 7px 12px 7px 32px; font-size: 13px; }
+#adminmenu .wp-submenu .current a { color: #72aee6; font-weight: 600; }
+
+/* ---------- 内容区 ---------- */
+#wpcontent { margin-left: 160px; }
+#wpbody-content { padding: 10px 20px 20px; min-height: calc(100vh - 32px); }
+
+.wrap { margin: 0; max-width: 100%; }
+.wrap > h1 {
+    font-size: 23px;
+    font-weight: 400;
+    margin: 12px 0 16px;
+    padding: 0;
+}
+
+/* ---------- 原生通知 ---------- */
+.notice {
+    background: #fff;
+    border-left: 4px solid #72aee6;
+    padding: 10px 14px;
+    margin: 12px 0 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+.notice-info { border-left-color: #72aee6; }
+.notice-success { border-left-color: #00a32a; }
+.notice p { margin: 0.4em 0; }
+
+/* ---------- 原生按钮 ---------- */
+.button {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #f6f7f7;
+    color: #1d2327;
+    border: 1px solid #2271b1;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.5;
+}
+.button:hover { background: #f0f0f1; border-color: #135e96; }
+.button-primary {
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+}
+.button-primary:hover { background: #135e96; border-color: #135e96; color: #fff; }
+.button-small { padding: 2px 8px; font-size: 12px; }
+
+/* ---------- 原生设置表格 ---------- */
+.form-table { border-collapse: collapse; width: 100%; margin: 0; background: #fff; }
+.form-table th, .form-table td {
+    padding: 15px 18px;
+    border-bottom: 1px solid #f0f0f1;
+    text-align: left;
+    vertical-align: top;
+}
+.form-table th {
+    width: 220px;
+    font-weight: 500;
+    color: #1d2327;
+    border-right: 1px solid #f0f0f1;
+}
+.form-table td select { min-width: 220px; }
+.form-table input[type="checkbox"] { width: 16px; height: 16px; margin-right: 6px; vertical-align: middle; }
+
+/* ---------- 页脚 ---------- */
+#wpfooter {
+    margin: 24px 0 0 160px;
+    padding: 12px 20px;
+    color: #646970;
+    font-size: 13px;
+    border-top: 1px solid #dcdcde;
+}
+#wpfooter .alignright { float: right; }
+#wpfooter .alignleft { float: left; }
+
+/* ---------- 响应式 ---------- */
+@media screen and (max-width: 782px) {
+    #adminmenumain { width: 44px; }
+    #adminmenu .wp-menu-name span { display: none; }
+    #wpcontent, #wpfooter { margin-left: 44px; }
+    .form-table th, .form-table td { display: block; width: 100%; border-right: none; }
+}

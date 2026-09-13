@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<!--
+  WP Clean Admin · 高保真原型（重构版 v1.8.20）
+  目标：忠实还原真实 WordPress 后台「设置 → Clean Admin」页面外观与交互，
+        替换旧版自定义顶栏 / 侧栏的脱离实现。
+  结构：prototype/index.html + wpca-admin.css（WP 后台外壳）+ wpca-components.css（插件组件）+ app.js
+  数据：纯静态 mock，不依赖后端 PHP。
+-->
+<html lang="zh-CN" class="wp-admin">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WP Clean Admin ‹ example.com — WordPress</title>
+    <link rel="stylesheet" href="wpca-admin.css" />
+    <link rel="stylesheet" href="wpca-components.css" />
+</head>
+<body class="wp-admin wp-core-ui no-js">
+    <!-- 图标精灵：dashicons 风格内联 SVG，离线可用 -->
+    <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <symbol id="i-dashboard" viewBox="0 0 20 20"><path fill="currentColor" d="M3 3h6v6H3V3zm8 0h6v6h-6V3zM3 11h6v6H3v-6zm8 0h6v6h-6v-6z"/></symbol>
+        <symbol id="i-posts" viewBox="0 0 20 20"><path fill="currentColor" d="M4 3h12v14H4V3zm2 2v2h8V5H6zm0 4v2h8V9H6zm0 4v2h5v-2H6z"/></symbol>
+        <symbol id="i-media" viewBox="0 0 20 20"><path fill="currentColor" d="M3 4h14v12H3V4zm2 2v6l3-3 2 2 4-4 2 2V6H5zm2 1.5A1.5 1.5 0 1 1 5 9a1.5 1.5 0 0 1 2-1.5z"/></symbol>
+        <symbol id="i-pages" viewBox="0 0 20 20"><path fill="currentColor" d="M5 2h8l4 4v12H5V2zm2 2v2h4V4H7zm0 4v8h8V8H7z"/></symbol>
+        <symbol id="i-comments" viewBox="0 0 20 20"><path fill="currentColor" d="M3 3h14v10H8l-4 4v-4H3V3zm2 2v6h3v2l2-2h5V5H5z"/></symbol>
+        <symbol id="i-appearance" viewBox="0 0 20 20"><path fill="currentColor" d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm0 2c1.5 0 3 2 3 4s-1 4-3 4-3-2-3-4 1.5-4 3-4zm0 8a6 6 0 0 1 4-2c0 2-1 4-4 4H6a6 6 0 0 1 4-2z"/></symbol>
+        <symbol id="i-plugins" viewBox="0 0 20 20"><path fill="currentColor" d="M7 2a2 2 0 0 0-2 2 2 2 0 0 0-1 3 2 2 0 0 0 1 3v4h2V10a2 2 0 0 0 2 1h2a2 2 0 0 0 2-1v4h2V10a2 2 0 0 0 1-3 2 2 0 0 0-1-3 2 2 0 0 0-2-2H7zm0 2h6v2H7V4z"/></symbol>
+        <symbol id="i-users" viewBox="0 0 20 20"><path fill="currentColor" d="M10 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM3 17a7 7 0 0 1 14 0v1H3v-1z"/></symbol>
+        <symbol id="i-tools" viewBox="0 0 20 20"><path fill="currentColor" d="M12 2a4 4 0 0 0-3.5 6L3 13.5 6.5 17l5.5-5.5A4 4 0 0 0 18 8l-3 3-2-2 3-3a4 4 0 0 0-4-4z"/></symbol>
+        <symbol id="i-settings" viewBox="0 0 20 20"><path fill="currentColor" d="M10 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm7 3-2-.4.2-1 1.7-1.2-1-1.7L14 5l-1-.2-1 .2-2-.4v-2h-2v2l-2 .4-1-.2L2.3 6.3l-1 1.7L3 9.2 2.8 10 1 11.2l1 1.7L4 13l1 .2.2 1 1.7-.2.4 2h2l.4-2 1 .2 1.7-1.2 1.7 1.2 1-1.7L15 13l1 .2 1.7-1.2-1-1.7L17 10z"/></symbol>
+        <symbol id="i-wp" viewBox="0 0 20 20"><path fill="currentColor" d="M10 1a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm0 2c1.2 0 2.3.2 3.3.7L6 11.3c-.4-1-.3-2.1.3-3 .7-.9 1.8-1.3 2.9-1l3.4-4.9A7 7 0 0 0 10 3zM3.7 7.3l4.3 6.3c-2.6.4-4.9-1.3-5.2-3.9-.2-1.6.4-3.2 1.6-4.4h-.7zm9.6 2.4 2.5 3.6c-1 .8-2.3 1.2-3.6 1.1-2.3-.1-4.2-2-4.2-4.3 0-.4 0-.8.1-1.1l5.2-2.3zm-1.6-5.3 2.7 4A4 4 0 0 0 13 9c0 1.6-1 3-2.4 3.6L6.3 6.6C6.9 5.1 8.3 4 10 4z"/></symbol>
+    </svg>
+
+    <!-- ===== 顶部管理工具条 ===== -->
+    <div id="wpadminbar" class="nojq" role="navigation">
+        <div id="wp-toolbar" class="quicklinks">
+            <ul id="wp-admin-bar-root-default" class="ab-top-menu">
+                <li id="wp-admin-bar-wp-logo" class="menupop">
+                    <a class="ab-item" href="#" aria-label="关于 WordPress"><svg class="ab-icon"><use href="#i-wp"/></svg></a>
+                </li>
+                <li id="wp-admin-bar-site-name" class="menupop">
+                    <a class="ab-item" href="#">example.com</a>
+                </li>
+                <li id="wp-admin-bar-customize"><a class="ab-item" href="#">自定义</a></li>
+            </ul>
+            <ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+                <li id="wp-admin-bar-clean-admin"><a class="ab-item" href="#">WP Clean Admin</a></li>
+                <li id="wp-admin-bar-my-account" class="menupop with-avatar">
+                    <a class="ab-item" href="#">你好，Admin<svg class="ab-avatar" viewBox="0 0 20 20"><use href="#i-users"/></svg></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="wpbody" role="main">
+        <!-- ===== 左侧管理菜单 ===== -->
+        <div id="adminmenumain" role="navigation" aria-label="主导航菜单">
+            <div id="adminmenuwrap">
+                <ul id="adminmenu">
+                    <li class="wp-first-item wp-has-current-submenu wp-menu-separator"><div class="separator"></div></li>
+                    <li class="menu-top"><a class="wp-menu-name" href="#"><svg class="wp-menu-icon"><use href="#i-dashboard"/></svg><span>仪表盘</span></a></li>
+                    <li class="menu-top wp-has-submenu"><a class="wp-menu-name" href="#"><svg class="wp-menu-icon"><use href="#i-posts"/></svg><span>文章</span></a></li>
+                    <li class="menu-top wp-has-submenu"><a class="wp-menu-name" href="#"><svg class="wp-menu-icon"><use href="#i-media"/></svg><span>媒体</span></a></li>
+                    <li class="menu-top wp-has-submenu"><a class="wp-menu-name" href="#"><svg class="wp-menu-icon"><use href="#i-pages"/></svg><span>页面</span></a></li>
+                    <li class="menu-top wp-has-submenu"><a class="wp-menu-name" href="#"><svg class="wp-menu-icon"><use href="#i-comments"/></svg><span>评论</span></a></li>
+                    <li class="menu-top wp-has-submenu"><a class="wp-menu-name" href="#"><svg class="wp-menu-icon"><use href="#i-appearance"/></svg><span>外观</span></a></li>
+                    <li class="menu-top wp-has-submenu"><a class="wp-menu-name" href="#"><svg class="wp-menu-icon"><use href="#i-plugins"/></svg><span>插件</span></a></li>
+                    <li class="menu-top wp-has-submenu"><a class="wp-menu-name" href="#"><svg class="wp-menu-icon"><use href="#i-users"/></svg><span>用户</span></a></li>
+                    <li class="menu-top wp-has-submenu"><a class="wp-menu-name" href="#"><svg class="wp-menu-icon"><use href="#i-tools"/></svg><span>工具</span></a></li>
+                    <li class="wp-has-current-submenu menu-top wp-menu-open">
+                        <a class="wp-menu-name" href="#"><svg class="wp-menu-icon"><use href="#i-settings"/></svg><span>设置</span></a>
+                        <ul class="wp-submenu" id="wp-submenu-settings">
+                            <li class="wp-submenu-head">设置</li>
+                            <li><a href="#">常规</a></li>
+                            <li><a href="#">撰写</a></li>
+                            <li><a href="#">阅读</a></li>
+                            <li><a href="#">讨论</a></li>
+                            <li><a href="#">媒体</a></li>
+                            <li><a href="#">固定链接</a></li>
+                            <li class="current"><a href="#" aria-current="page">Clean Admin</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ===== 内容区 ===== -->
+        <div id="wpcontent">
+            <div id="wpbody-content">
+                <div class="wrap" id="wpca-settings-wrap">
+                    <h1>WP Clean Admin</h1>
+
+                    <div class="notice notice-info inline">
+                        <p><strong>原型预览：</strong>以下为「设置 → Clean Admin」页面的高保真还原，所有控件与真实插件一致。切换选项卡、勾选开关与保存均为前端演示。</p>
+                    </div>
+
+                    <form method="post" action="options.php" id="wpca-settings-form">
+                        <input type="hidden" name="option_page" value="wp-clean-admin" />
+                        <input type="hidden" name="_wpnonce" value="wpca_demo_nonce" />
+                        <input type="hidden" name="_wp_http_referer" value="/wp-admin/options-general.php?page=wp-clean-admin" />
+
+                        <div class="wpca-settings-tabs">
+                            <div class="wpca-tabs-nav" role="tablist" aria-label="设置分组">
+                                <button type="button" class="wpca-tab-button is-active" role="tab" aria-selected="true" data-tab="general">
+                                    <svg class="wpca-tab-ico"><use href="#i-settings"/></svg>常规
+                                </button>
+                                <button type="button" class="wpca-tab-button" role="tab" aria-selected="false" data-tab="cleanup">
+                                    <svg class="wpca-tab-ico"><use href="#i-tools"/></svg>清理
+                                </button>
+                                <button type="button" class="wpca-tab-button" role="tab" aria-selected="false" data-tab="performance">
+                                    <svg class="wpca-tab-ico"><use href="#i-dashboard"/></svg>性能
+                                </button>
+                                <button type="button" class="wpca-tab-button" role="tab" aria-selected="false" data-tab="security">
+                                    <svg class="wpca-tab-ico"><use href="#i-wp"/></svg>安全
+                                </button>
+                                <button type="button" class="wpca-tab-button" role="tab" aria-selected="false" data-tab="diagnostics">
+                                    <svg class="wpca-tab-ico"><use href="#i-comments"/></svg>诊断
+                                </button>
+                            </div>
+
+                            <div class="wpca-tabs-content">
+                                <!-- 常规 -->
+                                <div class="wpca-tab-content is-active" id="wpca-tab-general" role="tabpanel">
+                                    <h2>常规设置</h2>
+                                    <p class="wpca-section-desc">配置 WP Clean Admin 插件的基础设置。</p>
+                                    <table class="form-table" role="presentation">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_clean_admin_bar">清理管理工具条</label></th>
+                                                <td><input type="checkbox" id="wpca_clean_admin_bar" name="wpca_settings[general][clean_admin_bar]" value="1" checked />
+                                                    <label for="wpca_clean_admin_bar">移除管理工具条中不必要的项目。</label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_remove_wp_logo">移除 WordPress 标志</label></th>
+                                                <td><input type="checkbox" id="wpca_remove_wp_logo" name="wpca_settings[general][remove_wp_logo]" value="1" checked />
+                                                    <label for="wpca_remove_wp_logo">移除管理工具条上的 WordPress 标志。</label></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- 清理 -->
+                                <div class="wpca-tab-content" id="wpca-tab-cleanup" role="tabpanel" hidden>
+                                    <h2>清理设置</h2>
+                                    <p class="wpca-section-desc">配置后台菜单与仪表盘的清理方式。</p>
+                                    <table class="form-table" role="presentation">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_remove_dashboard_widgets">移除仪表盘小工具</label></th>
+                                                <td><input type="checkbox" id="wpca_remove_dashboard_widgets" name="wpca_settings[menu][remove_dashboard_widgets]" value="1" checked />
+                                                    <label for="wpca_remove_dashboard_widgets">移除不必要的仪表盘小工具。</label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_simplify_admin_menu">简化管理菜单</label></th>
+                                                <td><input type="checkbox" id="wpca_simplify_admin_menu" name="wpca_settings[menu][simplify_admin_menu]" value="1" checked />
+                                                    <label for="wpca_simplify_admin_menu">通过移除不必要的项目来简化管理菜单。</label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">菜单定制</th>
+                                                <td>
+                                                    <div class="wpca-menu-customization" id="wpca-menu-customization">
+                                                        <p>自定义管理菜单项及其顺序。</p>
+                                                        <div class="wpca-menu-items">
+                                                            <div class="wpca-menu-items-header">
+                                                                <h4>菜单项</h4>
+                                                                <div class="wpca-menu-items-actions">
+                                                                    <button type="button" class="button button-small" id="wpca-select-all-menu-items">全选</button>
+                                                                    <button type="button" class="button button-small" id="wpca-deselect-all-menu-items">取消全选</button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="wpca-menu-tree" id="wpca-menu-tree">
+                                                                <div class="wpca-menu-item wpca-menu-item-level-1">
+                                                                    <div class="wpca-menu-item-header">
+                                                                        <input type="checkbox" checked />
+                                                                        <label>仪表盘</label>
+                                                                        <span class="wpca-menu-item-slug">index.php</span>
+                                                                        <span class="wpca-menu-item-toggle">▼</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="wpca-menu-item wpca-menu-item-level-1">
+                                                                    <div class="wpca-menu-item-header">
+                                                                        <input type="checkbox" checked />
+                                                                        <label>文章</label>
+                                                                        <span class="wpca-menu-item-slug">edit.php</span>
+                                                                        <span class="wpca-menu-item-toggle">▼</span>
+                                                                    </div>
+                                                                    <div class="wpca-submenu-items">
+                                                                        <div class="wpca-menu-item wpca-menu-item-level-2"><input type="checkbox" checked /><label>全部文章</label><span class="wpca-menu-item-slug">edit.php</span></div>
+                                                                        <div class="wpca-menu-item wpca-menu-item-level-2"><input type="checkbox" checked /><label>写文章</label><span class="wpca-menu-item-slug">post-new.php</span></div>
+                                                                        <div class="wpca-menu-item wpca-menu-item-level-2"><input type="checkbox" checked /><label>分类目录</label><span class="wpca-menu-item-slug">edit-tags.php?taxonomy=category</span></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="wpca-menu-item wpca-menu-item-level-1">
+                                                                    <div class="wpca-menu-item-header">
+                                                                        <input type="checkbox" checked />
+                                                                        <label>设置</label>
+                                                                        <span class="wpca-menu-item-slug">options-general.php</span>
+                                                                        <span class="wpca-menu-item-toggle">▼</span>
+                                                                    </div>
+                                                                    <div class="wpca-submenu-items">
+                                                                        <div class="wpca-menu-item wpca-menu-item-level-2"><input type="checkbox" checked /><label>常规</label><span class="wpca-menu-item-slug">options-general.php</span></div>
+                                                                        <div class="wpca-menu-item wpca-menu-item-level-2"><input type="checkbox" checked /><label>Clean Admin</label><span class="wpca-menu-item-slug">options-general.php?page=wp-clean-admin</span></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="wpca-menu-item wpca-menu-item-level-1">
+                                                                    <div class="wpca-menu-item-header">
+                                                                        <input type="checkbox" checked />
+                                                                        <label>插件</label>
+                                                                        <span class="wpca-menu-item-slug">plugins.php</span>
+                                                                        <span class="wpca-menu-item-toggle">▼</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="wpca-menu-order">
+                                                            <div class="wpca-menu-order-header">
+                                                                <h4>菜单顺序</h4>
+                                                                <div class="wpca-menu-order-actions">
+                                                                    <button type="button" class="button button-small" id="wpca-reset-menu-order">恢复默认顺序</button>
+                                                                </div>
+                                                            </div>
+                                                            <p>拖拽以重新排序菜单项：</p>
+                                                            <div class="wpca-menu-order-list" id="wpca-menu-order-list">
+                                                                <div class="wpca-menu-order-item" data-menu-slug="index.php"><span class="wpca-menu-order-handle">⠿</span><span class="wpca-menu-order-title">仪表盘</span></div>
+                                                                <div class="wpca-menu-order-item" data-menu-slug="edit.php"><span class="wpca-menu-order-handle">⠿</span><span class="wpca-menu-order-title">文章</span></div>
+                                                                <div class="wpca-menu-order-item" data-menu-slug="options-general.php"><span class="wpca-menu-order-handle">⠿</span><span class="wpca-menu-order-title">设置</span></div>
+                                                                <div class="wpca-menu-order-item" data-menu-slug="plugins.php"><span class="wpca-menu-order-handle">⠿</span><span class="wpca-menu-order-title">插件</span></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- 性能 -->
+                                <div class="wpca-tab-content" id="wpca-tab-performance" role="tabpanel" hidden>
+                                    <h2>性能设置</h2>
+                                    <p class="wpca-section-desc">配置性能优化相关设置。</p>
+                                    <table class="form-table" role="presentation">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_optimize_database">优化数据库</label></th>
+                                                <td><input type="checkbox" id="wpca_optimize_database" name="wpca_settings[performance][optimize_database]" value="1" checked />
+                                                    <label for="wpca_optimize_database">自动优化数据库表。</label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_clean_transients">清理临时数据</label></th>
+                                                <td><input type="checkbox" id="wpca_clean_transients" name="wpca_settings[performance][clean_transients]" value="1" checked />
+                                                    <label for="wpca_clean_transients">自动清理过期的临时数据（transients）。</label></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- 安全 -->
+                                <div class="wpca-tab-content" id="wpca-tab-security" role="tabpanel" hidden>
+                                    <h2>安全设置</h2>
+                                    <p class="wpca-section-desc">配置站点安全加固设置。</p>
+                                    <table class="form-table" role="presentation">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_hide_wp_version">隐藏 WordPress 版本</label></th>
+                                                <td><input type="checkbox" id="wpca_hide_wp_version" name="wpca_settings[security][hide_wp_version]" value="1" checked />
+                                                    <label for="wpca_hide_wp_version">隐藏 WordPress 版本信息。</label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_disable_xmlrpc">禁用 XML-RPC</label></th>
+                                                <td><input type="checkbox" id="wpca_disable_xmlrpc" name="wpca_settings[security][disable_xmlrpc]" value="1" checked />
+                                                    <label for="wpca_disable_xmlrpc">禁用 XML-RPC 功能。</label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_restrict_rest_api">限制 REST API</label></th>
+                                                <td><input type="checkbox" id="wpca_restrict_rest_api" name="wpca_settings[security][restrict_rest_api]" value="1" checked />
+                                                    <label for="wpca_restrict_rest_api">仅允许已登录用户访问 REST API。</label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_restrict_admin_access">限制后台访问</label></th>
+                                                <td><input type="checkbox" id="wpca_restrict_admin_access" name="wpca_settings[security][restrict_admin_access]" value="1" checked />
+                                                    <label for="wpca_restrict_admin_access">仅允许具备相应权限的用户访问后台。</label></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- 诊断 -->
+                                <div class="wpca-tab-content" id="wpca-tab-diagnostics" role="tabpanel" hidden>
+                                    <h2>诊断设置</h2>
+                                    <p class="wpca-section-desc">配置站点健康诊断相关设置。</p>
+                                    <table class="form-table" role="presentation">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_enable_diagnostics">启用诊断</label></th>
+                                                <td><input type="checkbox" id="wpca_enable_diagnostics" name="wpca_settings[diagnostics][enable_diagnostics]" value="1" checked />
+                                                    <label for="wpca_enable_diagnostics">启用站点健康诊断。</label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_auto_run_diagnostics">自动运行诊断</label></th>
+                                                <td><input type="checkbox" id="wpca_auto_run_diagnostics" name="wpca_settings[diagnostics][auto_run_diagnostics]" value="1" />
+                                                    <label for="wpca_auto_run_diagnostics">在仪表盘加载时自动运行诊断。</label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_show_warnings">显示警告</label></th>
+                                                <td><input type="checkbox" id="wpca_show_warnings" name="wpca_settings[diagnostics][show_warnings]" value="1" checked />
+                                                    <label for="wpca_show_warnings">对检测到的问题显示警告通知。</label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><label for="wpca_severity_filter">严重程度筛选</label></th>
+                                                <td>
+                                                    <select id="wpca_severity_filter" name="wpca_settings[diagnostics][severity_filter]">
+                                                        <option value="all" selected>全部严重程度</option>
+                                                        <option value="critical">仅严重</option>
+                                                        <option value="high">严重与高</option>
+                                                        <option value="medium">中及以上</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wpca-settings-submit">
+                            <button type="submit" class="button button-primary" id="wpca-save-button">保存更改</button>
+                            <span class="wpca-save-message" id="wpca-save-message" aria-live="polite"></span>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="wpfooter" role="contentinfo">
+                    <p id="footer-left" class="alignleft">感谢使用 <a href="https://wordpress.org/">WordPress</a> 创建站点。</p>
+                    <p id="footer-upgrade" class="alignright">版本 1.8.20</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
