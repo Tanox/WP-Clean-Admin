@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.10] - 2026-09-13
+
+- refactor: 拆分 Cleanup/Performance/Extension_API/Login 四个超 200 行核心类为单一职责 trait 子模块
+- 主类保留单例与公开 API 契约不变，按职责抽离数据库/媒体/评论/内容、禁用项/缓存/资源/预加载、注册/钩子/菜单/设置、CAPTCHA/两步验证/定制/限制等 trait
+- 新建 17 个 trait 子模块文件，4 个主类均降至 200 行以内
+- trait 命名采用无下划线驼峰以匹配 autoload 路径解析（如 CleanupDatabaseTasks → class-wpca-cleanup-database-tasks.php）
+
 ## [1.8.9] - 2026-09-13
 ### Fixed
 - 修复 `performance-ajax.php` 中 WP 函数调用处的双反斜杠（`\\wp_send_json_error` / `\\__` 非法语法），该错误此前被已删除的 IDE stub 声明掩盖，导致 `php -l` 解析失败
