@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.18] - 2026-09-13
+
+- refactor: 拆分 Database 核心类为 4 个职责 trait
+- 主类 420→66 行，抽离 info/backup/restore/backup-list 职责
+- 备注：发现含下划线类名（Menu_Customizer 等）autoload 不可达，详见 TASKS.md
+
 ## [1.8.17] - 2026-09-13
 
 - docs: TASKS.md 同步拆分进度（Helpers/Diagnostics/Cache 已完成）

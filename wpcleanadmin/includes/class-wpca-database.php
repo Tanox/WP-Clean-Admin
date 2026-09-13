@@ -2,8 +2,11 @@
 /**
  * WPCleanAdmin Database Class
  *
+ * Singleton entry point for database management. Information, optimization,
+ * backup, restore and backup-listing behavior is provided by the composed traits.
+ *
  * @package WPCleanAdmin
- * @version 1.8.5
+ * @version 1.8.18
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -18,14 +21,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Database class
  */
 class Database {
-    
+
+    use DatabaseInfoTasks;
+    use DatabaseBackupTasks;
+    use DatabaseRestoreTasks;
+    use DatabaseBackupListTasks;
+
     /**
      * Singleton instance
      *
      * @var Database
      */
     private static $instance = null;
-    
+
     /**
      * Get singleton instance
      *
@@ -37,14 +45,14 @@ class Database {
         }
         return self::$instance;
     }
-    
+
     /**
      * Constructor
      */
     private function __construct() {
         $this->init();
     }
-    
+
     /**
      * Initialize the database module
      */
@@ -54,366 +62,4 @@ class Database {
             \add_action( 'wpca_optimize_database', array( $this, 'optimize_database' ) );
         }
     }
-    
-    /**
-     * Get database information
-     *
-     * @return array Database information
-     */
-    public function get_database_info(): array {
-        global $wpdb;
-        
-        $info = array();
-        
-        // Get database name and version
-        $info['name'] = $wpdb->dbname;
-        $info['version'] = $wpdb->db_version();
-        
-        // Get table count
-        $info['table_count'] = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM information_schema.TABLES WHERE table_schema = %s", $wpdb->dbname ) );
-        
-        // Get database size
-        $result = $wpdb->get_row( $wpdb->prepare( "SELECT SUM(data_length + index_length) AS size FROM information_schema.TABLES WHERE table_schema = %s", $wpdb->dbname ), ARRAY_A );
-        $info['size'] = ( function_exists( 'size_format' ) ? \size_format( $result['size'], 2 ) : round( $result['size'] / 1024 / 1024, 2 ) . ' MB' );
-        
-        // Get WordPress tables
-        $info['wp_tables'] = array();
-        $tables = $wpdb->get_results( $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->prefix . '%' ), ARRAY_N );
-        
-        foreach ( $tables as $table ) {
-            $table_name = $table[0];
-            $table_info = $wpdb->get_row( $wpdb->prepare( "SELECT data_length, index_length FROM information_schema.TABLES WHERE table_schema = %s AND table_name = %s", $wpdb->dbname, $table_name ), ARRAY_A );
-            
-            $total_size = $table_info['data_length'] + $table_info['index_length'];
-            $data_size = $table_info['data_length'];
-            $index_size = $table_info['index_length'];
-            
-            $info['wp_tables'][] = array(
-                'name' => $table_name,
-                'size' => ( function_exists( 'size_format' ) ? \size_format( $total_size, 2 ) : round( $total_size / 1024 / 1024, 2 ) . ' MB' ),
-                'data_size' => ( function_exists( 'size_format' ) ? \size_format( $data_size, 2 ) : round( $data_size / 1024 / 1024, 2 ) . ' MB' ),
-                'index_size' => ( function_exists( 'size_format' ) ? \size_format( $index_size, 2 ) : round( $index_size / 1024 / 1024, 2 ) . ' MB' )
-            );
-        }
-        
-        return $info;
-    }
-    
-    /**
-     * Optimize database tables
-     *
-     * @uses $wpdb->prepare() To safely prepare SQL queries
-     * @uses $wpdb->get_results() To retrieve table list
-     * @uses $wpdb->query() To execute optimization query
-     * @uses \__() To translate strings
-     * @return array Optimization results with success status, message, and table details
-     */
-    public function optimize_database() {
-        global $wpdb;
-        
-        $results = array(
-            'success' => true,
-            'message' => \__( 'Database optimization completed successfully', WPCA_TEXT_DOMAIN ),
-            'tables' => array()
-        );
-        
-        // Get all WordPress tables
-        $tables = $wpdb->get_results( $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->prefix . '%' ), ARRAY_N );
-        
-        foreach ( $tables as $table ) {
-            $table_name = $table[0];
-            $result = $wpdb->query( $wpdb->prepare( "OPTIMIZE TABLE %s", $table_name ) );
-            
-            $results['tables'][] = array(
-                'name' => $table_name,
-                'optimized' => $result !== false
-            );
-        }
-        
-        return $results;
-    }
-    
-    /**
-     * Backup database
-     *
-     * @param array $options Backup options
-     * @return array Backup results
-     */
-    public function backup_database( $options = array() ) {
-        global $wpdb;
-        
-        $results = array(
-            'success' => false,
-            'message' => \__( 'Database backup failed', WPCA_TEXT_DOMAIN )
-        );
-        
-        // Set default options
-        $default_options = array(
-            'tables' => 'all',
-            'format' => 'sql',
-            'compress' => true
-        );
-        
-        $options = ( function_exists( '\wp_parse_args' ) ? \wp_parse_args( $options, $default_options ) : array_merge( $default_options, $options ) );
-        
-        // Create backup directory if it doesn't exist
-        $backup_dir = WPCA_PLUGIN_DIR . 'backups/';
-        if ( ! file_exists( $backup_dir ) ) {
-            if ( function_exists( 'wp_mkdir_p' ) ) {
-                \wp_mkdir_p( $backup_dir );
-            } else {
-                // Fallback to mkdir with recursive flag
-                mkdir( $backup_dir, 0755, true );
-            }
-        }
-        
-        // Generate backup file name
-        $backup_file = $backup_dir . 'wpca-backup-' . date( 'Y-m-d-H-i-s' ) . '.' . $options['format'];
-        
-        // Get tables to backup
-        if ( $options['tables'] === 'all' ) {
-            $tables = $wpdb->get_results( $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->prefix . '%' ), ARRAY_N );
-            $tables = array_column( $tables, 0 );
-        } else {
-            // Get all valid WordPress tables
-            $all_wp_tables = $wpdb->get_results( $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->prefix . '%' ), ARRAY_N );
-            $all_wp_tables = array_column( $all_wp_tables, 0 );
-            
-            // Filter requested tables to only include valid WordPress tables
-            $requested_tables = explode( ',', $options['tables'] );
-            $tables = array();
-            
-            foreach ( $requested_tables as $table ) {
-                $table = trim( $table );
-                // Only include valid WordPress tables to prevent SQL injection
-                if ( in_array( $table, $all_wp_tables ) ) {
-                    $tables[] = $table;
-                }
-            }
-        }
-        
-        // Start backup
-        $backup_content = "-- WordPress Database Backup\n";
-        $backup_content .= "-- Generated by WP Clean Admin on " . date( 'Y-m-d H:i:s' ) . "\n";
-        $backup_content .= "-- Database: {$wpdb->dbname}\n\n";
-        
-        // Backup each table
-        foreach ( $tables as $table ) {
-            // Table names are SQL identifiers and cannot be passed through $wpdb->prepare()
-            // (it would wrap them in quotes, breaking the query). Validate against a safe
-            // pattern and wrap with backticks instead.
-            if ( ! preg_match( '/^[A-Za-z0-9_]+$/', $table ) ) {
-                continue;
-            }
-
-            // Get table structure
-            $create_table = $wpdb->get_var( "SHOW CREATE TABLE `{$table}`" );
-            $backup_content .= "-- Table structure for table `{$table}`\n";
-            $backup_content .= "{$create_table};\n\n";
-            
-            // Get table data
-            $rows = $wpdb->get_results( "SELECT * FROM `{$table}`", ARRAY_A );
-            if ( count( $rows ) > 0 ) {
-                $backup_content .= "-- Dumping data for table `{$table}`\n";
-                $backup_content .= "INSERT INTO `{$table}` VALUES\n";
-                
-                $values = array();
-                foreach ( $rows as $row ) {
-                    $row_values = array();
-                    foreach ( $row as $value ) {
-                        $row_values[] = $wpdb->prepare( '%s', $value );
-                    }
-                    $values[] = "(" . implode( ',', $row_values ) . ")";
-                }
-                
-                $backup_content .= implode( ",\n", $values ) . ";\n\n";
-            }
-        }
-        
-        // Save backup file
-        if ( file_put_contents( $backup_file, $backup_content ) !== false ) {
-            $results['success'] = true;
-            $results['message'] = \__( 'Database backup created successfully', WPCA_TEXT_DOMAIN );
-            $results['file'] = basename( $backup_file );
-            $results['size'] = filesize( $backup_file );
-        }
-        
-        return $results;
-    }
-    
-    /**
-     * Check if a SQL query is safe to execute
-     *
-     * Only allows SELECT, INSERT, UPDATE with WHERE, DELETE with WHERE,
-     * OPTIMIZE TABLE, and REPAIR TABLE queries.
-     *
-     * @param string $query The SQL query to check
-     * @return bool True if the query is safe, false otherwise
-     */
-    private function is_safe_sql_query( string $query ): bool {
-        $query = trim( strtoupper( $query ) );
-        
-        // Define allowed query patterns (lowercase for matching)
-        $allowed_patterns = array(
-            '/^SELECT/',
-            '/^INSERT\s+INTO/',
-            '/^UPDATE.*WHERE/',
-            '/^DELETE\s+FROM.*WHERE/',
-            '/^OPTIMIZE\s+TABLE/',
-            '/^REPAIR\s+TABLE/',
-        );
-        
-        foreach ( $allowed_patterns as $pattern ) {
-            if ( preg_match( $pattern, $query ) ) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    /**
-     * Restore database from backup
-     *
-     * @param string $backup_file Backup file name
-     * @return array Restore results
-     */
-    public function restore_database( string $backup_file ): array {
-        global $wpdb;
-        
-        $results = array(
-            'success' => false,
-            'message' => \__( 'Database restore failed', WPCA_TEXT_DOMAIN )
-        );
-        
-        // Validate backup file name to prevent path traversal
-        $safe_filename = preg_replace( '/[^a-zA-Z0-9_\-\.]/', '', $backup_file );
-        if ( $safe_filename !== $backup_file ) {
-            $results['message'] = \__( 'Invalid backup file name', WPCA_TEXT_DOMAIN );
-            return $results;
-        }
-        
-        // Get full backup file path
-        $backup_path = WPCA_PLUGIN_DIR . 'backups/' . $backup_file;
-        
-        // Check if backup file exists
-        if ( ! file_exists( $backup_path ) ) {
-            $results['message'] = \__( 'Backup file not found', WPCA_TEXT_DOMAIN );
-            return $results;
-        }
-        
-        // Verify backup file is within expected directory
-        $real_backup_path = realpath( $backup_path );
-        $real_backups_dir = realpath( WPCA_PLUGIN_DIR . 'backups/' );
-        if ( strpos( $real_backup_path, $real_backups_dir ) !== 0 ) {
-            $results['message'] = \__( 'Invalid backup file path', WPCA_TEXT_DOMAIN );
-            return $results;
-        }
-        
-        // Read backup file content
-        $backup_content = file_get_contents( $backup_path );
-        
-        if ( $backup_content === false ) {
-            $results['message'] = \__( 'Failed to read backup file', WPCA_TEXT_DOMAIN );
-            return $results;
-        }
-        
-        // Execute SQL queries with safety checks
-        $queries = explode( ';', $backup_content );
-        $success = true;
-        $error_message = '';
-        
-        foreach ( $queries as $query ) {
-            $query = trim( $query );
-            if ( ! empty( $query ) ) {
-                // Validate query safety before execution
-                if ( ! $this->is_safe_sql_query( $query ) ) {
-                    $success = false;
-                    $error_message = \__( 'Unsafe SQL query detected', WPCA_TEXT_DOMAIN );
-                    break;
-                }
-                
-                // Execute the query
-                $result = $wpdb->query( $query );
-                if ( $result === false ) {
-                    $success = false;
-                    $error_message = \__( 'Query execution failed', WPCA_TEXT_DOMAIN );
-                    break;
-                }
-            }
-        }
-        
-        if ( $success ) {
-            $results['success'] = true;
-            $results['message'] = \__( 'Database restore completed successfully', WPCA_TEXT_DOMAIN );
-        } else {
-            $results['message'] = $error_message;
-        }
-        
-        return $results;
-    }
-    
-    /**
-     * Get database backups list
-     *
-     * @return array Database backups
-     */
-    public function get_database_backups(): array {
-        $backups = array();
-        
-        // Get backup directory
-        $backup_dir = WPCA_PLUGIN_DIR . 'backups/';
-        
-        // Check if backup directory exists
-        if ( ! file_exists( $backup_dir ) ) {
-            return $backups;
-        }
-        
-        // Get backup files
-        $files = glob( $backup_dir . '*.sql' );
-        
-        foreach ( $files as $file ) {
-            $backups[] = array(
-                'name' => basename( $file ),
-                'path' => $file,
-                'size' => filesize( $file ),
-                'modified' => filemtime( $file )
-            );
-        }
-        
-        // Sort backups by modified date (newest first)
-        usort( $backups, function( $a, $b ) {
-            return $b['modified'] - $a['modified'];
-        } );
-        
-        return $backups;
-    }
-    
-    /**
-     * Delete database backup
-     *
-     * @param string $backup_file Backup file name
-     * @return array Delete results
-     */
-    public function delete_database_backup( $backup_file ) {
-        $results = array(
-            'success' => false,
-            'message' => \__( 'Failed to delete backup file', WPCA_TEXT_DOMAIN )
-        );
-        
-        // Get full backup file path
-        $backup_path = WPCA_PLUGIN_DIR . 'backups/' . $backup_file;
-        
-        // Check if backup file exists
-        if ( file_exists( $backup_path ) ) {
-            // Delete backup file
-            if ( unlink( $backup_path ) ) {
-                $results['success'] = true;
-                $results['message'] = \__( 'Backup file deleted successfully', WPCA_TEXT_DOMAIN );
-            }
-        }
-        
-        return $results;
-    }
 }
-
