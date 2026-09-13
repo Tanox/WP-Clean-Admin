@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.13] - 2026-09-13
+
+- docs: 新增开发任务清单 TASKS.md（代码治理/功能提案/原型收尾/测试）
+- 汇总 41 个 >200 行文件拆分进度与功能增强提案 T001-T016 待办
+- 标注 helpers.php 未提交拆分改动与双体系去重决策项
+
 ## [1.8.12] - 2026-09-13
 
 - ci: 修复 phpcs 外部标准注册缺失（Universal/Modernize/NormalizedArrays sniff 报错）
