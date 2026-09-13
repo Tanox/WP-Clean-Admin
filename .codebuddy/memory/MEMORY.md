@@ -18,6 +18,7 @@
 - **本机无 PHP / Composer / gh CLI**（Windows + PowerShell 环境），PHP 语法与 PHPUnit 结果只能靠 CI 验证；PowerShell 下用 `cd E:\Github\WPCleanAdmin`（不要用 `/e/...`）。`php -l` 只看语法，语言结构误加 `\` 前缀（如 `\array(`/`\isset(`）不报错但运行期 fatal，需人工搜。
 - **判断"文件现状"须以磁盘/HEAD 为准**：`read_file`/`search_content` 可能返回过期缓存内容（1.8.20 轮次实测与 HEAD 不一致）。改用 `Get-Content <path>` 或 `git show HEAD:<path>` 复核，再决定是否改动。
 - **CI 红灯先查"本地是否已修但未推送"**：`git status -sb` 看 `ahead N`；多轮 CI 失败常是修复已提交未 push 所致（1.8.9 bootstrap、1.8.20 composer.json 均如此）。
+- **提交信息中文必须走 `-F` 文件**：本机执行命令行会经临时 `.ps1`（无 BOM）被 PowerShell 按 GBK 解析，`git commit -m "中文"` 会把中文写成乱码对象（1.8.20 轮次实测 `fcdf1de` 即是；`git log` 里同一终端下乱码版与 `-F` 版显示截然不同可判别）。改用 `write_to_file` 写 UTF-8 消息到 `.git/cb-msg.txt` + `git commit -F .git/cb-msg.txt`（`--amend` 同样用 `-F`）。
 
 ## 目录边界（2026-09-13 确认）
 - 插件运行时代码仅驻 `wpcleanadmin/`；原型 `prototype/`、文档 `docs/`、规范 `openspec/`、根级 README/CHANGELOG/AGENTS 等不放入 `wpcleanadmin/`。
