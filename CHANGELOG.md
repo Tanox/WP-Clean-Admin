@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.11] - 2026-09-13
+
+- refactor: 拆分 Settings 核心类为单一职责 trait（设置注册 / 设置页渲染）
+- 主类保留单例、初始化与子模块 require，公开方法契约不变
+- 设置页渲染含内联 CSS/JS，纯 trait 拆分后该 trait 仍 >200 行，后续抽离独立 css/js 资源可彻底达标
+
 ## [1.8.10] - 2026-09-13
 
 - refactor: 拆分 Cleanup/Performance/Extension_API/Login 四个超 200 行核心类为单一职责 trait 子模块
