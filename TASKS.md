@@ -148,6 +148,29 @@ helpers(614) cache(536) resources(356) login(324) menu-manager(283) login-two-fa
 | 1.8.14 | 08c03c2 | Helpers（613→88）拆 5 trait：Format / Env / Response / ErrorHandling / Log |
 | 1.8.15 | 0b2e65a | Diagnostics（626→68）拆 5 trait：Registration / Runner / ServerCheck / ConflictCheck / SecurityCheck |
 | 1.8.16 | ed23dc0 | Cache（536→105）拆 4 trait：Api / Memory / Database / File |
+| 1.8.18 | 52cf07a | Database（420→66）拆 4 trait：Info / Backup / Restore / BackupList |
 
 - **A-0 已完成**：helpers 的 dirty 收尾随 1.8.14 一并落地。
-- **A-1 剩余活业务类**：menu-customizer(534) / menu-manager(423) / database(420) / user-roles(417) / core-functions(371) / resources(356) / reset(323) / error-handler(321) / dashboard(282) / permissions(255) / core(236) / ajax(207) / database-ajax(240) / cleanup-ajax(237) / settings/menu-customization(337)
+- **A-1 剩余活业务类（可达）**：core-functions(371) / resources(356) / reset(323) / dashboard(282) / permissions(255) / core(236) / ajax(207) / database-ajax(240) / cleanup-ajax(237) / settings/menu-customization(337)
+- **A-1b ⚠️ 含下划线类，autoload 不可达（疑似死代码，需先决策 E-1）**：menu-customizer(534) / menu-manager(423) / user-roles(417) / error-handler(321) / extension-*（已拆但同样不可达）
+
+## 六、关键发现：autoload 与含下划线类名（2026-09-13）
+
+`includes/autoload.php:48-50`（及 `wp-clean-admin.php:51-55` 的 fallback）解析规则：
+
+1. 先 `preg_replace('/(?<!^)[A-Z]/', '-$0', $basename)` 给非首字母大写前加 `-`
+2. 再 `str_replace('_', '-', ...)` 把下划线转 `-`
+
+对含下划线的类名两步叠加会产出**双连字符**：
+
+- `Menu_Customizer` → `Menu_-Customizer` → `menu--customizer` → 查找 `class-wpca-menu--customizer.php`（实际文件是 `class-wpca-menu-customizer.php`）→ **不匹配，加载失败**
+- 同理：`Menu_Manager`、`User_Roles`、`Error_Handler`、`Extension_API`
+
+而 `core.php:142-151` 与 `modules/core/classes/class-wpca-module-loader.php` 均通过 `class_exists()` / `safe_init()` 静默加载，失败不报错。故这些类的根版大文件（534/423/417/321 行）很可能**从未被加载**（死代码）。
+
+**决策项 E-1 扩展**：需先确定
+
+- (a) 修 autoload 规则兼容下划线（如先 `str_replace('_', '-', $basename)` 再处理驼峰，避免双重插入连字符）
+- (b) 还是统一类名去下划线（重命名类 + 文件）
+
+之后才能安全决定 A-1b 是拆分、重命名还是删除。

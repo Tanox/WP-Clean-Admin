@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.8.19] - 2026-09-13
+
+- docs: TASKS.md 记录 Database 完成与 autoload 双连字符缺陷
+- 新增决策项：修复 autoload 规则或统一含下划线类名
+
 ## [1.8.18] - 2026-09-13
 
 - refactor: 拆分 Database 核心类为 4 个职责 trait
