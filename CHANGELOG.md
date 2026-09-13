@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.8.15] - 2026-09-13
+
+- refactor: 拆分 Diagnostics 核心类为 5 个职责 trait
+- 主类 626→68 行，抽离 registration/runner/server-check/conflict-check/security-check 职责
+
 ## [1.8.14] - 2026-09-13
 
 - refactor: 拆分 Helpers 核心类为 5 个职责 trait
