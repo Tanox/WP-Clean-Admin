@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.8.20] - 2026-09-13
+
+- fix(ci): 修正 phpcs 依赖包名（phpcsstandards/phpcsextra 提供 NormalizedArrays/Modernize）
+- composer.json 移除不存在的 phpcsstandards/normalizedarrays、phpcsstandards/modernize
+- CI installed_paths 修正为 wpcs/phpcsutils/phpcsextra
+
 ## [1.8.19] - 2026-09-13
 
 - docs: TASKS.md 记录 Database 完成与 autoload 双连字符缺陷

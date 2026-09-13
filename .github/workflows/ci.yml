@@ -39,7 +39,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist --no-progress
       - name: Register coding standards
         working-directory: wpcleanadmin
-        run: vendor/bin/phpcs --config-set installed_paths "$(pwd)/vendor/wp-coding-standards/wpcs,$(pwd)/vendor/phpcsstandards/phpcsutils,$(pwd)/vendor/phpcsstandards/normalizedarrays,$(pwd)/vendor/phpcsstandards/modernize"
+        run: vendor/bin/phpcs --config-set installed_paths "$(pwd)/vendor/wp-coding-standards/wpcs,$(pwd)/vendor/phpcsstandards/phpcsutils,$(pwd)/vendor/phpcsstandards/phpcsextra"
       - name: Run phpcs
         working-directory: wpcleanadmin
         run: vendor/bin/phpcs
