@@ -117,10 +117,10 @@ function wpca_emergency_deactivate() {
 
         // 如果 deactivate_plugins 函数可用，则执行停用
         if ( \function_exists( '\deactivate_plugins' ) ) {
-            \deactivate_plugins( \array( $plugin_basename ) );
+            \deactivate_plugins( array( $plugin_basename ) );
 
             // 若当前请求为激活操作，则输出停用提示并终止
-            if ( \isset( $_GET['action'] ) && $_GET['action'] === 'activate' && \function_exists( '\wp_die' ) && \function_exists( '\esc_html__' ) ) {
+            if ( isset( $_GET['action'] ) && $_GET['action'] === 'activate' && \function_exists( '\wp_die' ) && \function_exists( '\esc_html__' ) ) {
                 \wp_die(
                     \esc_html__(
                         'WP Clean Admin 插件因严重错误已被自动停用。请查看错误日志以获取更多信息。',
@@ -140,28 +140,28 @@ if ( \function_exists( '\register_activation_hook' ) ) {
     \register_activation_hook( __FILE__, function() {
         try {
             // Set default settings directly
-            $default_settings = \array(
-                'general' => \array(
+            $default_settings = array(
+                'general' => array(
                     'clean_admin_bar' => 1,
                     'clean_dashboard' => 1,
                     'remove_wp_logo' => 1,
                 ),
-                'performance' => \array(
+                'performance' => array(
                     'optimize_database' => 1,
                     'clean_transients' => 1,
                     'disable_emojis' => 1,
                 ),
-                'menu' => \array(
+                'menu' => array(
                     'remove_dashboard_widgets' => 1,
                     'simplify_admin_menu' => 1,
                 ),
-                'security' => \array(
+                'security' => array(
                     'hide_wp_version' => 1,
                     'disable_xmlrpc' => 1,
                     'restrict_rest_api' => 1,
                     'restrict_admin_access' => 1,
                 ),
-                'diagnostics' => \array(
+                'diagnostics' => array(
                     'enable_diagnostics' => 1,
                     'auto_run_diagnostics' => 0,
                     'show_warnings' => 1,
@@ -171,8 +171,8 @@ if ( \function_exists( '\register_activation_hook' ) ) {
             
             // Update settings if they don't exist
             if ( \function_exists( '\get_option' ) && \function_exists( '\update_option' ) ) {
-                $current_settings = \get_option( 'wpca_settings', \array() );
-                $current_settings = \is_array( $current_settings ) ? $current_settings : \array();
+                $current_settings = \get_option( 'wpca_settings', array() );
+                $current_settings = \is_array( $current_settings ) ? $current_settings : array();
                 $updated_settings = \array_merge( $default_settings, $current_settings );
                 \update_option( 'wpca_settings', $updated_settings );
             }
@@ -218,7 +218,7 @@ if ( \function_exists( '\register_deactivation_hook' ) ) {
  */
 function wpca_add_plugin_action_links( $links ) {
     if ( \function_exists( '\admin_url' ) && \function_exists( '\esc_url' ) && \function_exists( '\esc_html' ) && \function_exists( '\__' ) ) {
-        $settings_link = \array(
+        $settings_link = array(
             '<a href="' . \esc_url( \admin_url( 'admin.php?page=wp-clean-admin' ) ) . '">' . \esc_html( \__( 'Settings', WPCA_TEXT_DOMAIN ) ) . '</a>'
         );
         return \array_merge( $settings_link, $links );
