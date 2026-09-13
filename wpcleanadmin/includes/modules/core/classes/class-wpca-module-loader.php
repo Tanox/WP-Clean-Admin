@@ -13,6 +13,12 @@
 
 namespace WPCleanAdmin\Modules\Core\Classes;
 
+// Legacy 模块加载已废弃：旧版 WPCleanAdmin\Core 在全局命名空间下（如 WPCleanAdmin\Settings）
+// 注册了同名类，而新版模块化结构在 WPCleanAdmin\Modules\* 命名空间下。两者并存会导致
+// 同一块逻辑被实例化两次、产生重复 hook，且旧版类大部分已迁移为模块化版本的别名。
+// 新的模块化入口类 Core（WPCleanAdmin\Modules\Core\Classes\Core）已取代旧入口，
+// 因此 load_legacy_modules() 默认禁用，仅在 define('WPCA_DISABLE_LEGACY', false) 时才启用。
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -41,8 +47,17 @@ class Module_Loader {
 
     /**
      * Load legacy modules for backward compatibility
+     *
+     * 默认禁用 Legacy 模块加载。如需回滚至旧版入口，在 wp-config.php 或插件主文件中
+     * define('WPCA_DISABLE_LEGACY', false) 即可重新启用。
+     *
+     * @deprecated 1.8.9 模块化结构稳定后将移除。
      */
     public function load_legacy_modules(): void {
+        if ( defined( 'WPCA_DISABLE_LEGACY' ) && WPCA_DISABLE_LEGACY ) {
+            return;
+        }
+
         $modules = array(
             'Settings',
             'Dashboard',

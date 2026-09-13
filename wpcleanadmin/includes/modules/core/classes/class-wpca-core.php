@@ -10,13 +10,13 @@
  */
 
 namespace WPCleanAdmin\Modules\Core\Classes;
-require_once __DIR__ . '/class-wpca-security-headers.php';
-require_once __DIR__ . '/class-wpca-module-loader.php';
-require_once __DIR__ . '/class-wpca-core-settings.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+// 注：原文件在此处有 3 个 require_once（security-headers / module-loader / core-settings），
+// 已移除 —— 由 Composer / WPCA 内部 autoloader 统一处理。
 
 /**
  * Core class
@@ -90,7 +90,9 @@ class Core {
         $this->security_headers->register();
 
         // Initialize modules
-        $this->module_loader->load_legacy_modules();
+        // Legacy 加载已在 Module_Loader::load_legacy_modules() 内部通过常量守卫禁用，
+        // 这里也直接注释掉，避免无效调用开销。
+        // $this->module_loader->load_legacy_modules();
         $this->module_loader->load_modular_modules();
     }
 

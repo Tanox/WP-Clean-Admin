@@ -333,7 +333,7 @@ class Cache {
      * @return bool
      */
     private function clear_database_cache(): bool {
-        if ( ! function_exists( 'get_options' ) && ! function_exists( 'delete_option' ) ) {
+        if ( ! function_exists( 'get_option' ) && ! function_exists( 'delete_option' ) ) {
             return false;
         }
         

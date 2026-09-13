@@ -406,7 +406,7 @@ class Helpers {
             E_USER_ERROR => 'USER_ERROR',
             E_USER_WARNING => 'USER_WARNING',
             E_USER_NOTICE => 'USER_NOTICE',
-            // E_STRICT 甯搁噺宸插湪 PHP 7.4 璧疯寮冪敤锛岀Щ闄ゆ槧灏勪互閬垮厤璀﹀憡
+            // E_STRICT 常量在 PHP 7.4 起已废弃，移除以避免警告
             E_RECOVERABLE_ERROR => 'RECOVERABLE_ERROR',
             E_DEPRECATED => 'DEPRECATED',
             E_USER_DEPRECATED => 'USER_DEPRECATED',
@@ -519,13 +519,14 @@ class Helpers {
      * @return bool True if nonce is valid
      */
     public function validate_ajax_nonce( $nonce, $action = 'wpca_ajax_nonce' ) {
-        if ( function_exists( '\wp_verify_nonce' ) && ! \wp_verify_nonce( $nonce, $action ) ) {
+        if ( ! function_exists( '\wp_verify_nonce' ) || ! \wp_verify_nonce( $nonce, $action ) ) {
             $this->handle_ajax_error(
                 \__( 'Security verification failed. Please try again.', \WPCA_TEXT_DOMAIN ),
                 WPCA_Errors::ERROR_AUTH
             );
+            return false;
         }
-        
+
         return true;
     }
     

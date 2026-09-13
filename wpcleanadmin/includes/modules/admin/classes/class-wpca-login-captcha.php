@@ -62,7 +62,7 @@ class Login_Captcha {
         $code       = '';
 
         for ( $i = 0; $i < 6; $i++ ) {
-            $code .= $characters[ rand( 0, strlen( $characters ) - 1 ) ];
+            $code .= $characters[ random_int( 0, strlen( $characters ) - 1 ) ];
         }
 
         // Store in transient (wp_session doesn't exist in WordPress core)

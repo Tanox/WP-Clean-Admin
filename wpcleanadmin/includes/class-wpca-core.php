@@ -97,21 +97,19 @@ class Core {
             \header( 'Referrer-Policy: strict-origin-when-cross-origin' );
         }
         
-        // Content-Security-Policy: Restrict resource loading (basic configuration)
-        if ( ! \headers_sent() ) {
+        // Content-Security-Policy: Restrict resource loading (basic configuration, admin only)
+        if ( ! \headers_sent() && \is_admin() ) {
             \header( "Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';" );
         }
     }
     
     /**
      * Initialize all plugin modules
+     *
+     * Legacy Core 不再自动加载子模块，请使用 Modules\Core\Classes\Core
      */
     private function init_modules() {
-        // Load legacy modules for backward compatibility
-        $this->load_legacy_modules();
-        
-        // Load new modular structure
-        $this->load_modular_modules();
+        // Legacy Core 不再自动加载子模块，请使用 Modules\Core\Classes\Core
     }
     
     /**
@@ -225,7 +223,8 @@ class Core {
         
         // Update settings if they don't exist
         $current_settings = ( function_exists( 'get_option' ) ? \get_option( 'wpca_settings', array() ) : array() );
-        $updated_settings = ( function_exists( 'wp_parse_args' ) ? \wp_parse_args( $current_settings, $default_settings ) : array_merge( $default_settings, $current_settings ) );
+        // wp_parse_args( $args, $defaults )：以 defaults 为基底，$args 覆盖 defaults
+        $updated_settings = ( function_exists( 'wp_parse_args' ) ? \wp_parse_args( $current_settings, $default_settings ) : $current_settings );
         
         if ( function_exists( 'update_option' ) ) {
             \update_option( 'wpca_settings', $updated_settings );

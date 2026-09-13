@@ -113,7 +113,7 @@ class Login_TwoFactor {
         $secret = '';
 
         for ( $i = 0; $i < 16; $i++ ) {
-            $secret .= $chars[ rand( 0, strlen( $chars ) - 1 ) ];
+            $secret .= $chars[ random_int( 0, strlen( $chars ) - 1 ) ];
         }
 
         return $secret;

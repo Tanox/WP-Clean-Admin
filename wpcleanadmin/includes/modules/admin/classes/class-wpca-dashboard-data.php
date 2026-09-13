@@ -83,7 +83,7 @@ class Dashboard_Data {
         // Plugin information
         $info['plugin'] = array(
             'version' => WPCA_VERSION,
-            'active'  => ( function_exists( '\is_plugin_active' ) && function_exists( '\plugin_basename' ) && \is_plugin_active( \plugin_basename( WPCA_PLUGIN_DIR . 'wp-clean-admin.php' ) ) ) ? \__( 'Yes', WPCA_TEXT_DOMAIN ) : \__( 'Yes', WPCA_TEXT_DOMAIN ),
+            'active'  => ( function_exists( '\is_plugin_active' ) && function_exists( '\plugin_basename' ) && \is_plugin_active( \plugin_basename( WPCA_PLUGIN_DIR . 'wp-clean-admin.php' ) ) ) ? \__( 'Yes', WPCA_TEXT_DOMAIN ) : \__( 'No', WPCA_TEXT_DOMAIN ),
         );
 
         return $info;
