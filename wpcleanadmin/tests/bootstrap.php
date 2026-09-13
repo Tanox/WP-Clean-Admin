@@ -13,6 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     define( 'ABSPATH', dirname( __DIR__ ) . '/' );
 }
 
+// 定义插件核心常量（主插件文件在测试环境中不加载，故在此补齐）
+if ( ! defined( 'WPCA_TEXT_DOMAIN' ) ) {
+    define( 'WPCA_TEXT_DOMAIN', 'wp-clean-admin' );
+}
+
 // 最小 WordPress 函数 polyfill（仅覆盖测试所需，行为等价于 WP 核心）
 if ( ! function_exists( 'sanitize_text_field' ) ) {
     function sanitize_text_field( $value ) {
