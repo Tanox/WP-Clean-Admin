@@ -6,6 +6,7 @@
 - 版本号权威来源：`wpcleanadmin/wp-clean-admin.php` 的 `WPCA_VERSION` 常量（当前 **1.8.20**，2026-09-13 更新），插件头 `Version:`、README 徽章、根 `CHANGELOG.md` 须与之保持一致。
 - autoload 命名约定（1.8.10 确立）：主命名空间类/trait 文件按 `includes/class-wpca-{kebab}.php` 加载；trait 名须用**无下划线驼峰**（如 `CleanupDatabaseTasks` → `class-wpca-cleanup-database-tasks.php`），含下划线类名会被解析为双连字符路径（如 `Cleanup_Database_Tasks` → `class-wpca-cleanup--database--tasks.php`）导致 fatal。拆分核心类时主类保留单例 + `use` 业务 trait，公开方法契约不变。
 - **含下划线类名 autoload 不可达（1.8.19 发现，尚未修复）**：`includes/autoload.php:48-50` 与 `wp-clean-admin.php:51-55` 的 fallback 规则是「对非首字母大写插 `-`」+「`_`→`-`」两步，对含下划线类名叠加产出**双连字符**（`Menu_Customizer` → `menu--customizer`，实际文件 `class-wpca-menu-customizer.php`）→ 加载失败。受影响类：`Menu_Customizer`、`Menu_Manager`、`User_Roles`、`Error_Handler`、`Extension_API`（根版与 modules 版同名，均声明根命名空间）。`core.php:142` 与 `module-loader.php` 用 `class_exists`/`safe_init` 静默加载、失败不报错，故这些根版大文件（534/423/417/321 行）**疑似死代码**。**拆分这批类前必须先决策 E-1**：(a) 改 autoload 规则兼容下划线 or (b) 统一类名去下划线。**无下划线类（Database/Dashboard/Permissions/Resources/Reset/Cleanup/Cache/Helpers/Diagnostics 等）可达且活跃，可正常拆分。**
+- **2026-09-13 全量审查对上述「死代码」结论的更正**：这些 FQCN 实际由 `includes/modules/admin/classes/**` 副本成功声明（legacy 载入失败 → 无冲突 → modular 载入成功），故功能是活的，「死代码」仅指 `includes/class-wpca-menu-customizer.php` 等**根版文件本身**。同时发现更严重的反向问题：`modules/admin/classes/**` 与 `modules/utilities/classes/**` 共 35 个文件的 `namespace` 误写为根命名空间 `WPCleanAdmin`，与根版同名类 FQCN 冲突 → 运行期 `Cannot declare class` 致命错误（详见 `2026-09-13.md` 审查条目）。
 - **双体系（1.8.11 发现）**：`includes/modules/**` 是**活的平行类体系**，`autoload.php:67-82` 支持 `WPCleanAdmin\Modules\*` → `includes/modules/`。故 `includes/class-wpca-X.php`(namespace `WPCleanAdmin\X`) 与 `includes/modules/**/class-wpca-X.php`(namespace `WPCleanAdmin\Modules\...\X`) 是两套并行活类，行数常对应（helpers 614/614、cache 536/536、resources 356/356）；但 `modules/admin/classes/class-wpca-login.php` 是未拆旧 324 行副本（includes 根 Login 已拆为 116）。批量拆分须分别处理两套。
 - 渲染类 trait 因内联 CSS/JS 仍 >200（如 SettingsPageRenderTasks 421），彻底达标需抽离 `assets/css|js` 并改 enqueue，列为专项。
 - `includes/wpca-wordpress-stubs.php`(775) 是 autoload 加载的 IDE 空函数声明集，非业务逻辑，排除拆分。
@@ -13,6 +14,12 @@
 - 原型 `prototype/` 无插件版本串，无需版本同步。
 - `update_versions.php` / `update_versions.ps1` 为硬编码旧版（1.8.0→1.8.1）的过时批量工具，不宜直接运行；版本同步建议手工按文件精确替换，避免无关 diff 膨胀。
 - **phpcs/CI 标准注册（1.8.12 初修，1.8.20 更正）**：`wpcleanadmin/phpcs.xml.dist` 的 `<config name="installed_paths">` 用相对路径在 CI 中会覆盖并解析失败，导致 `Referenced sniff ... does not exist`，故已删除该配置。`.github/workflows/ci.yml` 的 phpcs job 用 `--config-set installed_paths` 注册**3 个绝对路径**：`vendor/wp-coding-standards/wpcs`（WordPress）、`vendor/phpcsstandards/phpcsutils`（Universal）、`vendor/phpcsstandards/phpcsextra`（**NormalizedArrays + Modernize**）。**重要：不存在 `phpcsstandards/normalizedarrays` / `phpcsstandards/modernize` 包（1.8.20 前 composer.json 误写导致 CI composer install 失败 exit 2），这两个标准由 `phpcsstandards/phpcsextra` 提供；且 `dealerdirect/phpcodesniffer-composer-installer` 并未列入 require-dev，故 CI 必须显式 `--config-set`。**
+
+## 运行期阻塞缺陷（2026-09-13 全量审查，静态推导，尚未实机验证）
+- **插件当前可能无法运行**：`load_legacy_modules()` 与 `load_modular_modules()` 都会载入同名类，而 `modules/admin/**`、`modules/utilities/**` 的 namespace 误写为 `WPCleanAdmin`（应与目录一致），导致 `Cannot declare class WPCleanAdmin\Dashboard` 之类致命错误（E_COMPILE_ERROR，`safe_init` 的 try/catch 无效）。修复方向：把这 35 个文件的 `namespace` 改为对应子命名空间（`WPCleanAdmin\Modules\Admin\Classes` / `...\Utilities\Classes`），或让 modular 只载入 legacy 未声明的类。
+- **第二处 fatal**：`includes/modules/utilities/classes/class-wpca-helpers.php:18` require 了不存在的 `wpca-wordpress-stubs.php`（该目录无此文件）。
+- **根本流程缺口**：CI 从不 boot 插件（php -l + 3 个不加载主文件的测试），此类致命错误无法被 CI 发现；建议给 CI 加「冒烟加载检查」。
+- **安全**：2FA 存在认证绕过（`class-wpca-login-two-factor-tasks.php:276-294`）；menu-customizer 的 4 个 `wp_ajax_` 处理器缺 nonce/权限校验。
 
 ## 环境与协作约定（2026-09-13）
 - **本机无 PHP / Composer / gh CLI**（Windows + PowerShell 环境），PHP 语法与 PHPUnit 结果只能靠 CI 验证；PowerShell 下用 `cd E:\Github\WPCleanAdmin`（不要用 `/e/...`）。`php -l` 只看语法，语言结构误加 `\` 前缀（如 `\array(`/`\isset(`）不报错但运行期 fatal，需人工搜。
