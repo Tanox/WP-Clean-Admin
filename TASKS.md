@@ -138,3 +138,16 @@ helpers(614) cache(536) resources(356) login(324) menu-manager(283) login-two-fa
 ---
 
 *本清单为过程性文档，随迭代更新；版本号变更见 `CHANGELOG.md`。*
+
+---
+
+## 五、进度更新日志
+
+| 版本 | 提交 | 内容 |
+|------|------|------|
+| 1.8.14 | 08c03c2 | Helpers（613→88）拆 5 trait：Format / Env / Response / ErrorHandling / Log |
+| 1.8.15 | 0b2e65a | Diagnostics（626→68）拆 5 trait：Registration / Runner / ServerCheck / ConflictCheck / SecurityCheck |
+| 1.8.16 | ed23dc0 | Cache（536→105）拆 4 trait：Api / Memory / Database / File |
+
+- **A-0 已完成**：helpers 的 dirty 收尾随 1.8.14 一并落地。
+- **A-1 剩余活业务类**：menu-customizer(534) / menu-manager(423) / database(420) / user-roles(417) / core-functions(371) / resources(356) / reset(323) / error-handler(321) / dashboard(282) / permissions(255) / core(236) / ajax(207) / database-ajax(240) / cleanup-ajax(237) / settings/menu-customization(337)

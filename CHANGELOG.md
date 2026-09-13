@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.8.17] - 2026-09-13
+
+- docs: TASKS.md 同步拆分进度（Helpers/Diagnostics/Cache 已完成）
+
 ## [1.8.16] - 2026-09-13
 
 - refactor: 拆分 Cache 核心类为 4 个职责 trait
