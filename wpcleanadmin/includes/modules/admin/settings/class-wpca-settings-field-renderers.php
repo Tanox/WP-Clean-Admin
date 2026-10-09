@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Settings Field Renderers
  *
  * 承载各类型设置字段的渲染方法，从 Settings_Fields 主类抽取。
  *
  * @package WPCleanAdmin\Modules\Admin\Settings
- * @version  1.8.4
+ * @version  1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

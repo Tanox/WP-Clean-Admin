@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.9.1] - 2026-10-09
+
+- fix(security): 修复 CAPTCHA 验证码绕过漏洞——未提交 wpca_captcha 字段时直接拒绝认证，改用 hash_equals 常量时间比较，校验后立即删除 transient 防重放
+- fix(security): 修复 GD 扩展缺失时 generate_captcha_image 调用未定义函数导致致命错误
+- fix(security): Permissions::filter_user_capabilities 签名补齐 $caps/$args 参数，改用 get_userdata 判断管理员身份，避免误删管理员能力导致后台无法访问
+- fix(security): wpca_load_template 的 extract() 改用 EXTR_SKIP + is_array 守卫，避免覆盖已有变量
+- fix(security): wpca_get_settings_url 改用 add_query_arg 构建查询参数，避免手工拼接 XSS 风险
+- fix(security): CAPTCHA IP 键值经 wp_unslash + sanitize_text_field 处理，避免注入
+- fix(perf): 2FA base32_decode 修复单引号转义 bug（'\r' → "\r"），原实现无法去除回车符
+- fix(arch): Module_Loader::safe_init 异常捕获从 \Exception 改为 \Throwable，覆盖 PHP 7+ Error
+- refactor: 移除 6 个模块文件中的全局 function_exists 空桩函数（死代码，ABSPATH 已定义时 WP 函数必然存在）
+- refactor: 4 个文件（settings-fields/settings-scripts/dashboard/settings）的 require_once 移到 ABSPATH 守卫之后
+- chore: 85 个 PHP 文件头部版本号同步至 1.9.0
+- style: 原型 tab button 添加语义化 id（wpca-tab-btn-*），方便调试定位
+
 ## [1.9.0] - 2026-09-13
 
 - fix(core): 修正 modules/admin/classes 与 modules/utilities/classes 共 24 个文件的命名空间（原误写为根命名空间，与根版同名类 FQCN 冲突导致 Cannot declare class 致命错误）

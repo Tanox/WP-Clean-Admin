@@ -78,11 +78,13 @@ trait LoginTwoFactorTasks {
      * @noinspection PhpUnusedPrivateMethodInspection Used by test validation script
      */
     public function create_random_secret() {
-        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-        $secret = '';
+        $chars     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+        $secret    = '';
+        $max_index = strlen( $chars ) - 1;
 
         for ( $i = 0; $i < 16; $i++ ) {
-            $secret .= $chars[rand( 0, strlen( $chars ) - 1 )];
+            // 使用密码学安全的随机数生成 2FA 密钥，避免 rand() 可预测
+            $secret .= $chars[ random_int( 0, $max_index ) ];
         }
 
         return $secret;
@@ -188,7 +190,7 @@ trait LoginTwoFactorTasks {
     private function base32_decode( $str ) {
         $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
         $str = strtoupper( $str );
-        $str = str_replace( array( ' ', '\r', '\n', '\t' ), '', $str );
+        $str = str_replace( array( ' ', "\r", "\n", "\t" ), '', $str );
 
         $length = strlen( $str );
         $result = '';

@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Core Settings
  *
  * 承载插件默认设置的合并与写入，从 Core 主类抽取。
  *
  * @package WPCleanAdmin\Modules\Core\Classes
- * @version  1.8.4
+ * @version  1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

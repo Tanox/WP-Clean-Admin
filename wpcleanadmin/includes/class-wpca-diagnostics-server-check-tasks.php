@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * Diagnostics Server Check Tasks
  *
  * Server / core environment diagnostic checks (PHP, WordPress, MySQL, memory, debug).
  *
  * @package WPCleanAdmin
- * @version 1.8.15
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.0

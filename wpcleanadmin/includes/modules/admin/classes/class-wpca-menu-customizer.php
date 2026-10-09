@@ -11,33 +11,14 @@
 
 
 namespace WPCleanAdmin\Modules\Admin\Classes;
-require_once __DIR__ . '/class-wpca-menu-customizer-options.php';
-require_once __DIR__ . '/class-wpca-menu-customizer-tree.php';
-require_once __DIR__ . '/class-wpca-menu-customizer-render.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Declare WordPress functions for IDE compatibility
-if ( ! function_exists( 'wpca_get_settings' ) ) {
-    function wpca_get_settings() {}
-}
-if ( ! function_exists( 'add_action' ) ) {
-    function add_action() {}
-}
-if ( ! function_exists( 'add_filter' ) ) {
-    function add_filter() {}
-}
-if ( ! function_exists( 'get_option' ) ) {
-    function get_option() {}
-}
-if ( ! function_exists( 'update_option' ) ) {
-    function update_option() {}
-}
-if ( ! function_exists( 'delete_option' ) ) {
-    function delete_option() {}
-}
+require_once __DIR__ . '/class-wpca-menu-customizer-options.php';
+require_once __DIR__ . '/class-wpca-menu-customizer-tree.php';
+require_once __DIR__ . '/class-wpca-menu-customizer-render.php';
 
 /**
  * Menu_Customizer class

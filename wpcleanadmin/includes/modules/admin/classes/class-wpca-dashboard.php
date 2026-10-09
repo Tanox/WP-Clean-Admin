@@ -11,11 +11,12 @@
 
 
 namespace WPCleanAdmin\Modules\Admin\Classes;
-require_once __DIR__ . '/class-wpca-dashboard-data.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+require_once __DIR__ . '/class-wpca-dashboard-data.php';
 
 /**
  * Dashboard class

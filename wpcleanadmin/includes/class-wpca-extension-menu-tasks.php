@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Extension API Menu Tasks Trait
  *
  * 扩展菜单项与设置区段/字段注册，从 class-wpca-extension-api.php 按职责抽离，公开方法契约不变。
  *
  * @package WPCleanAdmin
- * @version 1.8.10
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.10

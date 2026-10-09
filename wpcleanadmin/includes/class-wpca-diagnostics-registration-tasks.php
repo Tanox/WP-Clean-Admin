@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * Diagnostics Registration Tasks
  *
  * Registers the list of diagnostic checks for the Diagnostics class.
  *
  * @package WPCleanAdmin
- * @version 1.8.15
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.0

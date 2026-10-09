@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * Helpers Environment Tasks
  *
  * Environment and plugin-info helper methods for the Helpers class.
  *
  * @package WPCleanAdmin
- * @version 1.8.14
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  */

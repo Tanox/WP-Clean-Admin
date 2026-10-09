@@ -3,29 +3,26 @@
  * WPCleanAdmin PSR-4 Autoloader
  *
  * @package WPCleanAdmin
- * @version 1.8.5
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
  */
-// Load stubs for IDE support during development
-// These stubs are only for IDE support during development
-// They can cause conflicts with actual WordPress functions
+// Stubs 仅在非 WordPress 环境（如 CLI 运行 PHPUnit）下加载，
+// 用于让 autoloader 在缺少 WP 函数时仍能完成类文件加载。
+// 真实 WP 环境下 ABSPATH 已定义，整段逻辑被跳过，不会污染全局函数表。
 if ( ! defined( 'ABSPATH' ) ) {
-    // Load WordPress stubs for IDE support
     require_once __DIR__ . '/wpca-wordpress-stubs.php';
-    
-    // Load Composer stub for IDE support
+
     if ( file_exists( __DIR__ . '/composer-stub.php' ) ) {
         require_once __DIR__ . '/composer-stub.php';
     }
-    
-    // Load Elementor stub for IDE support
+
     if ( file_exists( __DIR__ . '/elementor-stub.php' ) ) {
         require_once __DIR__ . '/elementor-stub.php';
     }
-    
-    // Define ABSPATH constant for IDE environment to allow autoloader to continue
+
+    // 为 IDE/CLI 环境定义 ABSPATH，使后续类文件的守卫放行
     define( 'ABSPATH', dirname( dirname( __FILE__ ) ) . '/' );
 }
 

@@ -11,32 +11,12 @@
 
 
 namespace WPCleanAdmin\Modules\Admin\Classes;
-require_once __DIR__ . '/class-wpca-user-roles-data.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Declare WordPress functions and classes for IDE compatibility
-if ( ! function_exists( 'add_role' ) ) {
-    function add_role() {}
-}
-if ( ! function_exists( 'get_role' ) ) {
-    function get_role() {}
-}
-if ( ! function_exists( 'remove_role' ) ) {
-    function remove_role() {}
-}
-if ( ! function_exists( 'add_action' ) ) {
-    function add_action() {}
-}
-
-// Declare WP_Roles class for IDE compatibility
-if ( ! class_exists( 'WP_Roles' ) ) {
-    class WP_Roles {
-        public $roles = array();
-    }
-}
+require_once __DIR__ . '/class-wpca-user-roles-data.php';
 
 /**
  * User_Roles class

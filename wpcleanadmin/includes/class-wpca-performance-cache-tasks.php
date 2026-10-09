@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Performance Cache Tasks Trait
  *
  * 缓存清理与性能统计，从 class-wpca-performance.php 按职责抽离，公开方法契约不变。
  *
  * @package WPCleanAdmin
- * @version 1.8.10
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.10

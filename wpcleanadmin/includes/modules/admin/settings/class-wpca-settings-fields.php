@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Settings Fields
  *
  * @package WPCleanAdmin\Modules\Admin\Settings
- * @version 1.8.9
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -11,18 +11,12 @@
 
 
 namespace WPCleanAdmin\Modules\Admin\Settings;
-require_once __DIR__ . '/class-wpca-settings-field-renderers.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if ( ! function_exists( 'add_settings_field' ) ) {
-    function add_settings_field() {}
-}
-if ( ! function_exists( 'add_settings_section' ) ) {
-    function add_settings_section() {}
-}
+require_once __DIR__ . '/class-wpca-settings-field-renderers.php';
 
 /**
  * Settings Fields class

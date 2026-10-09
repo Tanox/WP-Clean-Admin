@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * Database Backup Tasks
  *
  * Dumps the WordPress database tables to a SQL backup file.
  *
  * @package WPCleanAdmin
- * @version 1.8.18
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

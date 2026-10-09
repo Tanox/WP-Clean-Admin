@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Permissions Class
  *
  * @package WPCleanAdmin
- * @version 1.8.5
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -79,7 +79,7 @@ class Permissions {
      * @return array Modified capabilities
      * @uses wpca_get_settings() To retrieve plugin settings
      */
-    public function filter_user_capabilities( $allcaps ) {
+    public function filter_user_capabilities( $allcaps, $caps = array(), $args = array() ) {
         // Load settings
         $settings = \wpca_get_settings();
         
@@ -102,7 +102,9 @@ class Permissions {
                 );
                 
                 // Remove restricted capabilities for non-administrators
-                if ( ! isset( $allcaps['administrator'] ) || ! $allcaps['administrator'] ) {
+                // 注意：$allcaps 中并不包含角色名，不能用于判断管理员身份，
+                // 否则会把管理员自身的能力也一并移除，导致后台无法访问。
+                if ( ! $this->is_administrator( $args ) ) {
                     foreach ( $restricted_caps as $cap ) {
                         if ( isset( $allcaps[$cap] ) ) {
                             unset( $allcaps[$cap] );
@@ -113,6 +115,35 @@ class Permissions {
         }
         
         return $allcaps;
+    }
+
+    /**
+     * Determine whether the capability check belongs to an administrator
+     *
+     * @param array $args Arguments passed to the `user_has_cap` filter ($args[0] is the user ID)
+     * @return bool True when the user has the administrator role
+     */
+    private function is_administrator( $args = array() ) {
+        $user_id = 0;
+
+        if ( is_array( $args ) && isset( $args[0] ) && is_numeric( $args[0] ) ) {
+            $user_id = (int) $args[0];
+        }
+
+        if ( $user_id <= 0 && function_exists( '\get_current_user_id' ) ) {
+            $user_id = (int) \get_current_user_id();
+        }
+
+        if ( $user_id <= 0 || ! function_exists( '\get_userdata' ) ) {
+            return false;
+        }
+
+        $user = \get_userdata( $user_id );
+        if ( ! $user || empty( $user->roles ) ) {
+            return false;
+        }
+
+        return in_array( 'administrator', (array) $user->roles, true );
     }
     
     /**
@@ -238,7 +269,7 @@ class Permissions {
             $current_page = isset( $_GET['page'] ) ? ( function_exists( 'sanitize_text_field' ) ? \sanitize_text_field( $_GET['page'] ) : $_GET['page'] ) : '';
             
             // Check if current page is restricted
-            if ( isset( $settings['permissions']['restricted_pages'] ) && in_array( $current_page, $settings['permissions']['restricted_pages'] ) ) {
+            if ( isset( $settings['permissions']['restricted_pages'] ) && in_array( $current_page, (array) $settings['permissions']['restricted_pages'], true ) ) {
                 // Check if user has access to restricted page
                 if ( ! ( function_exists( 'current_user_can' ) && \current_user_can( 'manage_options' ) ) ) {
                     // Redirect to admin dashboard

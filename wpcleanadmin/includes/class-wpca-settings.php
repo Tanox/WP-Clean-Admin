@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Settings Class
  *
@@ -6,7 +6,7 @@
  * 按职责抽离至 Settings_*_Tasks trait，公开方法契约不变。
  *
  * @package WPCleanAdmin
- * @version 1.8.11
+ * @version 1.9.0
  * @update_date 2026-01-28
  * @author Tanox
  * @author URI: https://github.com/Tanox

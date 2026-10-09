@@ -11,31 +11,16 @@
 
 
 namespace WPCleanAdmin\Modules\Admin\Classes;
-require_once __DIR__ . '/class-wpca-login-captcha.php';
-require_once __DIR__ . '/class-wpca-login-two-factor.php';
-require_once __DIR__ . '/class-wpca-login-style.php';
-require_once __DIR__ . '/class-wpca-login-attempts.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Declare WordPress functions for IDE compatibility
-if ( ! function_exists( 'wpca_get_settings' ) ) {
-    function wpca_get_settings() {}
-}
-if ( ! function_exists( 'add_action' ) ) {
-    function add_action() {}
-}
-if ( ! function_exists( 'add_filter' ) ) {
-    function add_filter() {}
-}
-if ( ! function_exists( 'set_transient' ) ) {
-    function set_transient() {}
-}
-if ( ! function_exists( 'get_transient' ) ) {
-    function get_transient() {}
-}
+// 依赖的子类文件——放在 ABSPATH 守卫之后，避免在非 WP 环境（如 CLI）下意外加载
+require_once __DIR__ . '/class-wpca-login-captcha.php';
+require_once __DIR__ . '/class-wpca-login-two-factor.php';
+require_once __DIR__ . '/class-wpca-login-style.php';
+require_once __DIR__ . '/class-wpca-login-attempts.php';
 
 /**
  * Login class

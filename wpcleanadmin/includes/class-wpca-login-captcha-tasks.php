@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Login CAPTCHA Tasks Trait
  *
  * 登录 CAPTCHA 生成、渲染与校验，从 class-wpca-login.php 按职责抽离，公开方法契约不变。
  *
  * @package WPCleanAdmin
- * @version 1.8.10
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.10
@@ -46,15 +46,17 @@ trait LoginCaptchaTasks {
     private function generate_captcha() {
         // Generate random code
         $characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-        $code = '';
+        $code       = '';
+        $max_index  = strlen( $characters ) - 1;
 
         for ( $i = 0; $i < 6; $i++ ) {
-            $code .= $characters[rand( 0, strlen( $characters ) - 1 )];
+            // 使用密码学安全的随机数生成验证码，避免 rand() 可预测导致验证码被破解
+            $code .= $characters[ random_int( 0, $max_index ) ];
         }
 
         // Store in transient (wp_session doesn't exist in WordPress core)
-        if ( function_exists( '\set_transient' ) && isset( $_SERVER['REMOTE_ADDR'] ) ) {
-            $user_ip = $_SERVER['REMOTE_ADDR'];
+        $user_ip = $this->get_captcha_user_key();
+        if ( function_exists( '\set_transient' ) && '' !== $user_ip ) {
             \set_transient( 'wpca_captcha_' . $user_ip, $code, 300 ); // 5 minutes
         }
 
@@ -62,9 +64,32 @@ trait LoginCaptchaTasks {
     }
 
     /**
+     * Get a sanitized per-visitor key used to store the CAPTCHA code
+     *
+     * @return string Visitor key, or empty string when unavailable
+     */
+    private function get_captcha_user_key() {
+        if ( ! isset( $_SERVER['REMOTE_ADDR'] ) ) {
+            return '';
+        }
+
+        $raw = function_exists( '\wp_unslash' ) ? \wp_unslash( $_SERVER['REMOTE_ADDR'] ) : $_SERVER['REMOTE_ADDR'];
+
+        return function_exists( '\sanitize_text_field' ) ? \sanitize_text_field( $raw ) : $raw;
+    }
+
+    /**
      * Generate CAPTCHA image
      */
     public function generate_captcha_image() {
+        // GD 扩展缺失时直接返回 500，避免调用未定义函数导致致命错误
+        if ( ! function_exists( 'imagecreatetruecolor' ) ) {
+            if ( function_exists( '\status_header' ) ) {
+                \status_header( 500 );
+            }
+            exit;
+        }
+
         // Generate CAPTCHA code
         $code = $this->generate_captcha();
 
@@ -145,23 +170,36 @@ trait LoginCaptchaTasks {
             return $user;
         }
 
-        // Check if CAPTCHA is submitted
-        if ( isset( $_POST['wpca_captcha'] ) ) {
-            $submitted_code = function_exists( '\sanitize_text_field' ) ? \sanitize_text_field( $_POST['wpca_captcha'] ) : $_POST['wpca_captcha'];
+        // 该过滤器仅在验证码启用时注册，因此此处必须校验验证码：
+        // 若请求未携带 wpca_captcha 字段，直接拒绝，避免“不提交字段即绕过验证码”。
+        if ( ! isset( $_POST['wpca_captcha'] ) ) {
+            return new \WP_Error( 'invalid_captcha', \__( 'Invalid CAPTCHA code. Please try again.', \WPCA_TEXT_DOMAIN ) );
+        }
 
-            // Get stored CAPTCHA code
-            $stored_code = '';
+        $raw_code       = function_exists( '\wp_unslash' ) ? \wp_unslash( $_POST['wpca_captcha'] ) : $_POST['wpca_captcha'];
+        $submitted_code = function_exists( '\sanitize_text_field' ) ? \sanitize_text_field( $raw_code ) : $raw_code;
 
-            // Use transient for storage (wp_session doesn't exist in WordPress core)
-            if ( function_exists( '\get_transient' ) && isset( $_SERVER['REMOTE_ADDR'] ) ) {
-                $user_ip = $_SERVER['REMOTE_ADDR'];
-                $stored_code = \get_transient( 'wpca_captcha_' . $user_ip );
-            }
+        // Get stored CAPTCHA code
+        $stored_code = '';
+        $user_ip     = $this->get_captcha_user_key();
 
-            // Verify CAPTCHA code
-            if ( empty( $submitted_code ) || strtoupper( $submitted_code ) !== strtoupper( $stored_code ) ) {
-                return new \WP_Error( 'invalid_captcha', \__( 'Invalid CAPTCHA code. Please try again.', \WPCA_TEXT_DOMAIN ) );
-            }
+        // Use transient for storage (wp_session doesn't exist in WordPress core)
+        if ( function_exists( '\get_transient' ) && '' !== $user_ip ) {
+            $stored_code = \get_transient( 'wpca_captcha_' . $user_ip );
+        }
+
+        // Verify CAPTCHA code with a constant-time comparison
+        if (
+            '' === (string) $submitted_code
+            || '' === (string) $stored_code
+            || ! hash_equals( strtoupper( (string) $stored_code ), strtoupper( (string) $submitted_code ) )
+        ) {
+            return new \WP_Error( 'invalid_captcha', \__( 'Invalid CAPTCHA code. Please try again.', \WPCA_TEXT_DOMAIN ) );
+        }
+
+        // 校验通过后立即失效，防止同一验证码被重放
+        if ( function_exists( '\delete_transient' ) && '' !== $user_ip ) {
+            \delete_transient( 'wpca_captcha_' . $user_ip );
         }
 
         return $user;

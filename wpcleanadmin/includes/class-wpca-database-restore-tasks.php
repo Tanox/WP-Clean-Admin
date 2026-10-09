@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * Database Restore Tasks
  *
  * Restores the database from a SQL backup file with query-safety validation.
  *
  * @package WPCleanAdmin
- * @version 1.8.18
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

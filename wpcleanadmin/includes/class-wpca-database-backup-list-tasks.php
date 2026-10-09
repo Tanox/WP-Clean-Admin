@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * Database Backup List Tasks
  *
  * Lists and deletes database backup files.
  *
  * @package WPCleanAdmin
- * @version 1.8.18
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

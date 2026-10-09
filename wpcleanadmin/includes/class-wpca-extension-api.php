@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Extension API Class
  *
@@ -6,7 +6,7 @@
  * 具体能力按职责拆入 Extension_*_Tasks trait（注册/钩子/菜单/设置），公开方法契约不变。
  *
  * @package WPCleanAdmin
- * @version 1.8.10
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.0

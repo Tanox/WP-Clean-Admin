@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Diagnostics Class
  *
@@ -7,7 +7,7 @@
  * provided by the traits composed below.
  *
  * @package WPCleanAdmin
- * @version 1.8.15
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.0

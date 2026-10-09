@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Login Class
  *
@@ -6,7 +6,7 @@
  * 拆入 Login_*_Tasks trait（CAPTCHA / 两步验证 / 登录页定制 / 登录限制），公开方法契约不变。
  *
  * @package WPCleanAdmin
- * @version 1.8.10
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

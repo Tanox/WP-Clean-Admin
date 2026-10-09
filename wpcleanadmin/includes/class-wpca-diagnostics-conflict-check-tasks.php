@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * Diagnostics Conflict Check Tasks
  *
  * Compatibility / conflict diagnostic checks (plugins, theme, cache, REST API).
  *
  * @package WPCleanAdmin
- * @version 1.8.15
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.0

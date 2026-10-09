@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Settings Scripts Class
  *
  * @package WPCleanAdmin
- * @version 1.8.5
+ * @version 1.9.0
  * @update_date 2026-01-28
  * @author Tanox
  * @author URI: https://github.com/Tanox

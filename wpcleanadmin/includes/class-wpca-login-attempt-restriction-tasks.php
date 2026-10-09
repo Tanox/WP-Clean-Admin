@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Login Attempt Restriction Tasks Trait
  *
  * 登录失败次数限制与锁定，从 class-wpca-login.php 按职责抽离，公开方法契约不变。
  *
  * @package WPCleanAdmin
- * @version 1.8.10
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.10

@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * Helpers Log Tasks
  *
  * Logging and log-management helper methods.
  *
  * @package WPCleanAdmin
- * @version 1.8.14
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  */

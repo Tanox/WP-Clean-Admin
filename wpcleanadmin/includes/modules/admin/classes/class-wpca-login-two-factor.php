@@ -13,33 +13,12 @@
 
 
 namespace WPCleanAdmin\Modules\Admin\Classes;
-require_once __DIR__ . '/class-wpca-login-totp.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if ( ! function_exists( 'update_user_meta' ) ) {
-    function update_user_meta() {}
-}
-if ( ! function_exists( 'get_user_meta' ) ) {
-    function get_user_meta() {}
-}
-if ( ! function_exists( 'get_userdata' ) ) {
-    function get_userdata() {}
-}
-if ( ! function_exists( 'wp_verify_nonce' ) ) {
-    function wp_verify_nonce() {}
-}
-if ( ! function_exists( 'wp_login_url' ) ) {
-    function wp_login_url() {}
-}
-if ( ! function_exists( 'add_action' ) ) {
-    function add_action() {}
-}
-if ( ! function_exists( 'add_filter' ) ) {
-    function add_filter() {}
-}
+require_once __DIR__ . '/class-wpca-login-totp.php';
 
 /**
  * 双因素认证类

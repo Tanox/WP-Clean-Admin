@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * Diagnostics Runner Tasks
  *
  * Runs all or a single diagnostic check and aggregates results.
  *
  * @package WPCleanAdmin
- * @version 1.8.15
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.0

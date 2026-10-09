@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Settings Styles
  *
  * 承载设置页面内联样式（CSS），从 Settings_Scripts 主类抽取。
  *
  * @package WPCleanAdmin\Modules\Admin\Settings
- * @version  1.8.4
+ * @version  1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

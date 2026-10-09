@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Module Loader
  *
  * 承载各模块的加载顺序与实例化逻辑，从 Core 主类抽取。
  *
  * @package WPCleanAdmin\Modules\Core\Classes
- * @version  1.8.4
+ * @version  1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -38,7 +38,8 @@ class Module_Loader {
             if ( class_exists( $class_name ) && method_exists( $class_name, 'getInstance' ) ) {
                 $class_name::getInstance();
             }
-        } catch ( \Exception $e ) {
+        } catch ( \Throwable $e ) {
+            // 捕获 Throwable 而非 Exception，以同时处理 PHP 7+ 的 Error（如类型错误、未定义方法）
             if ( function_exists( 'error_log' ) ) {
                 \error_log( 'WPCA Module Init Error (' . $class_name . '): ' . $e->getMessage() );
             }

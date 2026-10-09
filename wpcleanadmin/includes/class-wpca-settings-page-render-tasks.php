@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Settings Page Render Tasks Trait
  *
@@ -11,7 +11,7 @@
  * 并改 enqueue 加载，方可彻底达标。
  *
  * @package WPCleanAdmin
- * @version 1.8.11
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.8.11

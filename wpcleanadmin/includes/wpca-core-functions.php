@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 /**
  * WPCleanAdmin Core Functions
  *
  * @package WPCleanAdmin
- * @version 1.8.5
+ * @version 1.9.0
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -195,9 +195,13 @@ function wpca_get_template_path( $template_name ) {
  */
 function wpca_load_template( $template_name, $args = array() ) {
     $template_path = wpca_get_template_path( $template_name );
-    
+
     if ( file_exists( $template_path ) ) {
-        extract( $args );
+        // EXTR_SKIP 避免覆盖已存在的变量（如 $template_name、$template_path），
+        // 同时 $args 必须是数组——非数组直接跳过，防止 extract() 触发警告。
+        if ( is_array( $args ) ) {
+            extract( $args, EXTR_SKIP );
+        }
         include $template_path;
     }
 }
@@ -295,11 +299,16 @@ function wpca_get_current_tab( $default = 'dashboard' ) {
  */
 function wpca_get_settings_url( $tab = '' ) {
     $url = function_exists( 'admin_url' ) ? \admin_url( 'admin.php?page=wp-clean-admin' ) : '';
-    
+
     if ( ! empty( $tab ) ) {
-        $url .= '&tab=' . $tab;
+        // 使用 add_query_arg 构建查询参数，避免手工拼接导致的 XSS / 重复转义问题
+        if ( function_exists( 'add_query_arg' ) ) {
+            $url = \add_query_arg( 'tab', $tab, $url );
+        } else {
+            $url .= '&tab=' . rawurlencode( $tab );
+        }
     }
-    
+
     return $url;
 }
 
