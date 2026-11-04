@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.9.7] - 2026-11-04
+
+- refactor: 拆分超 200 行源文件——`AJAX\Cleanup` 抽离 `CleanupAjaxDatabaseMediaTasks`/`CleanupAjaxCommentsContentTasks`/`CleanupAjaxStatsTasks` 三个 trait（数据库/媒体、评论/内容、统计查询），主类由 237→38 行，并将内联 nonce/权限校验收敛为统一的 `verify_cleanup_request()` 私有方法（公开 API 与返回行为保持不变）
+- chore: 版本号统一至 1.9.7（插件头 `Version`、常量 `WPCA_VERSION`、README 标注、本批改动文件头注释）
+
 ## [1.9.6] - 2026-11-04
 
 - refactor: 拆分超 200 行源文件——`AJAX\Database` 抽离 `DatabaseAjaxInfoTasks`/`DatabaseAjaxBackupTasks`/`DatabaseAjaxSettingsTasks` 三个 trait（信息查询、备份恢复删除、设置保存重置），主类由 241→42 行，公开 API（全部静态方法签名）保持不变
