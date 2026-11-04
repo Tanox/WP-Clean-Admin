@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.9.5] - 2026-11-04
+
+- refactor: 拆分超 200 行源文件——`Dashboard` 抽离 `DashboardWidgetsTasks`/`DashboardStatsTasks`/`DashboardActionsTasks` 三个 trait（小工具注册与渲染、统计与系统信息、脚本注册与快捷操作），主类由 282→53 行，公开 API（单例与全部方法签名）保持不变
+- chore: 版本号统一至 1.9.5（插件头 `Version`、常量 `WPCA_VERSION`、README 标注、本批改动文件头注释）
+
 ## [1.9.4] - 2026-11-04
 
 - refactor: 拆分超 200 行源文件——`Permissions` 抽离 `PermissionsFilterTasks`/`PermissionsRestrictTasks` 两个 trait（能力过滤与特性权限判定、访问限制与用户权限查询），主类由 286→56 行，公开 API（单例与全部方法签名）保持不变
