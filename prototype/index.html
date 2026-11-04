@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  WP Clean Admin · 高保真原型（重构版 v1.9.2）
+  WP Clean Admin · 高保真原型（重构版 v1.9.8）
   目标：忠实还原真实 WordPress 后台「设置 → Clean Admin」页面外观与交互，
         替换旧版自定义顶栏 / 侧栏的脱离实现。
   结构：prototype/index.html + wpca-admin.css（WP 后台外壳）+ wpca-components.css（插件组件）+ app.js
@@ -98,7 +98,7 @@
                         <input type="hidden" name="_wpnonce" value="wpca_demo_nonce" />
                         <input type="hidden" name="_wp_http_referer" value="/wp-admin/options-general.php?page=wp-clean-admin" />
 
-                        <div class="wpca-settings-tabs">
+                        <div class="wpca-settings-tabs" id="wpca-settings-tabs">
                             <div class="wpca-tabs-nav" role="tablist" aria-label="设置分组" id="wpca-tabs-nav">
                                 <button type="button" id="wpca-tab-btn-general" class="wpca-tab-button is-active" role="tab" aria-selected="true" data-tab="general">
                                     <svg class="wpca-tab-ico"><use href="#i-settings"/></svg>常规
@@ -117,7 +117,7 @@
                                 </button>
                             </div>
 
-                            <div class="wpca-tabs-content">
+                            <div class="wpca-tabs-content" id="wpca-tabs-content">
                                 <!-- 常规 -->
                                 <div class="wpca-tab-content is-active" id="wpca-tab-general" role="tabpanel">
                                     <h2>常规设置</h2>
@@ -321,7 +321,7 @@
                             </div>
                         </div>
 
-                        <div class="wpca-settings-submit">
+                        <div class="wpca-settings-submit" id="wpca-settings-submit">
                             <button type="submit" class="button button-primary" id="wpca-save-button">保存更改</button>
                             <span class="wpca-save-message" id="wpca-save-message" aria-live="polite"></span>
                         </div>
@@ -330,7 +330,7 @@
 
                 <div id="wpfooter" role="contentinfo">
                     <p id="footer-left" class="alignleft">感谢使用 <a href="https://wordpress.org/">WordPress</a> 创建站点。</p>
-                    <p id="footer-upgrade" class="alignright">版本 1.9.2</p>
+                    <p id="footer-upgrade" class="alignright">版本 1.9.8</p>
                 </div>
             </div>
         </div>

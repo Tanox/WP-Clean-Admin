@@ -3,7 +3,7 @@
  * WPCleanAdmin Core Class
  *
  * @package WPCleanAdmin
- * @version 1.9.0
+ * @version 1.9.8
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -14,18 +14,25 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// 引入拆分出的核心模块 trait
+require_once __DIR__ . '/class-wpca-core-security-tasks.php';
+require_once __DIR__ . '/class-wpca-core-modules-tasks.php';
+
 /**
  * Core class
  */
 class Core {
-    
+
+    use CoreSecurityTasks;
+    use CoreModulesTasks;
+
     /**
      * Singleton instance
      *
      * @var Core
      */
     private static $instance = null;
-    
+
     /**
      * Get singleton instance
      *
@@ -37,14 +44,14 @@ class Core {
         }
         return self::$instance;
     }
-    
+
     /**
      * Constructor
      */
     private function __construct() {
         $this->init();
     }
-    
+
     /**
      * Initialize the plugin
      */
@@ -56,140 +63,27 @@ class Core {
             // Fallback if WPCA_PLUGIN_DIR not defined
             require_once dirname( __DIR__ ) . '/wpca-core-functions.php';
         }
-        
+
         // Add security headers
         $this->add_security_headers();
-        
+
         // Initialize modules
         $this->init_modules();
     }
-    
-    /**
-     * Add security HTTP headers
-     */
-    private function add_security_headers() {
-        if ( function_exists( 'add_action' ) ) {
-            \add_action( 'send_headers', array( $this, 'send_security_headers' ) );
-        }
-    }
-    
-    /**
-     * Send security HTTP headers
-     */
-    public function send_security_headers() {
-        // X-Frame-Options: Prevent clickjacking
-        if ( ! \headers_sent() ) {
-            \header( 'X-Frame-Options: SAMEORIGIN' );
-        }
-        
-        // X-XSS-Protection: Enable browser XSS filter
-        if ( ! \headers_sent() ) {
-            \header( 'X-XSS-Protection: 1; mode=block' );
-        }
-        
-        // X-Content-Type-Options: Prevent MIME type sniffing
-        if ( ! \headers_sent() ) {
-            \header( 'X-Content-Type-Options: nosniff' );
-        }
-        
-        // Referrer-Policy: Control referrer information
-        if ( ! \headers_sent() ) {
-            \header( 'Referrer-Policy: strict-origin-when-cross-origin' );
-        }
-        
-        // Content-Security-Policy: Restrict resource loading (basic configuration, admin only)
-        if ( ! \headers_sent() && \is_admin() ) {
-            \header( "Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';" );
-        }
-    }
-    
-    /**
-     * Initialize all plugin modules
-     *
-     * Legacy Core 不再自动加载子模块，请使用 Modules\Core\Classes\Core
-     */
-    private function init_modules() {
-        // Legacy Core 不再自动加载子模块，请使用 Modules\Core\Classes\Core
-    }
-    
-    /**
-     * Load legacy modules for backward compatibility
-     */
-    private function load_legacy_modules() {
-        // Module initialization order matters - load core modules first
-        $modules = array(
-            'Settings',
-            'Dashboard',
-            'Database',
-            'Performance',
-            'Menu_Manager',
-            'Menu_Customizer',
-            'Permissions',
-            'User_Roles',
-            'Login',
-            'Cleanup',
-            'Resources',
-            'Reset',
-            'AJAX',
-            'i18n',
-            'Error_Handler',
-            'Cache',
-            'Extension_API'
-        );
-        
-        foreach ( $modules as $module ) {
-            $class_name = 'WPCleanAdmin\\' . $module;
-            
-            try {
-                if ( class_exists( $class_name ) ) {
-                    // Check if getInstance method exists
-                    if ( method_exists( $class_name, 'getInstance' ) ) {
-                        $class_name::getInstance();
-                    }
-                }
-            } catch ( \Exception $e ) {
-                // Silently catch exceptions during module initialization
-                // This prevents the entire plugin from failing if one module has an issue
-                // Log error for debugging if needed
-                if ( function_exists( 'error_log' ) ) {
-                    \error_log( 'WPCA Legacy Module Init Error: ' . $e->getMessage() );
-                }
-            }
-        }
-    }
-    
-    /**
-     * Load modules from new modular structure
-     */
-    private function load_modular_modules() {
-        // Load admin settings module
-        try {
-            $class_name = 'WPCleanAdmin\\Modules\\Admin\\Settings\\Settings';
-            if ( class_exists( $class_name ) ) {
-                if ( method_exists( $class_name, 'getInstance' ) ) {
-                    $class_name::getInstance();
-                }
-            }
-        } catch ( \Exception $e ) {
-            if ( function_exists( 'error_log' ) ) {
-                \error_log( 'WPCA Modular Module Init Error: ' . $e->getMessage() );
-            }
-        }
-    }
-    
+
     /**
      * Plugin activation callback
      */
     public function activate() {
         // Set default settings
         $this->set_default_settings();
-        
+
         // Flush rewrite rules
         if ( function_exists( 'flush_rewrite_rules' ) ) {
             \flush_rewrite_rules();
         }
     }
-    
+
     /**
      * Plugin deactivation callback
      */
@@ -199,7 +93,7 @@ class Core {
             \flush_rewrite_rules();
         }
     }
-    
+
     /**
      * Set default plugin settings
      */
@@ -220,15 +114,14 @@ class Core {
                 'simplify_admin_menu' => 1,
             ),
         );
-        
+
         // Update settings if they don't exist
         $current_settings = ( function_exists( 'get_option' ) ? \get_option( 'wpca_settings', array() ) : array() );
         // wp_parse_args( $args, $defaults )：以 defaults 为基底，$args 覆盖 defaults
         $updated_settings = ( function_exists( 'wp_parse_args' ) ? \wp_parse_args( $current_settings, $default_settings ) : $current_settings );
-        
+
         if ( function_exists( 'update_option' ) ) {
             \update_option( 'wpca_settings', $updated_settings );
         }
     }
 }
-

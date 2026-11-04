@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.8] - 2026-11-04
+
+- refactor: 拆分超 200 行源文件——`Core` 抽离 `CoreSecurityTasks`/`CoreModulesTasks` 两个 trait（安全响应头、模块加载），主类由 235→102 行；`LoginCaptchaTasks` 拆为 `LoginCaptchaGenerateTasks`/`LoginCaptchaRenderVerifyTasks` 两个子 trait（原文件改为组合 trait，对外契约不变）
+- docs: 对齐规范与当前结构——`AGENTS.md` 版本号 1.9.2→1.9.8；`docs/设计规范_20260808.md` §7 映射表修正为当前 `prototype/` 布局（无 php/ui 子目录）；`prototype/index.html` 版本号对齐并补充语义化 ID（`wpca-settings-tabs`/`wpca-tabs-content`/`wpca-settings-submit`）
+- chore: 版本号统一至 1.9.8（插件头 `Version`、常量 `WPCA_VERSION`、README 标注、本批改动文件头注释）
+- 待 CI/PHP 环境验证
+
 ## [1.9.7] - 2026-11-04
 
 - refactor: 拆分超 200 行源文件——`AJAX\Cleanup` 抽离 `CleanupAjaxDatabaseMediaTasks`/`CleanupAjaxCommentsContentTasks`/`CleanupAjaxStatsTasks` 三个 trait（数据库/媒体、评论/内容、统计查询），主类由 237→38 行，并将内联 nonce/权限校验收敛为统一的 `verify_cleanup_request()` 私有方法（公开 API 与返回行为保持不变）
