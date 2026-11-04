@@ -45,8 +45,8 @@ trait SettingsPageRenderTasks {
                 ?>
 
                 <!-- Settings Tabs -->
-                <div class="wpca-settings-tabs">
-                    <div class="wpca-tabs-nav">
+                <div class="wpca-settings-tabs" id="wpca-settings-tabs">
+                    <div class="wpca-tabs-nav" id="wpca-tabs-nav">
                         <button type="button" class="wpca-tab-button active" data-tab="general">
                             <span class="dashicons dashicons-admin-generic"></span>
                             <?php echo \esc_html( \__( 'General', $text_domain ) ); ?>
@@ -69,7 +69,7 @@ trait SettingsPageRenderTasks {
                         </button>
                     </div>
 
-                    <div class="wpca-tabs-content">
+                    <div class="wpca-tabs-content" id="wpca-tabs-content">
                         <!-- General Tab -->
                         <div class="wpca-tab-content active" id="wpca-tab-general">
                             <?php

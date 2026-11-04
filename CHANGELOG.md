@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.9.2] - 2026-11-04
+
+- fix(security): 修复数据库备份删除的路径遍历漏洞——`delete_database_backup` 增加 `basename` 剔除目录成分 + `realpath` 边界校验 + `.sql` 扩展名白名单，杜绝 `../../` 任意文件删除（与 `restore_database` 防护对齐）
+- fix(security): 文件缓存读写由 PHP `serialize`/`unserialize` 改为 `wp_json_encode`/`json_decode`，消除不可信缓存文件触发的对象注入（POP chain）风险；旧序列化格式文件在读取/清理时安全丢弃
+- fix(security): 性能/数据库/菜单项/菜单定制等 AJAX 设置保存路径复用 `Settings::sanitize_settings` 递归消毒，修复仅 `wp_unslash` 导致的选项污染与存储型 XSS（含管理栏标题）
+- fix(security): 模块化 `Menu_Customizer::ajax_save_settings` 保存前递归消毒，修复管理栏节点 title 存储型 XSS
+- fix(perf): 缓存清理对旧格式（PHP 序列化）文件显式删除，避免无效文件堆积
+- refactor: 拆分超 200 行源文件——`Error_Handler` 抽离 `ErrorHandlerHandlersTasks`/`ErrorHandlerLoggingTasks` 两个 trait；`Reset` 抽离 `ResetOperationsTasks` trait，公开 API 保持不变
+- chore: 修正插件头 `Version: 1.9.0` 与常量 `WPCA_VERSION` 不一致（统一为 1.9.2）；本次改动文件头注释版本号同步至 1.9.2
+- docs: 原型页脚与 README 版本标注同步至 1.9.2
+
 ## [1.9.1] - 2026-10-09
 
 - fix(security): 修复 CAPTCHA 验证码绕过漏洞——未提交 wpca_captcha 字段时直接拒绝认证，改用 hash_equals 常量时间比较，校验后立即删除 transient 防重放
