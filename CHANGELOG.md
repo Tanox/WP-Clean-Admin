@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.9.4] - 2026-11-04
+
+- refactor: 拆分超 200 行源文件——`Permissions` 抽离 `PermissionsFilterTasks`/`PermissionsRestrictTasks` 两个 trait（能力过滤与特性权限判定、访问限制与用户权限查询），主类由 286→56 行，公开 API（单例与全部方法签名）保持不变
+- chore: 版本号统一至 1.9.4（插件头 `Version`、常量 `WPCA_VERSION`、README 标注、本批改动文件头注释）
+
 ## [1.9.3] - 2026-11-04
 
 - refactor: 拆分超 200 行源文件——`Resources` 抽离 `ResourcesOptimizationTasks`/`ResourcesStatsTasks`/`ResourcesOperationsTasks` 三个 trait（前端/后台资源优化、资源统计明细、资源通用操作），主类由 356→36 行，公开 API（单例与全部方法签名）保持不变
