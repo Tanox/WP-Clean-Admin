@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.10] - 2026-11-04
+
+- refactor: 拆分超 200 行源文件——`wpca-core-functions.php` 由单一 380 行函数库按职责拆为四组子文件：`wpca-core-settings-functions.php`（选项读取/写入/递归消毒）、`wpca-core-path-functions.php`（路径、URL 与模板加载）、`wpca-core-admin-functions.php`（后台上下文、提示输出与页面标题）、`wpca-core-util-functions.php`（版本、调试与日志），主文件仅保留 ABSPATH 守卫与引入语句，23 个全局函数的公开 API 与调用方式完全不变
+- refactor: 修复 `MenuManagerRestrictionsTasks`（204 行）拆分后仍超限问题，将「基于角色的菜单限制」抽离为 `MenuManagerRoleRestrictionsTasks`，原 trait 保留菜单简化与排序（降至 ~145 行）
+- chore: 版本号统一至 1.9.10（插件头 `Version`、常量 `WPCA_VERSION`、`README.md`/`README.en.md`/`AGENTS.md`/原型版本标注、本批改动文件头注释）
+- 待 CI/PHP 环境验证
+
 ## [1.9.9] - 2026-11-04
 
 - refactor: 拆分超 200 行源文件——`Menu_Manager` 抽离 `MenuManagerDisplayTasks`（仪表盘小部件、管理栏清理）与 `MenuManagerRestrictionsTasks`（菜单简化、排序、基于角色的限制）两个 trait，主类由 418→138 行；`User_Roles` 抽离 `UserRoleDefaultCapabilitiesTasks`（内置角色默认能力数据表）与 `UserRoleManagementTasks`（角色增删/复制/能力调整）两个 trait，主类由 411→109 行；`Menu_Customizer` 抽离 `MenuCustomizerApplyTasks`/`MenuCustomizerGroupsTasks`/`MenuCustomizerStructureTasks` 三个 trait，主类由 528→100 行；对外公开 API（类名、方法签名）均不变

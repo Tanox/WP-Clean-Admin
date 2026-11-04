@@ -149,9 +149,18 @@ helpers(614) cache(536) resources(356) login(324) menu-manager(283) login-two-fa
 | 1.8.15 | 0b2e65a | Diagnostics（626→68）拆 5 trait：Registration / Runner / ServerCheck / ConflictCheck / SecurityCheck |
 | 1.8.16 | ed23dc0 | Cache（536→105）拆 4 trait：Api / Memory / Database / File |
 | 1.8.18 | 52cf07a | Database（420→66）拆 4 trait：Info / Backup / Restore / BackupList |
+| 1.9.2 | 5a94990 | Error_Handler / Reset 拆分；缓存与备份安全修复 |
+| 1.9.3 | b91d669 | Resources（356→36）拆 3 trait |
+| 1.9.4 | 6e3810a | Permissions（286→56）拆 2 trait |
+| 1.9.5 | cc3c4c8 | Dashboard（282→53）拆 3 trait |
+| 1.9.6 | fcd44d6 | AJAX\Database（241→42）拆 3 trait |
+| 1.9.7 | c8a1066 | AJAX\Cleanup（237→38）与 Install 各拆 3 trait |
+| 1.9.8 | 7a4d95b | Core（235→102）与 LoginCaptchaTasks 各拆 2 trait |
+| 1.9.9 | f664ee3 | Menu_Manager / User_Roles / Menu_Customizer 拆为 trait |
+| 1.9.10 | 本次 | core-functions（380→14）拆 4 文件；menu-manager 角色限制再抽离 |
 
 - **A-0 已完成**：helpers 的 dirty 收尾随 1.8.14 一并落地。
-- **A-1 剩余活业务类（可达）**：core-functions(371) / resources(356) / reset(323) / dashboard(282) / permissions(255) / core(236) / ajax(207) / database-ajax(240) / cleanup-ajax(237) / settings/menu-customization(337)
+- **A-1 剩余活业务类（可达）**：仅 `settings/menu-customization.php`(337) 待处理；core-functions / resources / reset / dashboard / permissions / core / ajax / database-ajax / cleanup-ajax 与 Menu_Manager / User_Roles / Menu_Customizer 均已完成拆分（1.9.2–1.9.10）
 - **A-1b ⚠️ 含下划线类，autoload 不可达（疑似死代码，需先决策 E-1）**：menu-customizer(534) / menu-manager(423) / user-roles(417) / error-handler(321) / extension-*（已拆但同样不可达）
 
 ## 六、关键发现：autoload 与含下划线类名（2026-09-13）

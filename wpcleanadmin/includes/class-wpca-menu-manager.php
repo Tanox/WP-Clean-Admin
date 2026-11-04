@@ -3,7 +3,7 @@
  * WPCleanAdmin Menu Manager Class
  *
  * @package WPCleanAdmin
- * @version 1.9.9
+ * @version 1.9.10
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -34,6 +34,7 @@ if ( ! function_exists( 'update_option' ) ) {
 // 引入拆分出的菜单管理 trait
 require_once __DIR__ . '/class-wpca-menu-manager-display-tasks.php';
 require_once __DIR__ . '/class-wpca-menu-manager-restrictions-tasks.php';
+require_once __DIR__ . '/class-wpca-menu-manager-role-restrictions-tasks.php';
 
 /**
  * Menu_Manager class
@@ -42,6 +43,7 @@ class Menu_Manager {
 
     use MenuManagerDisplayTasks;
     use MenuManagerRestrictionsTasks;
+    use MenuManagerRoleRestrictionsTasks;
 
     /**
      * Singleton instance
