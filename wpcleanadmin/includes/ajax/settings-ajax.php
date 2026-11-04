@@ -3,7 +3,7 @@
  * WPCleanAdmin Settings AJAX Handler
  *
  * @package WPCleanAdmin
- * @version 1.9.0
+ * @version 1.9.2
  * @update_date 2026-01-30
  * @author Tanox
  * @author URI: https://github.com/Tanox
@@ -148,7 +148,7 @@ class Settings {
      * @param mixed $value 待清理的值（可为标量、数组）
      * @return mixed 清理后的值
      */
-    private static function sanitize_settings( $value ) {
+    public static function sanitize_settings( $value ) {
         if ( is_array( $value ) ) {
             $clean = array();
             foreach ( $value as $key => $item ) {

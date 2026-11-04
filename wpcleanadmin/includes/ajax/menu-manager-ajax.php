@@ -3,7 +3,7 @@
  * WPCleanAdmin Menu Manager AJAX Class
  *
  * @package WPCleanAdmin
- * @version 1.9.0
+ * @version 1.9.2
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -81,7 +81,8 @@ class Menu_Manager {
         }
         
         $menu_items = isset( $_POST['menu_items'] ) ? ( function_exists( '\wp_unslash' ) ? \wp_unslash( $_POST['menu_items'] ) : $_POST['menu_items'] ) : array();
-        
+        $menu_items = \WPCleanAdmin\AJAX\Settings::sanitize_settings( $menu_items );
+
         $menu_manager = \WPCleanAdmin\Menu_Manager::getInstance();
         $result = $menu_manager->save_menu_items( $menu_items );
         

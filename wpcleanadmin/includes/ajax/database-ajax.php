@@ -3,7 +3,7 @@
  * WPCleanAdmin Database AJAX Class
  *
  * @package WPCleanAdmin
- * @version 1.9.0
+ * @version 1.9.2
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -176,9 +176,10 @@ class Database {
         }
         
         $settings = isset( $_POST['settings'] ) ? ( function_exists( '\wp_unslash' ) ? \wp_unslash( $_POST['settings'] ) : $_POST['settings'] ) : array();
-        
+        $settings = \WPCleanAdmin\AJAX\Settings::sanitize_settings( $settings );
+
         $current_settings = function_exists( '\get_option' ) ? \get_option( 'wpca_settings', array() ) : array();
-        
+
         $current_settings['database'] = $settings;
         $result = function_exists( '\update_option' ) ? \update_option( 'wpca_settings', $current_settings ) : false;
         

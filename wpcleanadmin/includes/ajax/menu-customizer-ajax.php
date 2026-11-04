@@ -3,7 +3,7 @@
  * WPCleanAdmin Menu Customizer AJAX Class
  *
  * @package WPCleanAdmin
- * @version 1.9.0
+ * @version 1.9.2
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -64,7 +64,8 @@ class Menu_Customizer {
         }
         
         $settings = isset( $_POST['settings'] ) ? ( function_exists( '\wp_unslash' ) ? \wp_unslash( $_POST['settings'] ) : $_POST['settings'] ) : array();
-        
+        $settings = \WPCleanAdmin\AJAX\Settings::sanitize_settings( $settings );
+
         $menu_customizer = \WPCleanAdmin\Menu_Customizer::getInstance();
         $result = $menu_customizer->save_settings( $settings );
         

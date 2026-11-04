@@ -5,7 +5,7 @@
  * Lists and deletes database backup files.
  *
  * @package WPCleanAdmin
- * @version 1.9.0
+ * @version 1.9.2
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -69,16 +69,35 @@ trait DatabaseBackupListTasks {
             'message' => \__( 'Failed to delete backup file', WPCA_TEXT_DOMAIN )
         );
 
-        // Get full backup file path
-        $backup_path = WPCA_PLUGIN_DIR . 'backups/' . $backup_file;
+        // 仅取文件名，剔除目录成分，防御 ../ 路径遍历
+        $backup_file = \basename( \sanitize_text_field( (string) $backup_file ) );
+        if ( '' === $backup_file ) {
+            return $results;
+        }
 
-        // Check if backup file exists
-        if ( file_exists( $backup_path ) ) {
-            // Delete backup file
-            if ( unlink( $backup_path ) ) {
-                $results['success'] = true;
-                $results['message'] = \__( 'Backup file deleted successfully', WPCA_TEXT_DOMAIN );
-            }
+        // 拼接并校验文件真实存在
+        $backup_path = WPCA_PLUGIN_DIR . 'backups/' . $backup_file;
+        if ( ! \file_exists( $backup_path ) ) {
+            return $results;
+        }
+
+        // 校验真实路径必须落在备份目录内，且扩展名为 .sql
+        $backup_dir = \realpath( WPCA_PLUGIN_DIR . 'backups/' );
+        $real_path  = \realpath( $backup_path );
+        if (
+            false === $real_path
+            || false === $backup_dir
+            || 0 !== \strpos( $real_path, $backup_dir . \DIRECTORY_SEPARATOR )
+            || '.sql' !== \strtolower( \substr( $real_path, -4 ) )
+        ) {
+            $results['message'] = \__( 'Invalid backup file path', WPCA_TEXT_DOMAIN );
+            return $results;
+        }
+
+        // Delete backup file
+        if ( \unlink( $real_path ) ) {
+            $results['success'] = true;
+            $results['message'] = \__( 'Backup file deleted successfully', WPCA_TEXT_DOMAIN );
         }
 
         return $results;

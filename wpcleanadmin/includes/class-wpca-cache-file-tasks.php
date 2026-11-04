@@ -5,7 +5,7 @@
  * File cache backend, cache-directory resolution and expired-cache cleanup.
  *
  * @package WPCleanAdmin
- * @version 1.9.0
+ * @version 1.9.2
  * @author Tanox
  * @since 1.8.0
  */
@@ -32,7 +32,13 @@ trait CacheFileTasks {
 
         if ( \file_exists( $cache_file ) ) {
             $cache_data = \file_get_contents( $cache_file );
-            $cache = \unserialize( $cache_data );
+            $cache = \json_decode( $cache_data, true );
+
+            // 旧格式（PHP 序列化）或非数组数据视为无效，安全丢弃
+            if ( ! \is_array( $cache ) ) {
+                \unlink( $cache_file );
+                return $default;
+            }
 
             // Check if cache has expired
             if ( isset( $cache['expiration'] ) && $cache['expiration'] < \time() ) {
@@ -69,7 +75,7 @@ trait CacheFileTasks {
             'created_at' => \time()
         );
 
-        return \file_put_contents( $cache_file, \serialize( $cache ) ) !== false;
+        return \file_put_contents( $cache_file, \wp_json_encode( $cache ) ) !== false;
     }
 
     /**
@@ -160,7 +166,13 @@ trait CacheFileTasks {
             foreach ( $files as $file ) {
                 if ( \is_file( $file ) ) {
                     $cache_data = \file_get_contents( $file );
-                    $cache = \unserialize( $cache_data );
+                    $cache = \json_decode( $cache_data, true );
+
+                    // 无效（含旧序列化格式）文件直接清理
+                    if ( ! \is_array( $cache ) ) {
+                        \unlink( $file );
+                        continue;
+                    }
 
                     if ( isset( $cache['expiration'] ) && $cache['expiration'] < \time() ) {
                         \unlink( $file );

@@ -3,7 +3,7 @@
  * WPCleanAdmin Menu Customizer Class
  *
  * @package WPCleanAdmin
- * @version 1.9.0
+ * @version 1.9.2
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -275,6 +275,7 @@ class Menu_Customizer {
         if ( ! is_array( $settings ) ) {
             $settings = array();
         }
+        $settings = \WPCleanAdmin\AJAX\Settings::sanitize_settings( $settings );
 
         if ( $this->options->save_settings( $settings ) ) {
             if ( function_exists( '\wp_send_json_success' ) ) {
