@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.9.3] - 2026-11-04
+
+- refactor: 拆分超 200 行源文件——`Resources` 抽离 `ResourcesOptimizationTasks`/`ResourcesStatsTasks`/`ResourcesOperationsTasks` 三个 trait（前端/后台资源优化、资源统计明细、资源通用操作），主类由 356→36 行，公开 API（单例与全部方法签名）保持不变
+- chore: 版本号统一至 1.9.3（插件头 `Version`、常量 `WPCA_VERSION`、README 标注、本批改动文件头注释）
+
 ## [1.9.2] - 2026-11-04
 
 - fix(security): 修复数据库备份删除的路径遍历漏洞——`delete_database_backup` 增加 `basename` 剔除目录成分 + `realpath` 边界校验 + `.sql` 扩展名白名单，杜绝 `../../` 任意文件删除（与 `restore_database` 防护对齐）
