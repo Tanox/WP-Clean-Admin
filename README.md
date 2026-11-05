@@ -1,6 +1,6 @@
 # WP Clean Admin
 
-让您的 WordPress 后台变得更简洁、更快、更安全！**版本 1.9.12**
+让您的 WordPress 后台变得更简洁、更快、更安全！**版本 1.9.13**
 
 <p align="center">
   <img src="assets/hero-banner.svg" alt="WP Clean Admin 横幅" width="100%">
