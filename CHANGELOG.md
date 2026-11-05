@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.9.12] - 2026-11-05
+
+- refactor: 解除 E-2 阻塞——将 `settings/menu-customization.php` 与 `class-wpca-settings-page-render-tasks.php` 的内联 `<style>`/`<script>` 抽离至 `assets/css|js/wpca-menu-customization.*` 与 `wpca-settings-page.*`，由 `Settings_Scripts` 在设置页统一 enqueue（`wpca-settings-page` 经 `wp_localize_script` 注入 `wpcaSettings.saveMessage` 取代原 PHP 插值）；两文件剩余 PHP 分别降至 105 / 123 行（<200）
+- chore: 版本号统一至 1.9.12（插件头 `Version`、常量 `WPCA_VERSION`、`readme.txt` Stable tag、`README.md`/`AGENTS.md`、本批改动文件头注释）
+- docs: 剩余 >200 行收敛至 10 个（`includes/modules/**` 副本，受 E-1 双体系去重决策阻塞）；E-2 关闭
+
 ## [1.9.11] - 2026-11-05
 
 - refactor: 拆分 6 个超 200 行「任务 trait」——`PerformanceResourceTasks`→`Minify`/`Combine`、`ExtensionRegistrationTasks`→`Core`/`Lifecycle`、`CleanupContentTasks`→`Posts`/`Shortcode`、`LoginTwoFactorTasks`→`Secret`/`Auth`、`SettingsRegistrationTasks`→`Sections`/`Fields`、`ResetOperationsTasks`→`Settings`/`Plugin`；原 trait 改为组合 trait（`use` 两个子 trait），6 个消费类（`class-wpca-performance/extension-api/cleanup/login/settings/reset.php`）零改动，公开 API（方法签名/单例）不变
