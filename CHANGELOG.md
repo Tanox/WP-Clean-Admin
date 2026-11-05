@@ -2,7 +2,7 @@
 
 ## [1.9.13] - 2026-11-05
 
-- chore: 归档根 `includes/` 117 个死代码文件至 `archive/legacy-includes-1.9.12/`（modules 体系为运行期唯一权威入口，旧根类零引用、`load_legacy_modules()` 已禁用；保留 9 个活根文件：autoload / wpca-core-functions(+4 个 *-functions 子库) / wpca-wordpress-stubs / ajax/settings-ajax.php（被 modules menu-customizer 真实调用）/ class-wpca-helpers.php（被测试引用））
+- chore: 归档根 `includes/` 115 个死代码文件至 `archive/legacy-includes-1.9.12/`（modules 体系为运行期唯一权威入口，旧根类零引用、`load_legacy_modules()` 已禁用；保留 9 个活根文件：autoload / wpca-core-functions(+4 个 *-functions 子库) / wpca-wordpress-stubs / ajax/settings-ajax.php（被 modules menu-customizer 真实调用）/ class-wpca-helpers.php（被测试引用））
 - chore: 同步清理 E-2 遗留的 4 个孤立资源文件（`assets/css|js/wpca-menu-customization.*`、`wpca-settings-page.*`，仅被已归档死根代码引用）
 - docs: 更正 E-2 结论——`settings/menu-customization.php` 与 `settings-page-render-tasks.php` 的内联资源抽离作用于已归档的死根代码，活设置页（`modules/admin/settings/`）仍内联输出资源；E-1 已定（modules 权威、根死代码已归档），剩余 >200 行仅 modules 10 个（A-3）
 
