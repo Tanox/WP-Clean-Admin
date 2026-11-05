@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.11] - 2026-11-05
+
+- refactor: 拆分 6 个超 200 行「任务 trait」——`PerformanceResourceTasks`→`Minify`/`Combine`、`ExtensionRegistrationTasks`→`Core`/`Lifecycle`、`CleanupContentTasks`→`Posts`/`Shortcode`、`LoginTwoFactorTasks`→`Secret`/`Auth`、`SettingsRegistrationTasks`→`Sections`/`Fields`、`ResetOperationsTasks`→`Settings`/`Plugin`；原 trait 改为组合 trait（`use` 两个子 trait），6 个消费类（`class-wpca-performance/extension-api/cleanup/login/settings/reset.php`）零改动，公开 API（方法签名/单例）不变
+- chore: 版本号统一至 1.9.11（插件头 `Version`、常量 `WPCA_VERSION`、`readme.txt` Stable tag、`README.md`/`AGENTS.md`、本批改动文件头注释）
+- docs: 任务清单由 `TASKS.md` 迁移至 `docs/tasks.md`，新增 `docs/tasks-done.md` 归档已完成拆分；剩余 >200 行文件收敛至 11 个（根 `includes/` 仅余 `settings/menu-customization.php` 受 E-2 阻塞；`modules/**` 副本 10 个受 E-1 阻塞）
+- 待 CI/PHP 环境验证：本环境无 PHP 运行时，拆分沿用已验证的组合 trait 范式，未实跑 `composer test`
+
 ## [1.9.10] - 2026-11-04
 
 - refactor: 拆分超 200 行源文件——`wpca-core-functions.php` 由单一 380 行函数库按职责拆为四组子文件：`wpca-core-settings-functions.php`（选项读取/写入/递归消毒）、`wpca-core-path-functions.php`（路径、URL 与模板加载）、`wpca-core-admin-functions.php`（后台上下文、提示输出与页面标题）、`wpca-core-util-functions.php`（版本、调试与日志），主文件仅保留 ABSPATH 守卫与引入语句，23 个全局函数的公开 API 与调用方式完全不变
