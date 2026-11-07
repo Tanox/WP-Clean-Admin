@@ -1,5 +1,20 @@
 # Changelog
 
+> 版本号唯一来源：`wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION`。
+> 变更格式与同步清单见 `CONTRIBUTING.md` §5 / §9.2；纯文档变更不提升插件版本，记录于 `[Unreleased]`。
+
+## [Unreleased] - 2026-11-07
+
+- docs: 建立权威文档体系——新增 `CONTRIBUTING.md`（编码风格、命名约定、目录组织、提交信息格式、分支管理、代码审查流程、测试、版本与发布）与 `docs/README.md`（文档索引、编写格式、术语表、同步清单）
+- docs: 重写 `DEVELOPMENT.md`（修正不存在的 `prototype/php/`、`prototype/ui/`、`USE_MOCK`、`Core::init_modules()`，命令执行目录、原型预览、模块注册流程）与 `AGENTS.md`（消除重复章节编号、§5.2 OPENSPEC 标记范围矛盾、失真的模块状态表，代码规范改为索引引用）
+- docs: 重写 `wpcleanadmin/includes/modules/README.md`，对齐 1.9.14 实际目录、加载机制与命名规则；为 `openspec/project.md`、`openspec/specs/plugin-architecture/detailed-design.md`、`openspec/specs/api/spec.md` 及历史提案/审计报告/设计规范标注状态并修正失效路径
+- docs: 统一版本号至 1.9.14（`README.md` 1.9.13、`README.en.md` 1.9.10、`.github/SECURITY.md` 1.8.x、`openspec/AGENTS.md` 1.8.5、原型 `index.html` 1.9.10、`languages/*.pot|po` 的 `Project-Id-Version` 1.9.2）；`docs/tasks.md` 与 `tasks-done.md` 对齐 1.9.14 实测状态（A-3 15 个 >200 行活文件，Helpers/Cache 已完成）
+- ci: `.github/workflows/ci.yml` 触发分支移除不存在的 `develop`，对齐 `main` + PR 策略
+- chore: 新增 `.gitattributes` 统一仓库行尾为 LF（`core.autocrlf=true` 环境下的可靠保障），并落实发布打包 `export-ignore` 排除项
+- chore: `.gitignore` 为正式文档 `docs/审计报告_20260808.md` 增加例外，使其纳入版本控制（此前被 `*报告*.md` 忽略，但文档索引已引用它）
+- chore: `update_versions.php` / `update_versions.ps1` 标记为废弃并加 fail-fast 保护（原逻辑硬编码 1.8.0→1.8.1，误执行会造成版本回退）
+- 说明：本次为纯文档/规范/配置变更，插件版本保持 1.9.14；待 CI/PHP 环境验证
+
 ## [1.9.14] - 2026-11-07
 
 - refactor: 拆分超 200 行源文件（A-3 批次）——modules `Helpers` 抽离 `HelpersFormatTasks`/`HelpersErrorTasks`/`HelpersLoggingTasks`/`HelpersValidationTasks` 四个 trait，主类由 606→93 行；modules `Cache` 抽离 `CacheApiTasks`（统一分发）/`CacheMemoryTasks`/`CacheDatabaseTasks`/`CacheFileTasks` 四个 trait，主类由 540→127 行（`$memory_cache`/`$cache_enabled`/`$cache_expiration` 属性保留在主类）；对外公开 API（类名、方法签名、常量 `WPCA_Errors`）均不变

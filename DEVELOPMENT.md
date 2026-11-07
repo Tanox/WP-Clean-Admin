@@ -1,107 +1,82 @@
-# WP Clean Admin 开发指南
+# WP Clean Admin 开发指南（快速上手）
 
-## 目录结构
+> **适用基线**：1.9.14　|　**更新日期**：2026-11-07
+> 本文只提供环境搭建、常用命令与原型预览。**完整开发规范（编码风格、命名约定、目录组织、提交格式、分支管理、代码审查、版本与发布）见 [`CONTRIBUTING.md`](CONTRIBUTING.md)**，两者冲突时以 `CONTRIBUTING.md` 为准。
+
+## 1. 环境要求
+
+- PHP 7.4+（CI 矩阵：7.4 / 8.0 / 8.1 / 8.2 / 8.3）
+- WordPress 5.0+
+- Composer 2（依赖清单位于 `wpcleanadmin/composer.json`）
+- 可选：Node.js（仅用于本地静态检查脚本，原型本身无构建步骤）
+
+## 2. 目录速览
 
 ```
-wpcleanadmin/               # 插件运行时代码（仅此目录驻插件运行时文件）
-├── assets/                 # 静态资源 (CSS, JS, images)
-├── includes/
-│   ├── modules/            # 新模块化架构 (推荐使用)
-│   │   ├── admin/          # 后台管理功能
-│   │   ├── core/           # 核心功能
-│   │   └── utilities/      # 工具类
-│   ├── ajax/               # AJAX 处理程序
-│   ├── class-*.php         # 旧架构类文件 (向后兼容)
-│   └── autoload.php        # 自动加载器
-├── languages/              # 翻译文件
-├── tests/                  # 测试文件
-└── wp-clean-admin.php      # 插件主文件
-
-prototype/                  # 高保真原型（非插件运行时）
-├── php/                    # 模块骨架 (Module_Base + AJAX 网关), 与运行时解耦
-└── ui/                     # index.html + wpca-components.css(shadcn 设计系统) + app.js
-
-docs/                       # 项目文档（审计/设计规范等）
-openspec/                   # OpenSpec 规范与变更提案
+仓库根/
+├── wpcleanadmin/          # 插件运行时代码（唯一可部署目录）
+│   ├── wp-clean-admin.php # 引导主文件：常量、autoload、初始化钩子
+│   ├── includes/
+│   │   ├── autoload.php   # 主自动加载器
+│   │   ├── wpca-*.php     # 核心函数库与 CLI 函数桩（9 个活文件）
+│   │   ├── ajax/          # WPCleanAdmin\AJAX 处理器
+│   │   └── modules/       # ★ 权威业务实现：admin / core / utilities
+│   ├── assets/ languages/ tests/
+│   └── composer.json  phpunit.xml.dist  phpcs.xml.dist  readme.txt  uninstall.php
+├── prototype/             # 纯静态原型：index.html + app.js + 2 个 CSS
+├── docs/ openspec/        # 工程文档 / OpenSpec 规范与提案
+├── archive/               # 只读 legacy 归档（1.9.12 起，禁止引用）
+└── CONTRIBUTING.md  AGENTS.md  README.md  CHANGELOG.md
 ```
 
-> 目录边界见 `AGENTS.md`：原型、文档、规范分别驻 `prototype/`、`docs/`、`openspec/`，
-> 不得写入 `wpcleanadmin/`。
+> **架构定论**：`WPCleanAdmin\Modules\*` 是运行期唯一权威体系；根 `includes/` 旧类已归档至 `archive/`，不得在其上继续开发。完整目录约束见 `CONTRIBUTING.md` §2。
 
-## 开发环境设置
+## 3. 常用命令
 
-### 1. 安装依赖
+依赖与测试均在**插件子目录**执行：
 
 ```bash
-composer install
+cd wpcleanadmin
+composer install          # 安装 PHPUnit / WPCS 等开发依赖
+composer test             # PHPUnit（bootstrap: tests/bootstrap.php）
+composer phpcs            # WordPress Coding Standards 检查
+composer phpcbf           # 自动修复格式问题
 ```
 
-### 2. 运行测试
+全量语法检查（仓库根执行）：
 
 ```bash
-composer test
+find wpcleanadmin -type f -name '*.php' -print0 | xargs -0 -n1 php -l
 ```
 
-### 3. 代码规范检查
+Windows 无 PHP 运行时：本机无法执行上述命令时，按 `CONTRIBUTING.md` §8 在提交信息标注「待 CI/PHP 环境验证」，由 `.github/workflows/ci.yml` 校验。
 
-```bash
-composer phpcs
-```
+## 4. 原型预览
 
-## 原型预览
-
-高保真原型为纯静态前端，直接用浏览器打开即可（默认 `USE_MOCK=true` 内置模拟数据）：
+原型是**纯静态、无后端、无构建步骤**的高保真 UI，直接用浏览器打开：
 
 ```
-prototype/ui/index.html
+prototype/index.html
 ```
 
-接入真实后端时，将 `prototype/ui/app.js` 中 `USE_MOCK` 置 `false`，
-并确保后台页面包含 `wp_nonce_field('wpca_ajax_nonce', '_wpnonce')` 渲染的隐藏字段。
+四个文件平铺在 `prototype/`：`index.html`（结构）、`wpca-admin.css`（WP 后台外壳）、`wpca-components.css`（组件与设计令牌）、`app.js`（选项卡切换、菜单树、排序、保存演示）。所有数据为静态 mock，保存操作仅前端反馈，**不发送 AJAX、不含 `USE_MOCK` 开关、不需要 nonce**。
 
-设计系统令牌与组件类定义在 `prototype/ui/wpca-components.css`，
-插件侧 `wpcleanadmin/assets/css/wpca-admin.css` 末尾引用同源同名类，两端保持一致。
+- 设计令牌与组件类定义见 `docs/设计规范_20260808.md`（历史基线，路径映射以该文件 §7 当前版本为准）。
+- 原型新增交互元素时，须按 `CONTRIBUTING.md` §3.3 使用语义化 `id`，并与插件渲染模板保持一致。
+- 原型目录禁止放入 PHP 文件或 `ui/`、`php/` 子目录。
 
-## 代码规范
+## 5. 添加一个新模块
 
-### PHP 编码规范
+1. 在 `wpcleanadmin/includes/modules/{admin,core,utilities}/` 对应子目录创建 `class-wpca-<kebab-case>.php`。
+2. 命名空间使用 `WPCleanAdmin\Modules\<域>\<层>`；类名 PascalCase 且**不含下划线**（否则 autoload 会生成双连字符文件名而加载失败）。
+3. 在 `includes/modules/core/classes/class-wpca-module-loader.php` 的实例化清单中登记（通过 `safe_init()`）。
+4. 文件超过 200 行时按 `CONTRIBUTING.md` §4.5 拆为任务 trait。
+5. 配套单元测试、PHPDoc、`@version`，并按 §7.1 自检清单逐项确认。
 
-- 遵循 WordPress 编码规范
-- 使用 PSR-4 自动加载
-- 类名使用 PascalCase
-- 方法名使用 camelCase
-- 函数和变量使用 snake_case
-- 所有类和方法必须有 PHPDoc 注释
+完整流程与审查要求见 `CONTRIBUTING.md` §5–§8。
 
-### 安全最佳实践
+## 6. 版本与发布
 
-- 所有用户输入必须验证和清理
-- 使用 `$wpdb->prepare()` 进行数据库查询
-- 使用 nonce 验证所有表单和 AJAX 请求
-- 检查用户权限 (`current_user_can()`)
-- 所有输出到页面的内容必须转义
+版本号唯一来源为 `wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION`。同步清单、语义与发布步骤见 `CONTRIBUTING.md` §9；变更记录写入根 `CHANGELOG.md`。
 
-## 添加新功能
-
-### 创建新模块
-
-1. 在 `includes/modules/` 相应目录创建类文件
-2. 使用正确的命名空间
-3. 在 `Core::init_modules()` 中注册新模块
-4. 编写单元测试
-
-### 贡献代码
-
-1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'feat: Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 创建 Pull Request
-
-## 发布流程
-
-1. 更新版本号
-2. 更新 CHANGELOG.md
-3. 运行所有测试
-4. 创建 Git 标签
-5. 发布新版本
+> 根目录 `update_versions.php` / `update_versions.ps1` 已废弃（硬编码 1.8.0→1.8.1），禁止使用。

@@ -36,7 +36,9 @@ wp-config.php
 wp-content/uploads/
 
 
+# 忽略临时生成的报告文档；docs/ 下的正式审计报告须纳入版本控制
 *报告*.md
+!docs/审计报告_20260808.md
 .qwen/
 .trae/
 .codebuddy/

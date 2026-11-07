@@ -1,6 +1,8 @@
 # WP Clean Admin
 
-让您的 WordPress 后台变得更简洁、更快、更安全！**版本 1.9.13**
+让您的 WordPress 后台变得更简洁、更快、更安全！**版本 1.9.14**
+
+> 开发规范见 [`CONTRIBUTING.md`](CONTRIBUTING.md)，文档索引见 [`docs/README.md`](docs/README.md)，变更记录见 [`CHANGELOG.md`](CHANGELOG.md)。
 
 <p align="center">
   <img src="assets/hero-banner.svg" alt="WP Clean Admin 横幅" width="100%">
@@ -138,14 +140,15 @@ WP Clean Admin 使用 GPL-2.0+ 许可证。
 
 本项目附带高保真可交互原型与设计规范，便于设计与验收：
 
-- **原型**（`prototype/`）：`ui/index.html` 单入口（shadcn 风格），内置真实 mock 数据；
-  `php/` 为模块骨架（Module_Base + AJAX 网关），与插件运行代码解耦。
-  直接用浏览器打开 `prototype/ui/index.html` 预览，无需后端。
-- **设计系统**（`prototype/ui/wpca-components.css`）：shadcn/ui 风格单一令牌来源，
+- **原型**（`prototype/`）：**4 个静态文件平铺**——`index.html`（单入口，shadcn 风格、内置静态 mock 数据）、
+  `app.js`（交互演示）、`wpca-admin.css`（WP 后台外壳）、`wpca-components.css`（组件与设计令牌）。
+  纯前端、无 PHP、无构建步骤，直接用浏览器打开 `prototype/index.html` 预览，无需后端。
+- **设计系统**（`prototype/wpca-components.css`）：shadcn/ui 风格单一令牌来源，
   含设计令牌（色彩/字体/间距/圆角/阴影/动效）、组件库（card/btn/badge/switch/table/modal/toast 等）、
-  交互标准与响应式规范。插件 `wpcleanadmin/assets/css/wpca-admin.css` 末尾引用同源同名类。
-- **设计规范**：[`docs/设计规范_20260808.md`](docs/设计规范_20260808.md)
-- **审计报告**：[`docs/审计报告_20260808.md`](docs/审计报告_20260808.md)
+  交互标准与响应式规范。插件 `wpcleanadmin/assets/css/wpca-admin.css` 复用同源同名类。
+- **设计规范**：[`docs/设计规范_20260808.md`](docs/设计规范_20260808.md)（历史基线快照，路径映射以其中 §7 当前版本为准）
+- **审计报告**：[`docs/审计报告_20260808.md`](docs/审计报告_20260808.md)（历史快照，不代表当前状态）
+- **开发规范**：[`CONTRIBUTING.md`](CONTRIBUTING.md) ｜ **文档索引**：[`docs/README.md`](docs/README.md)
 - **OpenSpec 规范**：[`openspec/`](openspec/) — 功能提案与规范文档
 
 ---

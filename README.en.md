@@ -1,6 +1,8 @@
 # WP Clean Admin
 
-Make your WordPress admin cleaner, faster, and more secure! **Version 1.9.10**
+Make your WordPress admin cleaner, faster, and more secure! **Version 1.9.14**
+
+> Development rules: [`CONTRIBUTING.md`](CONTRIBUTING.md) · Documentation index: [`docs/README.md`](docs/README.md) · Changelog: [`CHANGELOG.md`](CHANGELOG.md).
 
 ✨ **Key Benefits**:
 - ✨ One-click cleanup of cluttered admin area
@@ -130,13 +132,14 @@ WP Clean Admin is licensed under GPL-2.0+.
 
 This project ships a high-fidelity interactive prototype and design specs for design review and acceptance:
 
-- **Prototype** (`prototype/`): `ui/index.html` is the single entry (shadcn style) with realistic mock data;
-  `php/` holds module skeletons (Module_Base + AJAX gateway), decoupled from the plugin runtime.
-  Open `prototype/ui/index.html` in a browser to preview, no backend required.
-- **Design system** (`prototype/ui/wpca-components.css`): the single source of shadcn/ui style tokens
+- **Prototype** (`prototype/`): **4 flat static files** — `index.html` (single entry, shadcn style with static mock data),
+  `app.js` (interaction demo), `wpca-admin.css` (WP admin shell), `wpca-components.css` (components and design tokens).
+  Pure frontend: no PHP, no build step, no backend. Open `prototype/index.html` in a browser.
+- **Design system** (`prototype/wpca-components.css`): the single source of shadcn/ui style tokens
   covering color/typography/spacing/radius/shadow/motion tokens, component library and responsive rules.
   The plugin's `wpcleanadmin/assets/css/wpca-admin.css` reuses the same token classes.
-- **Design spec**: [`docs/设计规范_20260808.md`](docs/设计规范_20260808.md)
+- **Design spec**: [`docs/设计规范_20260808.md`](docs/设计规范_20260808.md) (historical baseline snapshot)
+- **Contribution rules**: [`CONTRIBUTING.md`](CONTRIBUTING.md) ｜ **Docs index**: [`docs/README.md`](docs/README.md)
 - **OpenSpec specs**: [`openspec/`](openspec/)
 
 ---

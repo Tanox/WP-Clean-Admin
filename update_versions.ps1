@@ -1,5 +1,12 @@
-# 批量更新 WP Clean Admin 插件文件版本号
-# 用法: powershell -ExecutionPolicy Bypass -File update_versions.ps1
+# 【已废弃 / DEPRECATED】批量更新 WP Clean Admin 插件文件版本号
+#
+# 本脚本硬编码 1.8.0 -> 1.8.1，且只更新 @version 注释，不更新插件头 Version、
+# WPCA_VERSION、readme.txt Stable tag 等版本源，执行后会造成版本不一致甚至回退。
+# 版本更新请按 CONTRIBUTING.md §9.2 的同步清单执行。
+# 为防止误执行，脚本已加 fail-fast 保护。
+
+Write-Error "DEPRECATED: 请勿使用本脚本。版本更新流程见 CONTRIBUTING.md §9.2 同步清单。"
+exit 1
 
 $pluginDir = Join-Path $PSScriptRoot "wpcleanadmin"
 $oldVersion = "1.8.0"

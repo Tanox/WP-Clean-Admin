@@ -1,8 +1,8 @@
 # WP Clean Admin 已完成任务归档
 
-> 归档日期：2026-11-05 · 维护：Tanox
+> 归档日期：2026-11-05 · 最近补充：2026-11-07 · 维护：Tanox
 > 本文件收录已从 `docs/tasks.md` 移出的**已完成**任务，保持主清单精简。
-> 版本号变更见根 `CHANGELOG.md`。
+> 版本号变更见根 `CHANGELOG.md`；开发规范见根 `CONTRIBUTING.md`；文档索引见 `docs/README.md`。
 
 ---
 
@@ -25,6 +25,11 @@
 | 1.9.8 | 7a4d95b | Core 与 LoginCaptchaTasks 各拆 2 trait（后者改为组合 trait） | 235→102 |
 | 1.9.9 | f664ee3 | Menu_Manager / User_Roles / Menu_Customizer 拆为 trait | 418→138 / 411→109 / 528→100 |
 | 1.9.10 | ea1391f | core-functions（380→14）拆 4 文件；menu-manager 角色限制再抽离 | 380→14 |
+| 1.9.11 | c01b5ee | A-2 渲染/任务 trait 再拆为组合 trait（6 个，消费类零改动）；任务清单迁移至 `docs/` | — |
+| 1.9.12 | b2dee36 | E-2 内联资源抽离（menu-customization / settings-page-render） | 两文件降至 <200 |
+| 1.9.13 | 42fc534 | E-1 定案：归档根 `includes/` 115 个死代码文件至 `archive/legacy-includes-1.9.12/` | — |
+| 1.9.14 | 5fd486d | 拆分 `modules/utilities/classes/` Helpers 与 Cache 为 trait | — |
+| 1.9.14 | 本次 | 文档治理：建立 `CONTRIBUTING.md` / `docs/README.md`，重写 `DEVELOPMENT.md` / `AGENTS.md` / `modules/README.md`，统一版本与历史标注（纯文档变更，不提升插件版本） | — |
 
 ---
 

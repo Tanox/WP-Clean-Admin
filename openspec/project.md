@@ -1,6 +1,10 @@
 <!-- OPENSPEC:START -->
 # 项目上下文
 
+> **适用基线**：1.9.14　|　**更新日期**：2026-11-07
+> 本文为 OpenSpec 需求/设计层的项目上下文。**开发规范（编码风格、命名、目录、提交、分支、审查）以根 `CONTRIBUTING.md` 为唯一权威来源；版本变更历史以根 `CHANGELOG.md` 为准**；两者与本文冲突时以权威来源为准。
+> 架构定论：`WPCleanAdmin\Modules\*` 为运行期唯一权威体系，根 `includes/` legacy 类已归档至 `archive/`（只读）。
+
 ## 目的
 WP Clean Admin 是一个全面的 WordPress 后台清理和优化插件，旨在帮助管理员清理和优化 WordPress 后台，提高网站性能和管理效率。
 
@@ -14,16 +18,15 @@ WP Clean Admin 是一个全面的 WordPress 后台清理和优化插件，旨在
 ## 项目约定
 
 ### 代码风格
-- 采用 WordPress 编码规范
-- 使用 PSR-4 自动加载
-- 类名采用 PascalCase 命名
-- 方法名采用 camelCase 命名
-- 函数名采用 snake_case 命名，以 `wpca_` 为前缀
-- 变量名采用 snake_case 命名
-- 常量名采用全大写加下划线命名，以 `WPCA_` 为前缀
-- 代码缩进使用 4 个空格
-- 文件编码为 UTF-8 with BOM
-- 行尾序列为 Unix LF
+> 完整规范见根 `CONTRIBUTING.md` §3–§4，以下为摘要。
+
+- 采用 WordPress 编码规范（WPCS 3.x，`phpcs.xml.dist`）
+- 类名 PascalCase 且**禁止下划线**（下划线会被 autoload 转成双连字符而加载失败）
+- 函数 / 变量 / 参数 snake_case，全局函数以 `wpca_` 为前缀
+- 常量全大写下划线，以 `WPCA_` 为前缀
+- 方法名沿用所在类既有风格，同类内保持一致
+- 缩进 4 个空格；文件编码 **UTF-8 无 BOM**；行尾 Unix LF
+- PHP 7.4+ 兼容，禁止 PHP 8.0+ 专有语法
 
 ### 架构模式
 - 模块化设计：功能划分为独立模块，便于维护和扩展
@@ -40,11 +43,12 @@ WP Clean Admin 是一个全面的 WordPress 后台清理和优化插件，旨在
 - 代码覆盖率：确保代码覆盖率不低于 80%
 
 ### Git 工作流程
-- 主分支：main
-- 开发分支：dev
-- 功能分支：feature/功能名
-- 修复分支：fix/问题描述
-- 提交消息格式：<类型>: <描述>，如 feat: 添加新功能，fix: 修复bug
+> 完整规范见根 `CONTRIBUTING.md` §5–§7。
+
+- **`main` 是唯一长期分支**，仓库不存在 `dev` / `develop` 分支
+- 短生命周期分支：`feature/<简述>`、`fix/<简述>`、`docs/<简述>`、`refactor/<简述>`、`chore/<简述>`
+- 涉及公开 API、数据库结构、安全策略的变更走 PR 流程；日常小改动可直接提交 `main` 并推送
+- 提交消息格式：`<type>: <描述>`（type 见 `CONTRIBUTING.md` §5），如 `fix: 修复 AJAX nonce 校验`
 
 ## 领域上下文
 WordPress 插件开发领域，专注于后台管理优化和性能提升。插件通过 WordPress 钩子系统扩展 WordPress 功能，无需修改核心文件。
@@ -66,19 +70,28 @@ WordPress 插件开发领域，专注于后台管理优化和性能提升。插�
 
 ## 目录结构
 
-### 插件主目录结构
+### 插件主目录结构（当前 1.9.14）
 ```
 wpcleanadmin/
-├── assets/                    # 静态资源目录
-│   ├── css/                   # CSS 文件
-│   └── js/                    # JavaScript 文件
-├── includes/                  # 核心功能目录
-│   ├── autoload.php           # 自动加载文件
-│   ├── class-*.php            # 各个功能类
-│   └── wpca-core-functions.php # 核心函数
-├── languages/                 # 语言文件目录
-└── wp-clean-admin.php         # 插件主文件
+├── wp-clean-admin.php         # 引导主文件（常量、autoload、初始化钩子）
+├── includes/
+│   ├── autoload.php           # 主自动加载器
+│   ├── wpca-wordpress-stubs.php      # CLI/PHPUnit 环境 WP 函数桩
+│   ├── wpca-core-functions.php       # 核心函数库入口
+│   ├── wpca-core-{admin,path,settings,util}-functions.php
+│   ├── class-wpca-helpers.php        # 兼容层助手类
+│   ├── ajax/                 # WPCleanAdmin\AJAX 处理器
+│   └── modules/              # ★ 权威业务实现
+│       ├── admin/            # classes / settings
+│       ├── core/             # classes（Core、Module_Loader、Error_Handler）
+│       └── utilities/        # classes（Cache、Helpers、Resources、i18n）
+├── assets/css/ assets/js/    # 插件后台样式与脚本
+├── languages/                # .pot / .po / .mo
+├── tests/                    # PHPUnit 测试
+├── composer.json  phpunit.xml.dist  phpcs.xml.dist
+└── readme.txt  uninstall.php
 ```
+> 完整目录约束见根 `CONTRIBUTING.md` §2；归档的 legacy 代码位于仓库根 `archive/`（只读）。
 
 ### OpenSpec 目录结构
 ```
@@ -277,28 +290,28 @@ openspec/
 
 ## 开发指南
 
+> **本节为摘要，完整且权威的规范见根 `CONTRIBUTING.md`**（编码风格 §4、命名 §3、目录 §2、提交 §5、分支 §6、审查 §7、测试 §8、版本 §9）。以下仅列与本文上下文相关的要点。
+
 ### 代码规范
-- 遵循 WordPress 编码规范
-- 使用 PSR-4 自动加载
-- 类名采用 PascalCase 命名
-- 方法名采用 camelCase 命名
-- 函数名采用 snake_case 命名，以 `wpca_` 为前缀
-- 变量名采用 snake_case 命名
-- 常量名采用全大写加下划线命名，以 `WPCA_` 为前缀
+- 遵循 WordPress 编码规范（WPCS 3.x）；PHP 7.4+ 兼容
+- 类名 PascalCase 且禁止下划线；函数/变量 snake_case（全局函数 `wpca_` 前缀）
+- 常量 `WPCA_` 全大写；文件编码 UTF-8 无 BOM、行尾 LF
 
 ### 命名空间
-- 使用 `WPCleanAdmin` 命名空间
-- 所有类都位于该命名空间下
+- 根 `WPCleanAdmin`；AJAX 处理器 `WPCleanAdmin\AJAX`
+- **运行期权威体系** `WPCleanAdmin\Modules\{Admin,Core,Utilities}\{Classes,Settings}`
+- 根 `includes/` 仅保留自动加载器、核心函数库、函数桩与兼容层助手类
 
 ### 自动加载
-- 使用 PSR-4 自动加载规范
-- 类文件位于 `includes/` 目录下
-- 类名与文件名对应，例如 `WPCleanAdmin\Core` 对应 `includes/class-wpca-core.php`
+- 由 `includes/autoload.php` 注册（类名 kebab-case → `class-wpca-<kebab>.php`）；引导主文件另注册一个 fallback
+- `Modules` 命名空间段映射到 `includes/modules/` 对应目录；`AJAX` 段映射到 `includes/ajax/<kebab>-ajax.php`
+- 类名含下划线会生成双连字符文件名导致类不可加载，属历史缺陷，禁止使用
+- `composer.json` 的 PSR-4 声明 `WPCleanAdmin\ => includes/` 仅用于开发工具，运行时以插件自带 autoloader 为准
 
 ### 测试
-- 编写单元测试和集成测试
-- 确保代码覆盖率不低于 80%
-- 提交代码前运行测试
+- 编写单元测试；提案目标为覆盖率 ≥ 80%（当前未达成，见 `docs/tasks.md` D 节）
+- 提交前运行 `composer test`、`composer phpcs` 与全量 `php -l`
+- 本机无 PHP 运行时不得声称测试通过，须标注「待 CI/PHP 环境验证」
 
 ### 文档
 - 文档与代码同步更新
@@ -327,6 +340,9 @@ openspec/
 - 定期发布到 main 分支
 
 ## 版本历史
+
+> **历史存档（截至 1.8.1）**：以下条目为早期版本记录，保留作为上下文，**不代表当前版本**。
+> 完整、持续更新的版本变更历史以根 `CHANGELOG.md` 为唯一来源（当前 1.9.14）。
 
 ### [1.8.1] - 2026-05-17
 - 修复了诊断模块 AJAX 类引用错误

@@ -1,83 +1,58 @@
 # WP Clean Admin 模块结构
 
-## 模块组织方式
+> **适用基线**：1.9.14　|　**更新日期**：2026-11-07
+> 本文描述 `includes/modules/` 的**运行期唯一权威体系**。完整目录组织、命名与拆分规范见根 [`CONTRIBUTING.md`](../../../CONTRIBUTING.md)，环境命令见根 `DEVELOPMENT.md`。
 
-WP Clean Admin 插件采用模块化结构组织代码，以便于维护和扩展。模块结构如下：
+## 1. 目录结构（实际）
 
 ```
-modules/
-├── admin/            # 后台管理相关模块
-│   ├── ajax/         # AJAX 处理程序
-│   ├── classes/      # 后台管理类
-│   └── settings/     # 设置相关功能
-├── core/             # 核心功能模块
-│   └── classes/      # 核心类
-├── frontend/         # 前端相关模块
-│   └── classes/      # 前端类
-└── utilities/        # 工具类模块
-    └── classes/      # 工具类
+includes/modules/
+├── admin/
+│   ├── classes/       # 后台业务类：仪表盘、菜单管理、菜单定制、用户角色、登录相关
+│   └── settings/      # 设置页、字段渲染、样式、校验
+├── core/
+│   └── classes/       # Core（入口）、Module_Loader（实例化清单）、Error_Handler
+└── utilities/
+    └── classes/       # Cache、Helpers、Resources、i18n
 ```
 
-## 模块说明
+> 早期文档中出现的 `frontend/`、`admin/ajax/` 子目录**不存在**，请勿按该结构创建文件。
 
-### admin 模块
+## 2. 加载机制
 
-包含与 WordPress 后台管理相关的功能：
+- 入口：`wp-clean-admin.php` 在 `plugins_loaded` 钩子实例化 `WPCleanAdmin\Modules\Core\Classes\Core`。
+- `includes/modules/core/classes/class-wpca-module-loader.php` 通过 `safe_init()` 按清单加载 Settings、Error_Handler、`Admin\Classes\*`、`Utilities\Classes\*`；**清单是运行期可达性的判定依据**。
+- 类文件由 `includes/autoload.php` 自动加载：类名 kebab-case 映射为 `class-wpca-<kebab>.php`，`Modules` 命名空间段映射到 `includes/modules/` 下对应目录。
+- 根 `includes/` 下的 legacy 旧类已于 1.9.12 归档至 `archive/legacy-includes-1.9.12/`，**只读、不加载、不得引用**。
 
-- **ajax/**: 处理后台 AJAX 请求的处理程序
-- **classes/**: 后台管理相关的类，如仪表盘、菜单管理、权限管理等
-- **settings/**: 插件设置相关的功能，如设置页面、字段渲染等
+## 3. 添加新模块
 
-### core 模块
+1. 在对应域目录创建 `class-wpca-<kebab-case>.php`，命名空间为 `WPCleanAdmin\Modules\<域>\<层>`（如 `WPCleanAdmin\Modules\Admin\Classes`）。
+2. 类名使用 PascalCase 且**禁止下划线**（`Menu_Manager` 会被 autoload 转成 `menu--manager` 而加载失败）。
+3. 在 `class-wpca-module-loader.php` 的 `safe_init()` 清单中登记。
+4. 文件超过 200 行时按 `CONTRIBUTING.md` §4.5 拆为任务 trait 或组合 trait，公开 API 保持不变。
+5. 配套 PHPDoc、`@version`、单元测试，并执行 `CONTRIBUTING.md` §7.1 自检清单。
 
-包含插件的核心功能：
+## 4. 命名与风格速查
 
-- **classes/**: 核心类，如核心初始化、错误处理等
+| 对象 | 规则 |
+|------|------|
+| 类名 | PascalCase，无下划线 |
+| 文件名 | `class-wpca-{kebab-case}.php` |
+| 任务 trait | `class-wpca-{模块}-{职责}-tasks.php`，trait 名以 `Tasks` 结尾 |
+| 命名空间 | `WPCleanAdmin\Modules\{Admin,Core,Utilities}\{Classes,Settings}` |
+| 函数 / 变量 | `wpca_` 前缀 / snake_case |
+| 常量 | `WPCA_` 全大写 |
+| 文本域 | 统一 `WPCA_TEXT_DOMAIN`，禁止硬编码 `'wp-clean-admin'` |
 
-### frontend 模块
+> 早期版本「类名使用 PascalCase，如 `Menu_Manager`」的示例已废弃，下划线类名是历史缺陷来源。
 
-包含与 WordPress 前端相关的功能：
+## 5. 最佳实践
 
-- **classes/**: 前端相关的类，如前端资源管理等
+1. 单一职责；超 200 行按职责拆分。
+2. 所有 AJAX/表单写操作：nonce + `current_user_can('manage_options')` 双校验。
+3. 输入 `sanitize_*`、输出 `esc_*`、SQL `$wpdb->prepare()`。
+4. 每个类与方法有 PHPDoc；关键逻辑用中文注释说明「为什么」。
+5. 新功能配套单元测试；不得从 `archive/` 复制代码回本目录。
 
-### utilities 模块
-
-包含通用工具类：
-
-- **classes/**: 工具类，如缓存管理、国际化、资源管理等
-
-## 使用方法
-
-### 加载模块
-
-模块通过 `WPCleanAdmin\Modules\Core\Classes\Core` 类的 `init_modules()` 方法加载。加载顺序为：
-
-1. 首先加载核心模块
-2. 然后加载管理模块
-3. 最后加载工具模块
-
-### 添加新模块
-
-要添加新模块，请按照以下步骤操作：
-
-1. 在相应的模块目录下创建新的类文件
-2. 使用正确的命名空间（如 `WPCleanAdmin\Modules\Admin\Classes`）
-3. 在 `Core` 类的 `init_modules()` 方法中添加对新模块的加载
-
-## 命名规范
-
-- **类名**: 使用 PascalCase，如 `Menu_Manager`
-- **文件名**: 使用 `class-wpca-{kebab-case}.php` 格式，如 `class-wpca-menu-manager.php`
-- **命名空间**: 使用 `WPCleanAdmin\Modules\{ModuleName}\Classes` 格式
-
-## 最佳实践
-
-1. **单一职责**: 每个类应该只负责一个功能
-2. **依赖注入**: 避免硬编码依赖，使用依赖注入或服务容器
-3. **错误处理**: 使用 `Error_Handler` 类处理错误和日志
-4. **文档**: 为每个类和方法添加详细的注释
-5. **测试**: 为新功能编写测试用例
-
-## 版本控制
-
-模块结构从版本 1.8.0 开始引入，所有模块文件的版本号应与插件版本保持一致。
+*模块结构自 1.8.0 引入，1.9.13 起定为运行期唯一权威体系；版本变更见根 `CHANGELOG.md`。*

@@ -1,6 +1,10 @@
 <!-- OPENSPEC:START -->
 # WP Clean Admin API 文档
 
+> **状态**：API 设计基线快照（1.8.5 基线）　|　**适用基线**：1.9.14　|　**更新日期**：2026-11-07
+> 本文描述 API 设计约定，**运行期实际端点以 `wpcleanadmin/includes/ajax/` 与 `Module_Loader` 注册清单为准**（部分设计中的 `Gateway_Base`/`Module_*` 骨架类未落地）。
+> 版本历史以根 `CHANGELOG.md` 为准；开发规范以根 `CONTRIBUTING.md` 为准。
+
 ## 1. 概述
 
 WP Clean Admin API 提供了一系列用于管理和配置 WP Clean Admin 插件的编程接口，允许开发者通过代码与插件进行交互，实现自动化配置和扩展功能。
@@ -8,7 +12,7 @@ WP Clean Admin API 提供了一系列用于管理和配置 WP Clean Admin 插件
 ## 2. 基本信息
 
 ### 2.1 API 版本
-当前 API 版本：1.8.5
+插件版本与 API 版本同源，唯一来源为 `wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION`；变更记录见根 `CHANGELOG.md`。本文不写死当前版本号，避免文档漂移。
 
 ### 2.2 命名空间
 - 全局函数：`wpca_` 前缀，直接可用（见第 3 节）

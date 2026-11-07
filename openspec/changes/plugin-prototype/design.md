@@ -1,6 +1,10 @@
 <!-- OPENSPEC:START -->
 # 插件原型设计规范
 
+> **状态**：历史提案（1.8.3 基线，待归档）　|　**不代表当前状态**　|　**更新日期**：2026-11-07
+> 文中 `prototype/php/`、`prototype/ui/` 目录已不存在；当前原型为 `prototype/` 下 4 个静态文件（见根 `DEVELOPMENT.md`）。
+> 当前架构、规范与版本分别以 `CONTRIBUTING.md`、`docs/README.md`、根 `CHANGELOG.md` 为准；归档收尾任务见 `docs/tasks.md` C 节。
+
 ## Context
 
 WP Clean Admin 1.8.3 已修复 nonce 字段名不统一、设置未 sanitize、版本注释不一致等缺陷。为避免后续功能开发再次引入同类问题，需建立统一的设计规范与可运行原型，作为所有新功能的落地基线。

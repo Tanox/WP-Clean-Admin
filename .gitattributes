@@ -1,0 +1,46 @@
+# 行尾与编码：仓库内统一 LF（对应 CONTRIBUTING.md §4.1 / §9.4）
+* text=auto eol=lf
+
+*.php   text eol=lf
+*.js    text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.json  text eol=lf
+*.xml   text eol=lf
+*.dist  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.po    text eol=lf
+*.pot   text eol=lf
+*.sh    text eol=lf
+*.ps1   text eol=lf
+
+# 二进制文件不参与换行转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.mo   binary
+*.zip  binary
+
+# 发布打包排除项（git archive / GitHub 自动归档），见 CONTRIBUTING.md §9.4
+.github/            export-ignore
+docs/               export-ignore
+openspec/           export-ignore
+prototype/          export-ignore
+archive/            export-ignore
+wpcleanadmin/tests/ export-ignore
+wpcleanadmin/composer.json       export-ignore
+wpcleanadmin/composer.lock       export-ignore
+wpcleanadmin/phpunit.xml.dist    export-ignore
+wpcleanadmin/phpcs.xml.dist      export-ignore
+CONTRIBUTING.md     export-ignore
+DEVELOPMENT.md      export-ignore
+AGENTS.md           export-ignore
+update_versions.php export-ignore
+update_versions.ps1 export-ignore
+.gitattributes      export-ignore
