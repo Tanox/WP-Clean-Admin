@@ -4,7 +4,7 @@ Tags: admin, cleanup, optimization, performance, security, menu
 Requires at least: 5.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.9.14
+Stable tag: 1.9.15
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,6 +51,10 @@ For the full changelog, see CHANGELOG.md in the plugin repository:
 https://github.com/Tanox/WP-Clean-Admin/blob/main/CHANGELOG.md
 
 == Upgrade Notice ==
+
+= 1.9.15 =
+Releases are now published automatically by CI after all checks pass on main;
+adds an authoritative contribution specification and documentation index.
 
 = 1.9.0 =
 Fixes a module autoloading fatal error, hardens two-factor authentication and

@@ -1,7 +1,7 @@
 <!-- OPENSPEC:START -->
 # WP Clean Admin API 文档
 
-> **状态**：API 设计基线快照（1.8.5 基线）　|　**适用基线**：1.9.14　|　**更新日期**：2026-11-07
+> **状态**：API 设计基线快照（1.8.5 基线）　|　**适用基线**：1.9.15　|　**更新日期**：2026-11-07
 > 本文描述 API 设计约定，**运行期实际端点以 `wpcleanadmin/includes/ajax/` 与 `Module_Loader` 注册清单为准**（部分设计中的 `Gateway_Base`/`Module_*` 骨架类未落地）。
 > 版本历史以根 `CHANGELOG.md` 为准；开发规范以根 `CONTRIBUTING.md` 为准。
 

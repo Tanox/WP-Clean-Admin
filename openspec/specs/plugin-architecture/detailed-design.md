@@ -1,13 +1,13 @@
 <!-- OPENSPEC:START -->
 # WP Clean Admin 详细设计文档
 
-> **状态**：设计基线快照（1.8.5 基线，2026-09 校正）　|　**适用基线**：1.9.14　|　**更新日期**：2026-11-07
+> **状态**：设计基线快照（1.8.5 基线，2026-09 校正）　|　**适用基线**：1.9.15　|　**更新日期**：2026-11-07
 > 本文描述架构设计与历史方案，**不代表当前运行期实现**。当前实现以 `wpcleanadmin/includes/modules/` 为准；版本历史以根 `CHANGELOG.md` 为准；开发规范以根 `CONTRIBUTING.md` 为准。
 > 文中示例代码里的版本号、目录路径仅作示意，落地时按 `CONTRIBUTING.md` §3/§9 执行。
 
 ## 1. 项目概述
 
-WP Clean Admin 是一个 WordPress 插件，用于管理后台清理和优化，当前版本见根 `CHANGELOG.md`（编写时为 1.9.14）。插件采用模块化设计，运行期唯一权威实现为 `WPCleanAdmin\Modules\*`，遵循 WordPress 最佳实践，注重安全性、性能和用户体验。
+WP Clean Admin 是一个 WordPress 插件，用于管理后台清理和优化，当前版本见根 `CHANGELOG.md`（编写时为 1.9.15）。插件采用模块化设计，运行期唯一权威实现为 `WPCleanAdmin\Modules\*`，遵循 WordPress 最佳实践，注重安全性、性能和用户体验。
 
 **项目特点**：
 - 模块化设计，便于扩展和维护
@@ -88,7 +88,7 @@ wpcleanadmin/
  * Plugin Name: WP Clean Admin
  * Plugin URI: https://github.com/Tanox/WP-Clean-Admin
  * Description: A comprehensive WordPress admin cleanup and optimization plugin
- * Version: 1.9.14
+ * Version: 1.9.15
  * Author: Tanox
  * Author URI: https://github.com/Tanox
  * License: GPL v2 or later
@@ -174,7 +174,7 @@ if ( ! function_exists( 'plugin_basename' ) ) {
 
 ```php
 // Define plugin constants
-define( 'WPCA_VERSION', '1.9.14' );
+define( 'WPCA_VERSION', '1.9.15' );
 define( 'WPCA_PLUGIN_DIR', ( function_exists( 'plugin_dir_path' ) ? plugin_dir_path( __FILE__ ) : dirname( __FILE__ ) . '/' ) );
 define( 'WPCA_PLUGIN_URL', ( function_exists( 'plugin_dir_url' ) ? plugin_dir_url( __FILE__ ) : '' ) );
 define( 'WPCA_TEXT_DOMAIN', 'wp-clean-admin' );
@@ -419,7 +419,7 @@ if ( function_exists( '\add_filter' ) && function_exists( '\plugin_basename' ) )
  * WPCleanAdmin PSR-4 Autoloader
  *
  * @package WPCleanAdmin
- * @version 1.9.14
+ * @version 1.9.15
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -541,7 +541,7 @@ spl_autoload_register( function( $class ) {
  * WPCleanAdmin Core Class（适配层，逐步迁移至 WPCleanAdmin\Modules\*）
  *
  * @package WPCleanAdmin
- * @version 1.9.14
+ * @version 1.9.15
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

@@ -1,6 +1,6 @@
 # WP Clean Admin 贡献与开发规范
 
-> **状态**：权威（本项目开发规范的唯一来源）　|　**适用基线**：1.9.14　|　**生效日期**：2026-11-07
+> **状态**：权威（本项目开发规范的唯一来源）　|　**适用基线**：1.9.15　|　**生效日期**：2026-11-07
 > **维护者**：Tanox　|　**仓库**：https://github.com/Tanox/WP-Clean-Admin
 
 本文档定义 WP Clean Admin 的编码风格、命名约定、目录组织、提交信息格式、分支管理、代码审查流程、测试、版本管理与发布流程。**所有贡献者（含 AI 助手）在修改代码或文档前必须阅读本文**。
@@ -44,7 +44,7 @@
 
 | 项 | 值 | 来源 |
 |----|-----|------|
-| 插件版本 | `1.9.14` | `wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION` |
+| 插件版本 | `1.9.15` | `wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION` |
 | 最低 PHP | 7.4 | 插件头 `Requires PHP` / `composer.json` |
 | 最低 WordPress | 5.0 | 插件头 `Requires at least` |
 | Text Domain | `wp-clean-admin` | 插件头 / 常量 `WPCA_TEXT_DOMAIN` |
@@ -53,6 +53,7 @@
 | 自动加载 | `includes/autoload.php`（主）+ 主文件 fallback | 见 §3.2 |
 | 测试 | PHPUnit 9，5 个测试文件 | `wpcleanadmin/tests/`、`phpunit.xml.dist` |
 | CI | `.github/workflows/ci.yml` | lint / phpcs / phpunit 矩阵 |
+| Release | `.github/workflows/release.yml` | CI 全绿后自动发布 GitHub Release（见 §9.4） |
 
 **架构定论（E-1）**：`WPCleanAdmin\Modules\*` 为**唯一权威体系**。原 `includes/` 根目录下的 legacy 类（115 个文件）已于 1.9.12 归档至 `archive/legacy-includes-1.9.12/`，运行期不加载、不引用。根 `includes/` 仅保留 9 个活文件（见 §2）。禁止在 `archive/` 基础上继续开发。
 
@@ -161,7 +162,7 @@
  * WPCleanAdmin <模块名> <职责>
  *
  * @package WPCleanAdmin
- * @version 1.9.14
+ * @version 1.9.15
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -274,7 +275,7 @@ class Dashboard {
 
 1. 从 `main` 创建短分支，按 §5 提交。
 2. 推送分支并创建 PR，**标题遵循 `<type>: <描述>`**，填写 `.github/PULL_REQUEST_TEMPLATE.md`（变更总结、动机、类型、测试说明）。
-3. CI 自动运行 `.github/workflows/ci.yml`：`php-lint`（PHP 8.1）、`phpcs`、`phpunit`（PHP 7.4/8.0/8.1/8.2/8.3 矩阵）。
+3. CI 自动运行 `.github/workflows/ci.yml`：`php-lint`（PHP 8.1）、`phpcs`、`phpunit`（PHP 7.4/8.0/8.1/8.2/8.3 矩阵）；`main` 上全部 job 成功后由 `.github/workflows/release.yml` 自动发布 Release（见 §9.4）。
    > 当前 `phpcs` 步骤为 `continue-on-error: true`（非阻塞）；该状态属技术债，已在 `docs/tasks.md` 登记整改，整改前**审查者必须手动确认 phpcs 输出**。
 4. 审查者核对 §7.1 清单，重点关注：公开 API 兼容性、安全基线、与 `openspec/specs/` 对应功能规范的一致性、文档同步。
 5. 至少一名维护者批准后合并到 `main`；合并后删除来源分支并 `git push origin main`（若为直推则跳过 PR 步骤）。
@@ -315,6 +316,7 @@ class Dashboard {
 | `prototype/index.html` | 顶部注释版本 + 页脚 `版本 X` |
 | `AGENTS.md` | §3 项目概述版本 |
 | `wpcleanadmin/languages/*.pot` / `*.po` | `Project-Id-Version` |
+| `CONTRIBUTING.md` / `docs/README.md` / `AGENTS.md` / `docs/tasks.md` | 首部「适用基线」 |
 | 本次改动的所有 PHP 文件 | 文件头 `@version` |
 
 ### 9.3 版本号语义
@@ -325,14 +327,24 @@ class Dashboard {
 - **纯文档/规范变更不提升插件版本**，仅在 `CHANGELOG.md` 的 `[Unreleased]` 段记录（避免运行时版本无意义跳动）。
 - 根目录 `update_versions.php` / `update_versions.ps1` 硬编码 `1.8.0 → 1.8.1`，**已废弃，禁止使用**；版本更新按 §9.2 清单执行。
 
-### 9.4 发布步骤
+### 9.4 发布流程（CI 全绿自动发布）
 
-1. 确认 `main` 与 `origin/main` 同步、CI 全绿。
-2. 按 §9.2 bump 版本并更新 `CHANGELOG.md`（将 `[Unreleased]` 归入新版本小节）。
-3. 运行 §7.1 全部自检项。
-4. 生成翻译模板（`wp i18n make-pot`）并补齐 `zh_CN` 翻译。
-5. 打标签 `git tag -p v<版本>` 并推送；创建 GitHub Release。
-6. 打包时排除 `tests/`、`.github/`、`docs/`、`openspec/`、`prototype/`、`archive/`、`composer.json`（通过 `.gitattributes` 的 `export-ignore`）。
+**发布由 `.github/workflows/release.yml` 自动完成**：`workflow_run` 监听 `CI` 工作流，当其在 `main` 分支上**全部 job 结论为 success** 时自动触发。流程为：
+
+1. 读取插件头 `Version:` 作为发布版本（读取失败即失败，不发布）。
+2. 幂等检查：tag `v<版本>` 已存在则跳过（同版本不重复发布）。
+3. `git archive` 打包 `wpcleanadmin/` 为 `wp-clean-admin-v<版本>.zip`（目录重命名为 `wp-clean-admin`；`.gitattributes` 的 `export-ignore` 自动排除 `tests/`、`.github/`、`docs/`、`openspec/`、`prototype/`、`archive/`、`composer.*` 等非运行时文件）。
+4. 用 `gh release create v<版本> --generate-notes` 创建 GitHub Release 并上传 zip。
+
+人工职责（发布前完成，无需手动打 tag / 传包）：
+
+1. 按 §9.2 bump 版本并更新 `CHANGELOG.md`（将 `[Unreleased]` 归入新版本小节）。
+2. 运行 §7.1 全部自检项。
+3. 推送 `main`，等待 CI 全绿——**CI 失败则不会发布**（`phpcs` 当前非阻塞，不影响发布门禁；整改后应纳入）。
+4. 生成翻译模板（`wp i18n make-pot`）并补齐 `zh_CN` 翻译（在 bump 同一提交内完成）。
+5. 在 GitHub Release 页面核对自动生成的发布说明与资产，必要时编辑补充。
+
+> 新增其他工作流时，若其结论也应作为发布门禁，需扩展 `release.yml` 的 `workflow_run` 监听列表或改用合并门禁 job；仅监听 `CI` 是当前约定。
 
 ---
 

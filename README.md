@@ -1,6 +1,6 @@
 # WP Clean Admin
 
-让您的 WordPress 后台变得更简洁、更快、更安全！**版本 1.9.14**
+让您的 WordPress 后台变得更简洁、更快、更安全！**版本 1.9.15**
 
 > 开发规范见 [`CONTRIBUTING.md`](CONTRIBUTING.md)，文档索引见 [`docs/README.md`](docs/README.md)，变更记录见 [`CHANGELOG.md`](CHANGELOG.md)。
 

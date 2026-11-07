@@ -3,6 +3,13 @@
 > 版本号唯一来源：`wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION`。
 > 变更格式与同步清单见 `CONTRIBUTING.md` §5 / §9.2；纯文档变更不提升插件版本，记录于 `[Unreleased]`。
 
+## [1.9.15] - 2026-11-07
+
+- ci: **新增自动发布工作流 `.github/workflows/release.yml`**——`CI` 工作流在 `main` 分支全部 job 成功后自动触发：读取插件头 `Version:` → tag 幂等检查（已发布版本跳过）→ `git archive`（遵循 `.gitattributes` export-ignore，排除 tests/docs/openspec/prototype/archive 等非运行时文件）打包 `wp-clean-admin-v<版本>.zip` → 创建 GitHub Release 并上传资产
+- docs: 发布流程更新为「CI 全绿自动发布」（`CONTRIBUTING.md` §9.4，人工步骤收敛为发布前职责）；§7.2 补充发布门禁说明；§9.2 同步清单补充规范文档自身「适用基线」位
+- chore: 版本号统一至 1.9.15（插件头 `Version`、常量 `WPCA_VERSION`、readme.txt `Stable tag`、README/README.en、原型 `index.html`、`languages/*.pot|po`、`AGENTS.md` 等全部当前版本声明位）
+- 说明：本机无 PHP 运行时，待 CI/PHP 环境验证
+
 ## [Unreleased] - 2026-11-07
 
 - docs: 建立权威文档体系——新增 `CONTRIBUTING.md`（编码风格、命名约定、目录组织、提交信息格式、分支管理、代码审查流程、测试、版本与发布）与 `docs/README.md`（文档索引、编写格式、术语表、同步清单）

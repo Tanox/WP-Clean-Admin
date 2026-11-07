@@ -1,6 +1,6 @@
 # WP Clean Admin 开发任务清单（进行中）
 
-> **适用基线**：1.9.14　|　**最近更新**：2026-11-07　|　**维护**：Tanox
+> **适用基线**：1.9.15　|　**最近更新**：2026-11-07　|　**维护**：Tanox
 > 本文仅保留**进行中 / 待办**任务；已完成任务归档至 [`tasks-done.md`](tasks-done.md)。
 > 代码治理拆分规则、文档格式与版本同步清单见根 [`CONTRIBUTING.md`](../CONTRIBUTING.md) §4.5 / §9.2，术语见 §10，文档索引见 [`docs/README.md`](README.md)。
 
@@ -10,11 +10,11 @@
 
 | 维度 | 状态 |
 |------|------|
-| 版本 | **1.9.14**（插件头 `Version:` 与 `WPCA_VERSION` 一致） |
+| 版本 | **1.9.15**（插件头 `Version:` 与 `WPCA_VERSION` 一致） |
 | 架构 | `WPCleanAdmin\Modules\*` 为运行期唯一权威体系；根 `includes/` 仅余 9 个活文件，legacy 死代码（115 个）已归档至 `archive/legacy-includes-1.9.12/` |
 | 代码治理（>200 行拆分） | 1.9.14 已拆分 `modules/` Helpers 与 Cache；当前仍有 **15 个 `modules/**` 文件 >200 行**（A-3，实测 2026-11-07）；排除项：函数桩与引导主文件 |
 | 渲染类内联资源 | E-2 未闭环：活设置页 `modules/admin/settings/` 仍内联输出 CSS/JS，需重做于 modules 活代码 |
-| 文档与规范 | 已建立权威体系：`CONTRIBUTING.md`（规范）+ `docs/README.md`（索引）；版本号已统一至 1.9.14 |
+| 文档与规范 | 已建立权威体系：`CONTRIBUTING.md`（规范）+ `docs/README.md`（索引）；版本号已统一至 1.9.15；发布为 CI 全绿后自动发布 Release（`release.yml`，见 `CONTRIBUTING.md` §9.4） |
 | 功能增强提案 | 16 任务全待办（`openspec/changes/规范改进与功能增强计划/`） |
 | 原型提案 | 剩归档 2 项 |
 
@@ -81,7 +81,7 @@
 ### C. plugin-prototype 收尾（2 项）
 
 - [ ] 将设计规范归档至 `openspec/specs/plugin-architecture/`
-- [ ] 校准提案中的 `1.8.3` 基线表述（当前 1.9.14，以根 `CHANGELOG.md` 为准）
+- [ ] 校准提案中的 `1.8.3` 基线表述（当前 1.9.15，以根 `CHANGELOG.md` 为准）
 
 ### D. 测试与静态分析（部分阻塞：无 PHP 运行时）
 
@@ -120,6 +120,7 @@
 
 | 版本 | 提交 | 内容 |
 |------|------|------|
+| 1.9.15 | 本次 | 新增自动发布工作流 `release.yml`（CI 全绿自动发布 Release）并更新发布规范（`CONTRIBUTING.md` §9.4） |
 | 1.9.14 | `5fd486d` | 拆分 `modules/` Helpers 与 Cache 为 trait |
 | 1.9.14 | 本次 | 文档治理：建立 `CONTRIBUTING.md` / `docs/README.md`，重写 `DEVELOPMENT.md` / `AGENTS.md`，统一版本号与历史文档标注（纯文档变更，不提升插件版本） |
 | 1.9.13 | `42fc534` | E-1 已定：归档根 `includes/` 115 个死代码文件至 `archive/legacy-includes-1.9.12/`（modules 权威）；清理 E-2 孤立资源 4 个；更正 E-2 描述 |

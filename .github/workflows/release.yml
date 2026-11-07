@@ -1,0 +1,72 @@
+name: Release
+
+# 在 main 分支上 CI 全绿（conclusion == success）后自动发布 Release。
+# 发布内容：v{插件头版本号} tag + 按 .gitattributes export-ignore 打包的插件 zip。
+# 幂等：tag 已存在（该版本已发布过）则跳过，不重复发布。
+on:
+  workflow_run:
+    workflows: [ "CI" ]
+    types: [ completed ]
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Auto Release (CI green)
+    runs-on: ubuntu-latest
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Read plugin version
+        id: ver
+        run: |
+          VERSION=$(grep -oPm1 '(?<=^ \* Version: )[\d.]+' wpcleanadmin/wp-clean-admin.php)
+          if [ -z "$VERSION" ]; then
+            echo "::error::Cannot read plugin version from wpcleanadmin/wp-clean-admin.php"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Releasing version: $VERSION"
+
+      - name: Skip if tag already exists (idempotent)
+        id: gate
+        run: |
+          if git rev-parse -q --verify "refs/tags/v${{ steps.ver.outputs.version }}" >/dev/null; then
+            echo "Tag v${{ steps.ver.outputs.version }} already released; skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build plugin zip
+        if: steps.gate.outputs.skip == 'false'
+        run: |
+          mkdir -p build
+          # git archive 尊重 .gitattributes 的 export-ignore，
+          # 自动排除 tests/.github/docs/openspec/prototype/archive/composer.* 等非运行时文件。
+          git archive --format=tar "${{ github.event.workflow_run.head_sha }}" wpcleanadmin | tar -x -C build
+          mv build/wpcleanadmin build/wp-clean-admin
+          cd build
+          zip -r "../wp-clean-admin-v${{ steps.ver.outputs.version }}.zip" wp-clean-admin
+
+      - name: Create GitHub Release
+        if: steps.gate.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VER="${{ steps.ver.outputs.version }}"
+          gh release create "v$VER" \
+            --target "${{ github.event.workflow_run.head_sha }}" \
+            --title "WP Clean Admin v$VER" \
+            --generate-notes \
+            "wp-clean-admin-v$VER.zip"

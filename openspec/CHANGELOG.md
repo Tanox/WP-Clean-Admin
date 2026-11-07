@@ -2,7 +2,7 @@
 # Changelog
 
 > **注意**：本文件记录 **OpenSpec 文档体系自身**的变更，且已停止维护（最后条目 1.8.0）。
-> 插件版本变更历史以根 `CHANGELOG.md` 为唯一权威来源（当前 1.9.14）。请勿在此追加版本条目。
+> 插件版本变更历史以根 `CHANGELOG.md` 为唯一权威来源（当前 1.9.15）。请勿在此追加版本条目。
 
 All notable changes to WP Clean Admin will be documented in this file.
 
