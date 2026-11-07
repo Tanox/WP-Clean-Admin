@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.9.14] - 2026-11-07
+
+- refactor: 拆分超 200 行源文件（A-3 批次）——modules `Helpers` 抽离 `HelpersFormatTasks`/`HelpersErrorTasks`/`HelpersLoggingTasks`/`HelpersValidationTasks` 四个 trait，主类由 606→93 行；modules `Cache` 抽离 `CacheApiTasks`（统一分发）/`CacheMemoryTasks`/`CacheDatabaseTasks`/`CacheFileTasks` 四个 trait，主类由 540→127 行（`$memory_cache`/`$cache_enabled`/`$cache_expiration` 属性保留在主类）；对外公开 API（类名、方法签名、常量 `WPCA_Errors`）均不变
+- chore: 版本号统一至 1.9.14（插件头 `Version`、常量 `WPCA_VERSION`、readme.txt Stable tag、AGENTS.md、本批改动文件头注释）
+- 待 CI/PHP 环境验证
+
 ## [1.9.13] - 2026-11-05
 
 - chore: 归档根 `includes/` 115 个死代码文件至 `archive/legacy-includes-1.9.12/`（modules 体系为运行期唯一权威入口，旧根类零引用、`load_legacy_modules()` 已禁用；保留 9 个活根文件：autoload / wpca-core-functions(+4 个 *-functions 子库) / wpca-wordpress-stubs / ajax/settings-ajax.php（被 modules menu-customizer 真实调用）/ class-wpca-helpers.php（被测试引用））
