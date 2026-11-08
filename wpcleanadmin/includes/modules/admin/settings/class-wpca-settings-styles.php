@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * WPCleanAdmin Settings Styles
  *
@@ -6,7 +6,7 @@
  * 此处内联包含该资产以保留渲染行为，主类文件不再内联超长 CSS（§4.5）。
  *
  * @package WPCleanAdmin\Modules\Admin\Settings
- * @version 1.9.16
+ * @version 1.9.17
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

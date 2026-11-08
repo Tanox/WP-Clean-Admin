@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * WPCleanAdmin Settings Scripts Class
  *
