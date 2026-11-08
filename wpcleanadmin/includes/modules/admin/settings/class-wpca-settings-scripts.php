@@ -47,22 +47,10 @@ class Settings_Scripts {
      * Render settings page scripts and styles
      */
     public function render_scripts() {
-        // 内联样式由 Settings_Styles 注入（includes assets/css/wpca-settings.css，§4.5）
+        // 设置页 CSS 已抽离至 assets/css/wpca-settings.css，由 Settings_Styles::render()
+        // 经 include 注入（§4.5）；设置页 JS 由 SettingsEnqueueTasks 经 wp_enqueue_script
+        // 标准加载（含 wp_localize_script 本地化），此处不再内联/重复输出 JS
         $this->styles->render();
-
-        $text_domain = defined( 'WPCA_TEXT_DOMAIN' ) ? WPCA_TEXT_DOMAIN : 'wp-clean-admin';
-        ?>
-        <script type="text/javascript">
-            window.wpcaSaveMessage = <?php echo \json_encode( \__( 'Saving...', $text_domain ) ); ?>;
-        <?php
-        // E-2 重做（1.9.17）：活设置页 JS 抽离至 assets/js/wpca-settings.js
-        $js_file = defined( 'WPCA_PLUGIN_DIR' ) ? WPCA_PLUGIN_DIR . 'assets/js/wpca-settings.js' : '';
-        if ( '' !== $js_file && \file_exists( $js_file ) ) {
-            include $js_file;
-        }
-        ?>
-        </script>
-        <?php
     }
 
     /**
