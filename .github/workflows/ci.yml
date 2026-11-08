@@ -56,7 +56,8 @@ jobs:
         # Mirror the head of the report into ::error:: annotations (public
         # check-run API readable).
         run: |
-          vendor/bin/phpcs > /tmp/phpcs.log 2>&1; s=$?
+          s=0
+          vendor/bin/phpcs > /tmp/phpcs.log 2>&1 || s=$?
           if [ $s -ne 0 ]; then
             head -n 50 /tmp/phpcs.log | while IFS= read -r l; do echo "::error::$l"; done
           fi
@@ -87,7 +88,8 @@ jobs:
         # so the details are retrievable via the public check-run API (raw
         # logs need admin auth).
         run: |
-          composer test > /tmp/test.log 2>&1; s=$?
+          s=0
+          composer test > /tmp/test.log 2>&1 || s=$?
           if [ $s -ne 0 ]; then
             tail -n 30 /tmp/test.log | while IFS= read -r l; do echo "::error::$l"; done
           fi
