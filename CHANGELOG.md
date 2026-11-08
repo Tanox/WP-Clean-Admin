@@ -23,7 +23,7 @@
 - chore: 版本号统一至 1.9.15（插件头 `Version`、常量 `WPCA_VERSION`、readme.txt `Stable tag`、README/README.en、原型 `index.html`、`languages/*.pot|po`、`AGENTS.md` 等全部当前版本声明位）
 - 说明：本机无 PHP 运行时，待 CI/PHP 环境验证
 
-## [Unreleased] - 2026-11-07
+## [Unreleased] - 2026-11-08
 
 - docs: 建立权威文档体系——新增 `CONTRIBUTING.md`（编码风格、命名约定、目录组织、提交信息格式、分支管理、代码审查流程、测试、版本与发布）与 `docs/README.md`（文档索引、编写格式、术语表、同步清单）
 - docs: 重写 `DEVELOPMENT.md`（修正不存在的 `prototype/php/`、`prototype/ui/`、`USE_MOCK`、`Core::init_modules()`，命令执行目录、原型预览、模块注册流程）与 `AGENTS.md`（消除重复章节编号、§5.2 OPENSPEC 标记范围矛盾、失真的模块状态表，代码规范改为索引引用）
@@ -34,6 +34,8 @@
 - chore: `.gitignore` 为正式文档 `docs/审计报告_20260808.md` 增加例外，使其纳入版本控制（此前被 `*报告*.md` 忽略，但文档索引已引用它）
 - chore: `update_versions.php` / `update_versions.ps1` 标记为废弃并加 fail-fast 保护（原逻辑硬编码 1.8.0→1.8.1，误执行会造成版本回退）
 - 说明：本次为纯文档/规范/配置变更，插件版本保持 1.9.14；待 CI/PHP 环境验证
+- docs: 全量文档审查对齐代码实测——`README.md`/`README.en.md` 环境要求由「PHP 7.0」修正为「PHP 7.4」（与插件头 `Requires PHP: 7.4`、`composer.json`、`readme.txt` 一致）；`DEVELOPMENT.md` 目录注释「wpca-*.php 9 个活文件」修正为「6 个」（实测 includes 根：5 个核心函数库 + 1 个函数桩 + autoload.php + class-wpca-helpers.php 共 8 个）
+- chore: 全库 50 个 PHP 文件头过时 `@version`（1.9.0/1.9.2/1.9.10/1.9.14）统一同步至当前版本（§4.2：`@version` 必须等于当前插件版本）；`@since`（引入版本）一律不动
 
 ## [1.9.14] - 2026-11-07
 

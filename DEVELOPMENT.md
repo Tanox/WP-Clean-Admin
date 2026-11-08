@@ -18,7 +18,7 @@
 │   ├── wp-clean-admin.php # 引导主文件：常量、autoload、初始化钩子
 │   ├── includes/
 │   │   ├── autoload.php   # 主自动加载器
-│   │   ├── wpca-*.php     # 核心函数库与 CLI 函数桩（9 个活文件）
+│   │   ├── wpca-*.php     # 核心函数库与 CLI 函数桩（6 个活文件）
 │   │   ├── ajax/          # WPCleanAdmin\AJAX 处理器
 │   │   └── modules/       # ★ 权威业务实现：admin / core / utilities
 │   ├── assets/ languages/ tests/

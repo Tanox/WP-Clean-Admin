@@ -111,7 +111,7 @@ Or you can upload via FTP to `wp-content/plugins/` directory, then activate in a
 ## Requirements
 
 - WordPress 5.0 or higher
-- PHP 7.0 or higher
+- PHP 7.4 or higher
 - MySQL 5.6 or higher
 
 ---
