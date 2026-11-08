@@ -31,6 +31,7 @@
 | 1.9.14 | 5fd486d | 拆分 `modules/utilities/classes/` Helpers 与 Cache 为 trait | — |
 | 1.9.14 | 本次 | 文档治理：建立 `CONTRIBUTING.md` / `docs/README.md`，重写 `DEVELOPMENT.md` / `AGENTS.md` / `modules/README.md`，统一版本与历史标注（纯文档变更，不提升插件版本） | — |
 | 1.9.16 | 本次 | A-3 收官：拆分 `modules/**` 剩余 15 个 >200 行活文件，新增 30 个任务 trait、改写 14 个消费类；全仓 >200 行仅余 2 个排除项 | — |
+| 1.9.17 | 本次 | E-2 闭环：恢复活设置页资源抽离（创建 `assets/css/wpca-settings.css`、抽离 `assets/js/wpca-settings.js`，改写 `Settings_Scripts::render_scripts` 由内联改为 `include`）；CI `php-lint` 增加 PHP 7.4 矩阵；版本号统一至 1.9.17 | — |
 
 ---
 

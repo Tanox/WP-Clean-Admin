@@ -5,7 +5,7 @@
  * 承载文件缓存后端的读写删清、路径解析与过期清理逻辑，从 Cache 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.9.14
+ * @version  1.9.16
  * @author Tanox
  * @since 1.9.14
  */

@@ -5,7 +5,7 @@
  * 承载功能权限与用户权限的计算逻辑，从 Permissions 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.9.0
+ * @version  1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

@@ -5,7 +5,7 @@
  * 承载版本、调试与日志等通用工具，从 wpca-core-functions.php 按职责抽取。
  *
  * @package WPCleanAdmin
- * @version 1.9.10
+ * @version 1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.9.10

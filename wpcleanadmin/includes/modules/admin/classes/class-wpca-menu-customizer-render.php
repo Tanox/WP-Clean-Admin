@@ -5,7 +5,7 @@
  * 承载 admin bar 定制与结构导出/导入逻辑，从 Menu_Customizer 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.9.0
+ * @version  1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

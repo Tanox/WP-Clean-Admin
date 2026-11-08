@@ -1,93 +1,43 @@
 /**
- * WP Clean Admin Settings JavaScript
+ * WP Clean Admin — Settings Page Scripts
  *
- * @package WPCA
- * @version 1.8.5
- * @author Tanox
- * @author URI: https://github.com/Tanox
- * @since 1.7.15
+ * E-2 抽离资产（1.9.17）：活设置页 Tab 切换 / 折叠 / 提交反馈交互。
+ * 本地化文案由 class-wpca-settings-scripts.php 注入为 window.wpcaSaveMessage。
+ *
+ * @version 1.9.17
  */
-// Use IIFE to encapsulate the settings functionality
 (function($) {
     'use strict';
-    
-    /**
-     * Settings functionality for WPCA
-     */
-    const WPCASettings = {
-        /**
-         * Initialize settings functionality
-         */
-        init: function() {
-            this.bindEvents();
-            this.initSettingsForms();
-        },
-        
-        /**
-         * Bind events for settings
-         */
-        bindEvents: function() {
-            // Handle settings form submission
-            $(document).on('submit', '.wpca-settings-form', this.handleFormSubmission.bind(this));
-            
-            // Handle reset buttons
-            $(document).on('click', '.wpca-reset-btn', this.handleReset.bind(this));
-        },
-        
-        /**
-         * Initialize settings forms
-         */
-        initSettingsForms: function() {
-            // Add loading state handlers
-            $('.wpca-settings-form').each(function() {
-                const $form = $(this);
-                const $submitBtn = $form.find('input[type="submit"]');
-                
-                if ($submitBtn.length) {
-                    $form.data('original-submit-text', $submitBtn.val());
-                }
-            });
-        },
-        
-        /**
-         * Handle form submission
-         * @param {Event} e - The submit event
-         */
-        handleFormSubmission: function(e) {
-            const $form = $(e.currentTarget);
-            const $submitBtn = $form.find('input[type="submit"]');
-            
-            if ($submitBtn.length) {
-                $submitBtn.prop('disabled', true).val($form.data('saving-text') || 'Saving...');
-            }
-        },
-        
-        /**
-         * Handle reset button click
-         * @param {Event} e - The click event
-         */
-        handleReset: function(e) {
-            const $btn = $(e.currentTarget);
-            const confirmText = $btn.data('confirm') || 'Are you sure you want to reset these settings?';
-            
-            if (!confirm(confirmText)) {
-                e.preventDefault();
-                return false;
-            }
-            
-            // Add loading state
-            $btn.prop('disabled', true).val($btn.data('resetting-text') || 'Resetting...');
-            
-            return true;
-        }
-    };
-    
-    // Initialize settings when DOM is ready
-    $(document).ready(function() {
-        WPCASettings.init();
-    });
-    
-    // Expose to global scope for potential external use
-    window.WPCASettings = WPCASettings;
-})(jQuery);
 
+    $(document).ready(function() {
+        const tabButtons = $('.wpca-tab-button');
+        const tabContents = $('.wpca-tab-content');
+
+        tabButtons.on('click', function() {
+            const tabId = $(this).data('tab');
+
+            tabButtons.removeClass('active');
+            tabContents.removeClass('active');
+
+            $(this).addClass('active');
+            $(`#wpca-tab-${tabId}`).addClass('active');
+
+            $('html, body').animate({
+                scrollTop: $('.wpca-settings-form').offset().top - 20
+            }, 300);
+        });
+
+        $('#wpca-settings-form').on('submit', function() {
+            const msg = ('undefined' !== typeof window.wpcaSaveMessage) ? window.wpcaSaveMessage : 'Saving...';
+            $('#wpca-save-message').html('<span class="wpca-saving">' + msg + '</span>');
+        });
+
+        $('.wpca-settings-section h3').on('click', function() {
+            const section = $(this).closest('.wpca-settings-section');
+            const content = section.nextUntil('.wpca-settings-section');
+
+            section.toggleClass('collapsed');
+            content.slideToggle();
+        });
+    });
+})(jQuery);

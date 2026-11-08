@@ -5,7 +5,7 @@
  * 承载内存缓存后端的读写删清逻辑，从 Cache 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.9.14
+ * @version  1.9.16
  * @author Tanox
  * @since 1.9.14
  */

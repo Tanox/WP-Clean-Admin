@@ -7,7 +7,7 @@
  * 产生 FQCN 冲突（Cannot declare class fatal），本测试用于回归防护。
  *
  * @package WPCleanAdmin
- * @version 1.9.0
+ * @version 1.9.16
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

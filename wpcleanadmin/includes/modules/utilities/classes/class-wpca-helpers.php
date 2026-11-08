@@ -3,7 +3,7 @@
  * WPCleanAdmin Helpers Class
  *
  * @package WPCleanAdmin
- * @version  1.9.14
+ * @version  1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

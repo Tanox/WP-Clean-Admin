@@ -1,9 +1,9 @@
-﻿<?php
+<?php
 /**
  * WPCleanAdmin Settings AJAX Handler
  *
  * @package WPCleanAdmin
- * @version 1.9.2
+ * @version 1.9.16
  * @update_date 2026-01-30
  * @author Tanox
  * @author URI: https://github.com/Tanox

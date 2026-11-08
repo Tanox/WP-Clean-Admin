@@ -7,15 +7,19 @@ on:
 
 jobs:
   php-lint:
-    name: PHP Syntax Lint
+    name: PHP Syntax Lint (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.4', '8.1' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: ${{ matrix.php }}
       - name: Lint PHP files
         # php -l catches parse errors across the whole plugin tree
         run: find wpcleanadmin -type f -name '*.php' -print0 | xargs -0 -n1 php -l

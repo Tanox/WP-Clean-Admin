@@ -5,7 +5,7 @@
  * 承载格式化与环境信息读取逻辑，从 Helpers 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.9.14
+ * @version  1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.9.14

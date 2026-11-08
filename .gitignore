@@ -42,3 +42,4 @@ wp-content/uploads/
 .qwen/
 .trae/
 .codebuddy/
+_*.mjs

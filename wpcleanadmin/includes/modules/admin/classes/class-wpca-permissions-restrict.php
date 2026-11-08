@@ -5,7 +5,7 @@
  * 承载后台访问与特定页面的限制/重定向逻辑，从 Permissions 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.9.0
+ * @version  1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

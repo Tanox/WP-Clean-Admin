@@ -1,6 +1,6 @@
 # WP Clean Admin 贡献与开发规范
 
-> **状态**：权威（本项目开发规范的唯一来源）　|　**适用基线**：1.9.16　|　**生效日期**：2026-11-07
+> **状态**：权威（本项目开发规范的唯一来源）　|　**适用基线**：1.9.17　|　**生效日期**：2026-11-07
 > **维护者**：Tanox　|　**仓库**：https://github.com/Tanox/WP-Clean-Admin
 
 本文档定义 WP Clean Admin 的编码风格、命名约定、目录组织、提交信息格式、分支管理、代码审查流程、测试、版本管理与发布流程。**所有贡献者（含 AI 助手）在修改代码或文档前必须阅读本文**。
@@ -44,7 +44,7 @@
 
 | 项 | 值 | 来源 |
 |----|-----|------|
-| 插件版本 | `1.9.16` | `wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION` |
+| 插件版本 | `1.9.17` | `wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION` |
 | 最低 PHP | 7.4 | 插件头 `Requires PHP` / `composer.json` |
 | 最低 WordPress | 5.0 | 插件头 `Requires at least` |
 | Text Domain | `wp-clean-admin` | 插件头 / 常量 `WPCA_TEXT_DOMAIN` |
@@ -162,7 +162,7 @@
  * WPCleanAdmin <模块名> <职责>
  *
  * @package WPCleanAdmin
- * @version 1.9.16
+ * @version 1.9.17
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -247,7 +247,7 @@ class Dashboard {
 | `fix/<简述>` | bug 修复 | `fix/ajax-nonce` |
 | `docs/<简述>` | 文档批量更新 | `docs/dev-spec` |
 | `refactor/<简述>` | 重构/拆分 | `refactor/split-dashboard` |
-| `chore/<简述>` | 依赖、配置、版本 | `chore/bump-1.9.16` |
+| `chore/<简述>` | 依赖、配置、版本 | `chore/bump-1.9.17` |
 
 - 单人维护的日常小改动（含治理拆分）允许直接提交 `main`，但**每个提交必须可独立回滚**、必须通过 §7 自检清单、且提交后执行 `git push origin main` 同步远端。
 - 涉及公开 API、数据库结构、安全策略或大规模目录调整的变更，**必须**走 PR 流程（§7）。

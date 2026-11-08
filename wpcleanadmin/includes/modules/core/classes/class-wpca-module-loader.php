@@ -1,11 +1,11 @@
-﻿<?php
+<?php
 /**
  * WPCleanAdmin Module Loader
  *
  * 承载各模块的加载顺序与实例化逻辑，从 Core 主类抽取。
  *
  * @package WPCleanAdmin\Modules\Core\Classes
- * @version  1.9.0
+ * @version  1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

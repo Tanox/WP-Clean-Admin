@@ -5,7 +5,7 @@
  * 承载后台菜单的移除/清理/角色限制逻辑，从 Menu_Manager 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.9.0
+ * @version  1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

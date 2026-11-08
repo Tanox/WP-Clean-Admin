@@ -3,6 +3,13 @@
 > 版本号唯一来源：`wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION`。
 > 变更格式与同步清单见 `CONTRIBUTING.md` §5 / §9.2；纯文档变更不提升插件版本，记录于 `[Unreleased]`。
 
+## [1.9.17] - 2026-11-08
+
+- fix: E-2 闭环——恢复活设置页（`modules/admin/settings`）内联资源抽离：创建 `assets/css/wpca-settings.css`（1.9.13 误删，1.9.17 恢复并更名）、抽离 `assets/js/wpca-settings.js`，改写 `Settings_Scripts::render_scripts()` 由内联 `<script>` 改为 `include` 外部资产（CSS 经 `Settings_Styles` 注入），消除 40 行内联 JS；公开渲染行为不变
+- ci: `php-lint` 增加 PHP 7.4 语法检查矩阵（§7.2 要求，复盖最低支持版本）
+- chore: 版本号统一至 1.9.17（§9.2 同步清单全部声明位）
+- 说明：本机无 PHP 运行时；`phpcs` 阻塞门禁与 `composer test` 实跑验证仍阻塞于无 PHP 环境（遵循 CI 既定「规则集调优前不阻塞」，避免破坏 release 自动发布）；IDE 诊断 0 错误
+
 ## [1.9.16] - 2026-11-08
 
 - refactor: **A-3 收官**——按 `CONTRIBUTING.md` §4.5 组合 trait 范式拆分 `modules/**` 剩余超 200 行活文件（Dashboard / Login 系列 / Menu_Customizer 系列 / Menu_Manager / User_Roles 系列 / Settings 系列 / Error_Handler / Resources）：新增 30 个任务 trait、改写 14 个消费类（`require_once` + `use`），公开 API（类名、方法签名、单例）不变；实测全仓 >200 行 PHP 仅余 2 个登记排除项（`wpca-wordpress-stubs.php` 函数桩 774 行、`wp-clean-admin.php` 引导主文件 236 行）

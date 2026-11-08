@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * WPCleanAdmin Core Functions
  *
@@ -6,7 +6,7 @@
  * 统一在此引入，对外仍是同一组全局函数（公开 API 不变）。
  *
  * @package WPCleanAdmin
- * @version 1.9.10
+ * @version 1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

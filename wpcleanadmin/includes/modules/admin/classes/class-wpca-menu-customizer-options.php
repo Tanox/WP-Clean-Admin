@@ -5,7 +5,7 @@
  * 承载菜单定制设置的读写与分组 CRUD，从 Menu_Customizer 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.9.0
+ * @version  1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

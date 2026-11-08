@@ -5,7 +5,7 @@
  * 承载能力校验、参数校验、AJAX nonce 校验与 AJAX/验证错误响应，从 Helpers 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.9.14
+ * @version  1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.9.14

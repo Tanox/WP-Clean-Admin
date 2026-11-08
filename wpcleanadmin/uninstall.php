@@ -6,7 +6,7 @@
  * is deleted through the WordPress admin. Triggered by WordPress core only.
  *
  * @package WPCleanAdmin
- * @version 1.9.0
+ * @version 1.9.16
  */
 
 // Exit if not uninstalling from WordPress admin.

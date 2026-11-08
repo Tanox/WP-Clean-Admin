@@ -5,7 +5,7 @@
  * 承载缓存的统一读写删清分发入口，从 Cache 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.9.14
+ * @version  1.9.16
  * @author Tanox
  * @since 1.9.14
  */

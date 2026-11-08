@@ -3,7 +3,7 @@
  * WPCleanAdmin Cache Manager
  *
  * @package WPCleanAdmin
- * @version  1.9.14
+ * @version  1.9.16
  * @author Tanox
  * @since 1.8.0
  */

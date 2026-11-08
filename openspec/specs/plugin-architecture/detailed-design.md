@@ -1,7 +1,7 @@
 <!-- OPENSPEC:START -->
 # WP Clean Admin 详细设计文档
 
-> **状态**：设计基线快照（1.8.5 基线，2026-09 校正）　|　**适用基线**：1.9.16　|　**更新日期**：2026-11-07
+> **状态**：设计基线快照（1.8.5 基线，2026-09 校正）　|　**适用基线**：1.9.17　|　**更新日期**：2026-11-07
 > 本文描述架构设计与历史方案，**不代表当前运行期实现**。当前实现以 `wpcleanadmin/includes/modules/` 为准；版本历史以根 `CHANGELOG.md` 为准；开发规范以根 `CONTRIBUTING.md` 为准。
 > 文中示例代码里的版本号、目录路径仅作示意，落地时按 `CONTRIBUTING.md` §3/§9 执行。
 
@@ -88,7 +88,7 @@ wpcleanadmin/
  * Plugin Name: WP Clean Admin
  * Plugin URI: https://github.com/Tanox/WP-Clean-Admin
  * Description: A comprehensive WordPress admin cleanup and optimization plugin
- * Version: 1.9.16
+ * Version: 1.9.17
  * Author: Tanox
  * Author URI: https://github.com/Tanox
  * License: GPL v2 or later
@@ -174,7 +174,7 @@ if ( ! function_exists( 'plugin_basename' ) ) {
 
 ```php
 // Define plugin constants
-define( 'WPCA_VERSION', '1.9.16' );
+define( 'WPCA_VERSION', '1.9.17' );
 define( 'WPCA_PLUGIN_DIR', ( function_exists( 'plugin_dir_path' ) ? plugin_dir_path( __FILE__ ) : dirname( __FILE__ ) . '/' ) );
 define( 'WPCA_PLUGIN_URL', ( function_exists( 'plugin_dir_url' ) ? plugin_dir_url( __FILE__ ) : '' ) );
 define( 'WPCA_TEXT_DOMAIN', 'wp-clean-admin' );
@@ -419,7 +419,7 @@ if ( function_exists( '\add_filter' ) && function_exists( '\plugin_basename' ) )
  * WPCleanAdmin PSR-4 Autoloader
  *
  * @package WPCleanAdmin
- * @version 1.9.16
+ * @version 1.9.17
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -541,7 +541,7 @@ spl_autoload_register( function( $class ) {
  * WPCleanAdmin Core Class（适配层，逐步迁移至 WPCleanAdmin\Modules\*）
  *
  * @package WPCleanAdmin
- * @version 1.9.16
+ * @version 1.9.17
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

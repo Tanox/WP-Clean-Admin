@@ -5,7 +5,7 @@
  * 承载日志写入、统计与导出逻辑，从 Helpers 主类抽取。
  *
  * @package WPCleanAdmin
- * @version  1.9.14
+ * @version  1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.9.14

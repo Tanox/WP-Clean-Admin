@@ -1,16 +1,18 @@
-/**
- * WP Clean Admin Settings CSS
+/*
+ * WP Clean Admin — Settings Page Styles
  *
- * @package WPCA
+ * E-2 抽离资产：活设置页（modules/admin/settings）的内联样式已抽离至此文件，
+ * 由 class-wpca-settings-styles.php::render() 经 include 注入（§4.5）。
+ * 源为 1.9.12 抽离的 wpca-settings-page.css（1.9.13 误删，1.9.17 恢复并更名）。
+ *
+ * @version 1.9.17
  */
 
-/* Settings page container */
-.wpca-settings-wrap {
+﻿.wpca-settings-wrap {
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* Settings tabs */
 .wpca-settings-tabs {
     margin: 20px 0;
     background: #fff;
@@ -74,7 +76,6 @@
     animation: wpca-fade-in 0.3s ease;
 }
 
-/* Settings sections */
 .wpca-settings-section {
     margin-bottom: 20px;
     padding: 20px;
@@ -146,7 +147,6 @@
     color: #555;
 }
 
-/* Submit button */
 .wpca-settings-submit {
     margin: 30px 0;
     padding: 20px;
@@ -174,35 +174,35 @@
     font-weight: 500;
 }
 
-/* Responsive design */
+/* Responsive Design */
 @media screen and (max-width: 782px) {
     .wpca-settings-wrap {
         padding: 0 10px;
     }
-    
+
     .wpca-tabs-nav {
         flex-direction: column;
     }
-    
+
     .wpca-tab-button {
         justify-content: flex-start;
         border-bottom: 1px solid #e1e1e1;
     }
-    
+
     .wpca-tab-button.active {
         border-bottom: 1px solid #e1e1e1;
         border-left: 3px solid #007cba;
     }
-    
+
     .wpca-settings-section .form-table {
         display: block;
     }
-    
+
     .wpca-settings-section .form-table tr {
         display: block;
         border-bottom: 1px solid #f0f0f0;
     }
-    
+
     .wpca-settings-section .form-table th,
     .wpca-settings-section .form-table td {
         display: block;
@@ -210,23 +210,23 @@
         border-right: none;
         border-bottom: 1px solid #f0f0f0;
     }
-    
+
     .wpca-settings-section .form-table th {
         background: #fafafa;
         padding-bottom: 8px;
     }
-    
+
     .wpca-settings-section .form-table td {
         padding-top: 8px;
         padding-bottom: 12px;
     }
-    
+
     .wpca-settings-submit {
         flex-direction: column;
         gap: 15px;
         align-items: stretch;
     }
-    
+
     #wpca-save-button {
         width: 100%;
         text-align: center;
