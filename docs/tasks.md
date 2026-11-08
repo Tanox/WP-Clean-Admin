@@ -1,6 +1,6 @@
 # WP Clean Admin 开发任务清单（进行中）
 
-> **适用基线**：1.9.15　|　**最近更新**：2026-11-07　|　**维护**：Tanox
+> **适用基线**：1.9.16　|　**最近更新**：2026-11-08　|　**维护**：Tanox
 > 本文仅保留**进行中 / 待办**任务；已完成任务归档至 [`tasks-done.md`](tasks-done.md)。
 > 代码治理拆分规则、文档格式与版本同步清单见根 [`CONTRIBUTING.md`](../CONTRIBUTING.md) §4.5 / §9.2，术语见 §10，文档索引见 [`docs/README.md`](README.md)。
 
@@ -10,11 +10,11 @@
 
 | 维度 | 状态 |
 |------|------|
-| 版本 | **1.9.15**（插件头 `Version:` 与 `WPCA_VERSION` 一致） |
+| 版本 | **1.9.16**（插件头 `Version:` 与 `WPCA_VERSION` 一致） |
 | 架构 | `WPCleanAdmin\Modules\*` 为运行期唯一权威体系；根 `includes/` 仅余 9 个活文件，legacy 死代码（115 个）已归档至 `archive/legacy-includes-1.9.12/` |
-| 代码治理（>200 行拆分） | 1.9.14 已拆分 `modules/` Helpers 与 Cache；当前仍有 **15 个 `modules/**` 文件 >200 行**（A-3，实测 2026-11-07）；排除项：函数桩与引导主文件 |
+| 代码治理（>200 行拆分） | 1.9.14 已拆分 `modules/` Helpers 与 Cache；**A-3 已收官（1.9.16）**：15 个 >200 行活文件全部按组合 trait 范式拆分；实测全仓仅余 2 个登记排除项（函数桩 774、引导主文件 236） |
 | 渲染类内联资源 | E-2 未闭环：活设置页 `modules/admin/settings/` 仍内联输出 CSS/JS，需重做于 modules 活代码 |
-| 文档与规范 | 已建立权威体系：`CONTRIBUTING.md`（规范）+ `docs/README.md`（索引）；版本号已统一至 1.9.15；发布为 CI 全绿后自动发布 Release（`release.yml`，见 `CONTRIBUTING.md` §9.4） |
+| 文档与规范 | 已建立权威体系：`CONTRIBUTING.md`（规范）+ `docs/README.md`（索引）；版本号已统一至 1.9.16；发布为 CI 全绿后自动发布 Release（`release.yml`，见 `CONTRIBUTING.md` §9.4） |
 | 功能增强提案 | 16 任务全待办（`openspec/changes/规范改进与功能增强计划/`） |
 | 原型提案 | 剩归档 2 项 |
 
@@ -32,9 +32,9 @@
 
 拆分范式：原 trait 改为「组合 trait」（`use` 两个子 trait），消费类零改动，公开 API 不变。详见 `docs/tasks-done.md`。
 
-#### A-3. 活体系拆分（`modules/**`，15 个，待办）
+#### A-3. 活体系拆分（`modules/**`，15 个，已完成 1.9.16）
 
-> 实测口径：2026-11-07 按 `wpcleanadmin/` 全量 PHP 文件行数统计，已排除 `wpca-wordpress-stubs.php`（函数桩）与 `wp-clean-admin.php`（引导主文件）。
+> 下表为拆分前基线（2026-11-07 实测，按 `wpcleanadmin/` 全量 PHP 行数统计，已排除函数桩与引导主文件）；1.9.16 已全部拆分，行数变化见 `tasks-done.md`。
 > 范式见 `CONTRIBUTING.md` §4.5：主类 `require_once` + `use` 任务 trait；若原文件本身是 trait，改用组合 trait，消费类零改动。
 
 | 文件（`wpcleanadmin/includes/modules/` 下） | 行数 |
@@ -55,7 +55,7 @@
 | `admin/classes/class-wpca-user-roles.php` | 206 |
 | `admin/classes/class-wpca-login-captcha.php` | 201 |
 
-- [ ] 按上表逐个拆分（每个文件一个提交，附带行数变化与公开 API 不变说明）
+- [x] 按上表逐个拆分，1.9.16 全部完成（新增 30 个任务 trait、改写 14 个消费类；附行数变化，公开 API 不变）
 - [x] `modules/utilities/classes/class-wpca-helpers.php`、`class-wpca-cache.php` — 1.9.14 已拆分，见 `tasks-done.md`
 
 #### A-4. 排除项（不拆分，已登记）
@@ -81,7 +81,7 @@
 ### C. plugin-prototype 收尾（2 项）
 
 - [ ] 将设计规范归档至 `openspec/specs/plugin-architecture/`
-- [ ] 校准提案中的 `1.8.3` 基线表述（当前 1.9.15，以根 `CHANGELOG.md` 为准）
+- [ ] 校准提案中的 `1.8.3` 基线表述（当前 1.9.16，以根 `CHANGELOG.md` 为准）
 
 ### D. 测试与静态分析（部分阻塞：无 PHP 运行时）
 
@@ -97,19 +97,19 @@
 
 ---
 
-## 三、优先级建议（更新于 2026-11-07）
+## 三、优先级建议（更新于 2026-11-08）
 
 | 优先级 | 范围 | 说明 |
 |--------|------|------|
-| P0 | A-3 | 拆分 `modules/**` 15 个 >200 行文件（组合 trait 范式，公开 API 不变） |
+| P0 | 无（A-3 已完成） | A-3 于 1.9.16 收官；当前最高优先级为 P1 |
 | P1 | D + E-2 | 建立阻塞式 CI 门禁与 PHP 运行时验证；重做活设置页资源抽离 |
 | P2 | B、C | 功能增强提案 16 任务（先复核与现有文档的差距）；原型归档 |
 
 ---
 
-## 四、统计摘要（2026-11-07）
+## 四、统计摘要（2026-11-08）
 
-- `>200` 行 PHP 文件：**15 个待办**（全部为 `modules/**` 活文件）+ 2 个登记排除项（函数桩、引导主文件）
+- `>200` 行 PHP 文件：**0 个待办**（A-3 于 1.9.16 收官）+ 2 个登记排除项（函数桩 774、引导主文件 236）
 - 已完成代码拆分批次：见 `docs/tasks-done.md`
 - 功能增强提案待办：**16**
 - 原型提案剩余：**2**
@@ -120,7 +120,8 @@
 
 | 版本 | 提交 | 内容 |
 |------|------|------|
-| 1.9.15 | 本次 | 新增自动发布工作流 `release.yml`（CI 全绿自动发布 Release）并更新发布规范（`CONTRIBUTING.md` §9.4） |
+| 1.9.16 | 本次 | A-3 收官：拆分 `modules/**` 剩余 15 个 >200 行活文件（新增 30 trait、改写 14 消费类），全仓 >200 行仅余 2 个排除项；版本号同步至 1.9.16 |
+| 1.9.15 | 上次 | 新增自动发布工作流 `release.yml`（CI 全绿自动发布 Release）并更新发布规范（`CONTRIBUTING.md` §9.4） |
 | 1.9.14 | `5fd486d` | 拆分 `modules/` Helpers 与 Cache 为 trait |
 | 1.9.14 | 本次 | 文档治理：建立 `CONTRIBUTING.md` / `docs/README.md`，重写 `DEVELOPMENT.md` / `AGENTS.md`，统一版本号与历史文档标注（纯文档变更，不提升插件版本） |
 | 1.9.13 | `42fc534` | E-1 已定：归档根 `includes/` 115 个死代码文件至 `archive/legacy-includes-1.9.12/`（modules 权威）；清理 E-2 孤立资源 4 个；更正 E-2 描述 |

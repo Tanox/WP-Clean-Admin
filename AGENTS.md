@@ -1,7 +1,7 @@
 <!-- OPENSPEC:START -->
 # WP Clean Admin AI 助手指令
 
-> **适用基线**：1.9.15　|　**更新日期**：2026-11-07
+> **适用基线**：1.9.16　|　**更新日期**：2026-11-07
 > 本文档为 AI 助手提供工作指南与目录边界。**编码风格、命名约定、提交格式、分支管理、代码审查、测试与版本管理的完整规范以根 [`CONTRIBUTING.md`](CONTRIBUTING.md) 为唯一权威来源**；本文不重复其条文。
 
 ## 1. 何时参考本文件
@@ -40,7 +40,7 @@
 
 ## 3. 项目概述
 
-WP Clean Admin 是 WordPress 后台清理与优化插件，当前版本 **1.9.15**，最低 PHP 7.4 / WordPress 5.0，Text Domain `wp-clean-admin`。
+WP Clean Admin 是 WordPress 后台清理与优化插件，当前版本 **1.9.16**，最低 PHP 7.4 / WordPress 5.0，Text Domain `wp-clean-admin`。
 
 - **运行期唯一权威体系**：`WPCleanAdmin\Modules\*`（`admin/` / `core/` / `utilities/`）
 - **入口**：`wp-clean-admin.php` → `plugins_loaded` → `WPCleanAdmin\Modules\Core\Classes\Core` → `Module_Loader::safe_init()`

@@ -3,6 +3,12 @@
 > 版本号唯一来源：`wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION`。
 > 变更格式与同步清单见 `CONTRIBUTING.md` §5 / §9.2；纯文档变更不提升插件版本，记录于 `[Unreleased]`。
 
+## [1.9.16] - 2026-11-08
+
+- refactor: **A-3 收官**——按 `CONTRIBUTING.md` §4.5 组合 trait 范式拆分 `modules/**` 剩余超 200 行活文件（Dashboard / Login 系列 / Menu_Customizer 系列 / Menu_Manager / User_Roles 系列 / Settings 系列 / Error_Handler / Resources）：新增 30 个任务 trait、改写 14 个消费类（`require_once` + `use`），公开 API（类名、方法签名、单例）不变；实测全仓 >200 行 PHP 仅余 2 个登记排除项（`wpca-wordpress-stubs.php` 函数桩 774 行、`wp-clean-admin.php` 引导主文件 236 行）
+- chore: 版本号统一至 1.9.16（§9.2 同步清单全部声明位：插件头 `Version` / `WPCA_VERSION`、`readme.txt` Stable tag 与 Upgrade Notice、README/README.en、原型 `index.html`、`languages/*.pot|po`、AGENTS/CONTRIBUTING/DEVELOPMENT/docs/openspec 各「适用基线」与项目概述、本批改动 PHP 文件头 `@version`）
+- 说明：本机无 PHP 运行时；45 个改动文件的 `__DIR__` `require_once` 已静态校验全部可解析，IDE 诊断 0 错误；待 CI/PHP 环境验证
+
 ## [1.9.15] - 2026-11-07
 
 - ci: **新增自动发布工作流 `.github/workflows/release.yml`**——`CI` 工作流在 `main` 分支全部 job 成功后自动触发：读取插件头 `Version:` → tag 幂等检查（已发布版本跳过）→ `git archive`（遵循 `.gitattributes` export-ignore，排除 tests/docs/openspec/prototype/archive 等非运行时文件）打包 `wp-clean-admin-v<版本>.zip` → 创建 GitHub Release 并上传资产

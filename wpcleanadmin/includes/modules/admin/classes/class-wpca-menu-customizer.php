@@ -3,12 +3,11 @@
  * WPCleanAdmin Menu Customizer Class
  *
  * @package WPCleanAdmin
- * @version 1.9.2
+ * @version 1.9.16
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
  */
-
 
 namespace WPCleanAdmin\Modules\Admin\Classes;
 
@@ -19,11 +18,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/class-wpca-menu-customizer-options.php';
 require_once __DIR__ . '/class-wpca-menu-customizer-tree.php';
 require_once __DIR__ . '/class-wpca-menu-customizer-render.php';
+require_once __DIR__ . '/class-wpca-menu-customizer-delegation-tasks.php';
+require_once __DIR__ . '/class-wpca-menu-customizer-ajax-tasks.php';
 
 /**
  * Menu_Customizer class
  */
 class Menu_Customizer {
+
+    use MenuCustomizerDelegationTasks;
+    use MenuCustomizerAjaxTasks;
 
     /**
      * Singleton instance
@@ -94,260 +98,6 @@ class Menu_Customizer {
             // Export/Import handlers
             \add_action( 'wp_ajax_wpca_export_menu_customizer', array( $this, 'ajax_export_settings' ) );
             \add_action( 'wp_ajax_wpca_import_menu_customizer', array( $this, 'ajax_import_settings' ) );
-        }
-    }
-
-    /**
-     * Customize admin menu (delegated)
-     */
-    public function customize_admin_menu(): void {
-        $this->tree->customize_admin_menu();
-    }
-
-    /**
-     * Customize admin bar (delegated)
-     */
-    public function customize_admin_bar(): void {
-        $this->render->customize_admin_bar();
-    }
-
-    /**
-     * Get menu customizer settings (delegated)
-     *
-     * @return array
-     */
-    public function get_settings(): array {
-        return $this->options->get_settings();
-    }
-
-    /**
-     * Save menu customizer settings (delegated)
-     *
-     * @param array $settings
-     * @return bool
-     */
-    public function save_settings( array $settings ): bool {
-        return $this->options->save_settings( $settings );
-    }
-
-    /**
-     * Reset menu customizer settings (delegated)
-     *
-     * @return bool
-     */
-    public function reset_settings(): bool {
-        return $this->options->reset_settings();
-    }
-
-    /**
-     * Create menu group (delegated)
-     *
-     * @param string $group_id
-     * @param string $group_name
-     * @param array  $menu_items
-     * @return bool
-     */
-    public function create_menu_group( $group_id, $group_name, $menu_items = array() ): bool {
-        return $this->options->create_menu_group( $group_id, $group_name, $menu_items );
-    }
-
-    /**
-     * Delete menu group (delegated)
-     *
-     * @param string $group_id
-     * @return bool
-     */
-    public function delete_menu_group( $group_id ): bool {
-        return $this->options->delete_menu_group( $group_id );
-    }
-
-    /**
-     * Update menu group (delegated)
-     *
-     * @param string $group_id
-     * @param array  $group_settings
-     * @return bool
-     */
-    public function update_menu_group( $group_id, $group_settings ): bool {
-        return $this->options->update_menu_group( $group_id, $group_settings );
-    }
-
-    /**
-     * Get menu group settings (delegated)
-     *
-     * @return array
-     */
-    public function get_menu_groups(): array {
-        return $this->options->get_menu_groups();
-    }
-
-    /**
-     * Get admin menu structure (delegated)
-     *
-     * @return array
-     */
-    public function get_admin_menu_structure(): array {
-        return $this->render->get_admin_menu_structure();
-    }
-
-    /**
-     * Get admin bar structure (delegated)
-     *
-     * @return array
-     */
-    public function get_admin_bar_structure(): array {
-        return $this->render->get_admin_bar_structure();
-    }
-
-    /**
-     * Export menu customizer settings (delegated)
-     *
-     * @return array
-     */
-    public function export_settings(): array {
-        return $this->render->export_settings();
-    }
-
-    /**
-     * Import menu customizer settings (delegated)
-     *
-     * @param array $import_data
-     * @return bool
-     */
-    public function import_settings( array $import_data ): bool {
-        return $this->render->import_settings( $import_data );
-    }
-
-    /**
-     * Apply menu order (delegated)
-     *
-     * @param array $menu
-     * @param array $menu_order
-     */
-    public function apply_menu_order( array &$menu, array $menu_order ): void {
-        $this->tree->apply_menu_order( $menu, $menu_order );
-    }
-
-    /**
-     * Apply menu groups (delegated)
-     *
-     * @param array $menu
-     * @param array $menu_groups
-     */
-    public function apply_menu_groups( array &$menu, array $menu_groups ): void {
-        $this->tree->apply_menu_groups( $menu, $menu_groups );
-    }
-
-    /**
-     * Verify AJAX nonce and user capability.
-     *
-     * @return bool
-     */
-    private function verify_ajax_request(): bool {
-        $nonce = isset( $_POST['_wpnonce'] ) ? \sanitize_text_field( \wp_unslash( $_POST['_wpnonce'] ) ) : '';
-
-        if ( ! function_exists( '\wp_verify_nonce' ) || '' === $nonce || ! \wp_verify_nonce( $nonce, 'wpca_ajax_nonce' ) ) {
-            if ( function_exists( '\wp_send_json_error' ) ) {
-                \wp_send_json_error( \__( 'Invalid nonce', \WPCA_TEXT_DOMAIN ) );
-            }
-            return false;
-        }
-
-        if ( ! function_exists( '\current_user_can' ) || ! \current_user_can( 'manage_options' ) ) {
-            if ( function_exists( '\wp_send_json_error' ) ) {
-                \wp_send_json_error( \__( 'Insufficient permissions', \WPCA_TEXT_DOMAIN ) );
-            }
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * AJAX handler: save menu customizer settings.
-     */
-    public function ajax_save_settings(): void {
-        if ( ! $this->verify_ajax_request() ) {
-            return;
-        }
-
-        $settings = isset( $_POST['settings'] ) ? \wp_unslash( $_POST['settings'] ) : array();
-        if ( ! is_array( $settings ) ) {
-            $settings = array();
-        }
-        $settings = \WPCleanAdmin\AJAX\Settings::sanitize_settings( $settings );
-
-        if ( $this->options->save_settings( $settings ) ) {
-            if ( function_exists( '\wp_send_json_success' ) ) {
-                \wp_send_json_success( array( 'message' => \__( 'Menu customizer settings saved successfully', \WPCA_TEXT_DOMAIN ) ) );
-            }
-            return;
-        }
-
-        if ( function_exists( '\wp_send_json_error' ) ) {
-            \wp_send_json_error( \__( 'Failed to save menu customizer settings', \WPCA_TEXT_DOMAIN ) );
-        }
-    }
-
-    /**
-     * AJAX handler: reset menu customizer settings.
-     */
-    public function ajax_reset_settings(): void {
-        if ( ! $this->verify_ajax_request() ) {
-            return;
-        }
-
-        if ( $this->options->reset_settings() ) {
-            if ( function_exists( '\wp_send_json_success' ) ) {
-                \wp_send_json_success( array( 'message' => \__( 'Menu customizer settings reset to default', \WPCA_TEXT_DOMAIN ) ) );
-            }
-            return;
-        }
-
-        if ( function_exists( '\wp_send_json_error' ) ) {
-            \wp_send_json_error( \__( 'Failed to reset menu customizer settings', \WPCA_TEXT_DOMAIN ) );
-        }
-    }
-
-    /**
-     * AJAX handler: export menu customizer settings.
-     */
-    public function ajax_export_settings(): void {
-        if ( ! $this->verify_ajax_request() ) {
-            return;
-        }
-
-        if ( function_exists( '\wp_send_json_success' ) ) {
-            \wp_send_json_success( $this->render->export_settings() );
-        }
-    }
-
-    /**
-     * AJAX handler: import menu customizer settings.
-     */
-    public function ajax_import_settings(): void {
-        if ( ! $this->verify_ajax_request() ) {
-            return;
-        }
-
-        $import_data = isset( $_POST['import_data'] ) ? \wp_unslash( $_POST['import_data'] ) : array();
-        if ( is_string( $import_data ) ) {
-            $decoded = function_exists( '\json_decode' ) ? \json_decode( $import_data, true ) : null;
-            $import_data = is_array( $decoded ) ? $decoded : array();
-        }
-        if ( ! is_array( $import_data ) ) {
-            $import_data = array();
-        }
-
-        if ( $this->render->import_settings( $import_data ) ) {
-            if ( function_exists( '\wp_send_json_success' ) ) {
-                \wp_send_json_success( array( 'message' => \__( 'Menu customizer settings imported successfully', \WPCA_TEXT_DOMAIN ) ) );
-            }
-            return;
-        }
-
-        if ( function_exists( '\wp_send_json_error' ) ) {
-            \wp_send_json_error( \__( 'Failed to import menu customizer settings', \WPCA_TEXT_DOMAIN ) );
         }
     }
 }

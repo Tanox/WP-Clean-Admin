@@ -15,7 +15,7 @@
 
 ## 2. 项目概述
 
-WP Clean Admin 是一个 WordPress 插件，用于管理后台清理和优化，版本 1.9.15。
+WP Clean Admin 是一个 WordPress 插件，用于管理后台清理和优化，版本 1.9.16。
 
 > 开发规范（编码、命名、提交、分支、审查）以根 `CONTRIBUTING.md` 为唯一权威来源；版本历史以根 `CHANGELOG.md` 为准。本文件仅规定 OpenSpec 文档流程。
 
