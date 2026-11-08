@@ -3,7 +3,7 @@
  * WPCleanAdmin PSR-4 Autoloader
  *
  * @package WPCleanAdmin
- * @version 1.9.16
+ * @version 1.9.17
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -42,9 +42,11 @@ spl_autoload_register( function( $class ) {
     $namespace_parts = explode( '\\', $class_name );
     $class_basename = array_pop( $namespace_parts );
     
-    // Convert camelCase to kebab-case and replace underscores with hyphens for class name
-    $class_file = strtolower( preg_replace( '/(?<!^)[A-Z]/', '-$0', $class_basename ) );
-    $class_file = str_replace( '_', '-', $class_file );
+    // 历史类名含下划线（如 Security_Headers）时，先去除下划线再转 kebab-case，
+    // 避免生成双连字符文件名（class-wpca-security--headers.php）导致类不可加载。
+    // 后续应按 CONTRIBUTING.md §3 将下划线类名统一改为 PascalCase（见 docs/tasks.md）。
+    $class_basename = str_replace( '_', '', $class_basename );
+    $class_file     = strtolower( preg_replace( '/(?<!^)[A-Z]/', '-$0', $class_basename ) );
     
     // Build directory path from namespace parts
     $dir_path = '';

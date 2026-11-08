@@ -13,10 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * - format_bytes（纯函数，无依赖）
  *
  * @package WPCleanAdmin
+ * @version 1.9.17
  */
 
 use PHPUnit\Framework\TestCase;
-use WPCleanAdmin\Helpers;
+use WPCleanAdmin\Modules\Utilities\Classes\Helpers;
 
 class HelpersTest extends TestCase {
 
