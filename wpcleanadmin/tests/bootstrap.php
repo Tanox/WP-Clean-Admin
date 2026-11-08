@@ -6,12 +6,16 @@
  * 核心函数，使单元测试（无需完整 WP 环境）可独立运行并验证插件逻辑。
  *
  * @package WPCleanAdmin
+ * @version 1.9.17
  */
 
 // 提前定义 ABSPATH：阻止 autoloader 加载空白 IDE stub，并确保核心函数文件不 exit
 if ( ! defined( 'ABSPATH' ) ) {
     define( 'ABSPATH', dirname( __DIR__ ) . '/' );
 }
+
+// 守卫化全局 polyfill：兜底插件代码在 CLI 测试环境可能调用的 WP 函数
+require_once __DIR__ . '/wp-polyfill.php';
 
 // 定义插件核心常量（主插件文件在测试环境中不加载，故在此补齐）
 if ( ! defined( 'WPCA_TEXT_DOMAIN' ) ) {

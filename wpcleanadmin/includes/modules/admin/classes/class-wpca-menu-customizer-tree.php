@@ -5,7 +5,7 @@
  * 承载菜单结构构建、排序与分组逻辑，从 Menu_Customizer 主类抽取。
  *
  * @package WPCleanAdmin
- * @version 1.9.16
+ * @version 1.9.17
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -20,9 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/class-wpca-menu-customizer-tree-customize-tasks.php';
 require_once __DIR__ . '/class-wpca-menu-customizer-tree-order-tasks.php';
 
-if ( ! function_exists( 'sanitize_html_class' ) ) {
-    function sanitize_html_class() {}
-}
 
 /**
  * 菜单结构构建类

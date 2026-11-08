@@ -5,7 +5,7 @@
  * 承载角色默认能力清单与角色 CRUD 操作，从 User_Roles 主类抽取。
  *
  * @package WPCleanAdmin
- * @version 1.9.16
+ * @version 1.9.17
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

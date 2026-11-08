@@ -6,7 +6,7 @@
  * 主类 `Dashboard` 通过 `use DashboardWidgetTasks;` 组合。
  *
  * @package WPCleanAdmin
- * @version 1.9.16
+ * @version 1.9.17
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

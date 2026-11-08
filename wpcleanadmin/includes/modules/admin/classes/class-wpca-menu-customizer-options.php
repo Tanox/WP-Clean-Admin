@@ -17,18 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if ( ! function_exists( 'update_option' ) ) {
-    function update_option() {}
-}
-if ( ! function_exists( 'delete_option' ) ) {
-    function delete_option() {}
-}
-if ( ! function_exists( 'get_option' ) ) {
-    function get_option() {}
-}
-if ( ! function_exists( 'wp_parse_args' ) ) {
-    function wp_parse_args() {}
-}
 
 /**
  * 菜单定制设置操作类

@@ -17,9 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if ( ! function_exists( 'update_option' ) ) {
-    function update_option() {}
-}
 
 /**
  * 菜单数据类

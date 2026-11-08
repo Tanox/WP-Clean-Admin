@@ -3,7 +3,7 @@
  * WPCleanAdmin Permissions Class
  *
  * @package WPCleanAdmin
- * @version 1.9.16
+ * @version 1.9.17
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -19,18 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Declare WordPress functions for IDE compatibility
-if ( ! function_exists( 'get_current_user_id' ) ) {
-    function get_current_user_id() {}
-}
-if ( ! function_exists( 'get_user_by' ) ) {
-    function get_user_by() {}
-}
-if ( ! function_exists( 'user_can' ) ) {
-    function user_can() {}
-}
-if ( ! function_exists( 'wp_redirect' ) ) {
-    function wp_redirect() {}
-}
 
 /**
  * Permissions class

@@ -3,7 +3,7 @@
  * WPCleanAdmin Menu Manager Class
  *
  * @package WPCleanAdmin
- * @version 1.9.16
+ * @version 1.9.17
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -21,21 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Declare WordPress functions for IDE compatibility
-if ( ! function_exists( 'wp_get_current_user' ) ) {
-    function wp_get_current_user() {}
-}
-if ( ! function_exists( 'add_action' ) ) {
-    function add_action() {}
-}
-if ( ! function_exists( 'remove_meta_box' ) ) {
-    function remove_meta_box() {}
-}
-if ( ! function_exists( 'remove_action' ) ) {
-    function remove_action() {}
-}
-if ( ! function_exists( 'update_option' ) ) {
-    function update_option() {}
-}
 
 /**
  * Menu_Manager class

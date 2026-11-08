@@ -17,18 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if ( ! function_exists( 'wp_get_current_user' ) ) {
-    function wp_get_current_user() {}
-}
-if ( ! function_exists( 'wp_json_encode' ) ) {
-    function wp_json_encode() {}
-}
-if ( ! function_exists( 'json_decode' ) ) {
-    function json_decode() {}
-}
-if ( ! function_exists( 'sanitize_text_field' ) ) {
-    function sanitize_text_field() {}
-}
 
 /**
  * 菜单渲染/导出类

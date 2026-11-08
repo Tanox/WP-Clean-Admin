@@ -17,15 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if ( ! function_exists( 'add_action' ) ) {
-    function add_action() {}
-}
-if ( ! function_exists( 'remove_meta_box' ) ) {
-    function remove_meta_box() {}
-}
-if ( ! function_exists( 'remove_action' ) ) {
-    function remove_action() {}
-}
 
 /**
  * 菜单限制类

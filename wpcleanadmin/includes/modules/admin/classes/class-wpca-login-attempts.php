@@ -17,18 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if ( ! function_exists( 'get_transient' ) ) {
-    function get_transient() {}
-}
-if ( ! function_exists( 'set_transient' ) ) {
-    function set_transient() {}
-}
-if ( ! function_exists( 'add_action' ) ) {
-    function add_action() {}
-}
-if ( ! function_exists( 'add_filter' ) ) {
-    function add_filter() {}
-}
 
 /**
  * 登录尝试限制类
