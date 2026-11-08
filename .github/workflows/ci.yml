@@ -24,12 +24,13 @@ jobs:
         # php -l catches parse errors across the whole plugin tree.
         # Use an explicit loop instead of `find | xargs` to fail fast on the
         # first parse error and avoid any xargs edge cases (exit 124 timeout).
+        # Output is mirrored into $GITHUB_STEP_SUMMARY so failure details stay
+        # retrievable via the public check-run API (raw logs need admin auth).
         run: |
-          set -euo pipefail
           status=0
           while IFS= read -r -d '' f; do
             php -l "$f" || status=1
-          done < <( find wpcleanadmin -type f -name '*.php' -print0 )
+          done < <( find wpcleanadmin -type f -name '*.php' -print0 ) >> "$GITHUB_STEP_SUMMARY" 2>&1
           exit $status
 
   phpcs:
@@ -54,7 +55,8 @@ jobs:
         run: vendor/bin/phpcs --config-set installed_paths "$(pwd)/vendor/wp-coding-standards/wpcs,$(pwd)/vendor/phpcsstandards/phpcsutils,$(pwd)/vendor/phpcsstandards/phpcsextra"
       - name: Run phpcs
         working-directory: wpcleanadmin
-        run: vendor/bin/phpcs
+        # Mirror output into the step summary (public check-run API readable)
+        run: vendor/bin/phpcs 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"; exit ${PIPESTATUS[0]}
 
   phpunit:
     name: PHPUnit (PHP ${{ matrix.php }})
@@ -77,4 +79,6 @@ jobs:
         run: composer install --no-interaction --prefer-dist --no-progress
       - name: Run PHPUnit
         working-directory: wpcleanadmin
-        run: composer test
+        # Mirror output into the step summary so failure details stay
+        # retrievable via the public check-run API without admin log access.
+        run: composer test 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"; exit ${PIPESTATUS[0]}
