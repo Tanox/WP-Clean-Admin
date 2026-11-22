@@ -9,7 +9,7 @@
 WP Clean Admin 是一个全面的 WordPress 后台清理和优化插件，旨在帮助管理员清理和优化 WordPress 后台，提高网站性能和管理效率。
 
 ## 技术栈
-- PHP 7.0+
+- PHP 7.4+
 - WordPress 5.0+
 - MySQL 5.6+
 - JavaScript (ES6+)
@@ -29,7 +29,7 @@ WP Clean Admin 是一个全面的 WordPress 后台清理和优化插件，旨在
 - PHP 7.4+ 兼容，禁止 PHP 8.0+ 专有语法
 
 ### 架构模式
-- 模块化设计：功能划分为独立模块，便于维护和扩展
+- 权威体系（`modules/` 体系）：功能按域划分为独立模块，便于维护和扩展
 - 单例模式：核心类和功能模块使用单例模式
 - 钩子机制：深度集成 WordPress 钩子系统
 - 面向对象设计：采用面向对象编程范式
@@ -40,7 +40,7 @@ WP Clean Admin 是一个全面的 WordPress 后台清理和优化插件，旨在
 - 集成测试：测试模块之间的集成
 - 手动测试：验证用户界面和功能完整性
 - 兼容性测试：测试不同 WordPress 版本和主题的兼容性
-- 代码覆盖率：确保代码覆盖率不低于 80%
+- 代码覆盖率：≥80% 为提案目标（待办，见 `docs/tasks.md` D 节），非现行强制门槛
 
 ### Git 工作流程
 > 完整规范见根 `CONTRIBUTING.md` §5–§7。
@@ -55,7 +55,7 @@ WordPress 插件开发领域，专注于后台管理优化和性能提升。插�
 
 ## 重要约束
 - 不修改 WordPress 核心文件
-- 兼容 WordPress 5.0+ 和 PHP 7.0+
+- 兼容 WordPress 5.0+ 和 PHP 7.4+
 - 遵循 WordPress 安全最佳实践
 - 保持插件体积小，加载速度快
 - 遵循 WordPress 插件开发规范
@@ -252,9 +252,9 @@ openspec/
 - 功能降级：根据 WordPress 版本提供不同功能
 
 ### PHP 版本兼容性
-- 最低版本：PHP 7.0+
+- 最低版本：PHP 7.4+
 - 兼容性检查：使用 `function_exists()` 检查函数是否存在
-- 语法兼容：使用兼容 PHP 7.0+ 的语法
+- 语法兼容：使用兼容 PHP 7.4+ 的语法
 
 ### 浏览器兼容性
 - 支持浏览器：Chrome, Firefox, Safari, Edge
@@ -336,8 +336,8 @@ openspec/
 ### 审查流程
 - 代码审查
 - 测试验证
-- 合并到 develop 分支
-- 定期发布到 main 分支
+- 合并到唯一长期分支 `main`
+- CI 全绿后由 `release.yml` 自动发布（见 `CONTRIBUTING.md` §9.4）
 
 ## 版本历史
 

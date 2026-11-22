@@ -3,6 +3,12 @@
 > 版本号唯一来源：`wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION`。
 > 变更格式与同步清单见 `CONTRIBUTING.md` §5 / §9.2；纯文档变更不提升插件版本，记录于 `[Unreleased]`。
 
+## [Unreleased]
+
+- docs: 规范文档整理——重写 `openspec/AGENTS.md`（仅保留 OpenSpec 流程，消除与 `CONTRIBUTING.md` 重复的过时规范）；将 `.github/CONTRIBUTING.md` 改为权威规范指针；修正 `openspec/README.md` 目录树与命名格式、`openspec/project.md` 与 plugin-architecture 设计文档的 PHP 7.0/develop/camelCase 等过时表述；根 `AGENTS.md` 与 `docs/审计报告_20260808.md` 移除误用的 OPENSPEC 标记；补齐多份文档的适用基线头与安全章节引用（§4.4）
+- docs: 记忆文档整理——重写仓库 `.codebuddy/memory/MEMORY.md`，按核心决策/事实速查/时间线/环境约束归类并标注时效与可信度，删除已被 E-1 归档结论覆盖的「双体系并存」等失效内容；全局记忆索引按主题重排并更新治理记忆至 A-3 收官状态
+- docs: 纯文档变更，不提升插件版本
+
 ## [1.9.17] - 2026-11-08
 
 - fix: E-2 闭环——恢复活设置页（`modules/admin/settings`）内联资源抽离：创建 `assets/css/wpca-settings.css`（1.9.13 误删，1.9.17 恢复并更名）、抽离 `assets/js/wpca-settings.js`，改写 `Settings_Scripts::render_scripts()` 由内联 `<script>` 改为 `include` 外部资产（CSS 经 `Settings_Styles` 注入），消除 40 行内联 JS；公开渲染行为不变

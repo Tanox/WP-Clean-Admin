@@ -7,7 +7,7 @@
 
 ## 1. 项目概述
 
-WP Clean Admin 是一个 WordPress 插件，用于管理后台清理和优化，当前版本见根 `CHANGELOG.md`（编写时为 1.9.16）。插件采用模块化设计，运行期唯一权威实现为 `WPCleanAdmin\Modules\*`，遵循 WordPress 最佳实践，注重安全性、性能和用户体验。
+WP Clean Admin 是一个 WordPress 插件，用于管理后台清理和优化；当前版本见根 `CHANGELOG.md`（本文为历史设计基线，含已废弃结构描述）。运行期唯一权威实现为 `WPCleanAdmin\Modules\*`，遵循 WordPress 最佳实践，注重安全性、性能和用户体验。
 
 **项目特点**：
 - 模块化设计，便于扩展和维护
@@ -1109,9 +1109,9 @@ wpca_restrict_specific_admin_pages();
 
 ### 8.2 PHP 版本兼容性
 
-- **最低版本**：PHP 7.0+
+- **最低版本**：PHP 7.4+
 - **兼容性检查**：使用 `function_exists()` 检查函数是否存在
-- **语法兼容**：使用兼容 PHP 7.0+ 的语法
+- **语法兼容**：使用兼容 PHP 7.4+ 的语法
 
 ### 8.3 浏览器兼容性
 
@@ -1180,8 +1180,8 @@ wpca_restrict_specific_admin_pages();
 
 ### 11.2 命名规范
 
-- **类名**：使用 PascalCase，例如 `WPCleanAdmin\Core`
-- **方法名**：使用 camelCase，例如 `getInstance()`
+- **类名**：使用 PascalCase 且禁止下划线；业务类在 `WPCleanAdmin\Modules\...` 命名空间
+- **方法名**：沿用所在类既有风格（现状为 snake_case），同类内保持一致
 - **函数名**：使用 snake_case，例如 `wpca_get_settings()`
 - **变量名**：使用 snake_case，例如 `$plugin_settings`
 - **常量名**：使用全大写字母和下划线，例如 `WPCA_VERSION`
@@ -1189,7 +1189,7 @@ wpca_restrict_specific_admin_pages();
 
 ### 11.3 开发流程
 
-- **分支管理**：main（主分支）、develop（开发分支）、feature/xxx（功能分支）、bugfix/xxx（修复分支）
+- **分支管理**：仅 `main` 为长期分支；短生命周期分支用 `feature/` / `fix/` / `docs/` / `refactor/` / `chore/`
 - **提交信息**：使用 Conventional Commits 规范
 - **代码审查**：所有代码必须经过审查
 - **测试**：每个功能必须编写测试用例
@@ -1212,7 +1212,7 @@ wpca_restrict_specific_admin_pages();
 
 **问题**：插件激活时出现错误
 **解决方案**：
-- 检查 PHP 版本是否满足要求（PHP 7.0+）
+- 检查 PHP 版本是否满足要求（PHP 7.4+）
 - 检查 WordPress 版本是否满足要求（WordPress 5.0+）
 - 检查文件权限是否正确
 - 查看错误日志获取详细信息

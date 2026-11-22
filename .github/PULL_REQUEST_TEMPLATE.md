@@ -39,7 +39,7 @@
 - [ ] `README.md` / `README.en.md` / `CHANGELOG.md` / `CONTRIBUTING.md` 等文档已按 §9.2 同步清单检查
 - [ ] 未引用 `archive/`；未向 `wpcleanadmin/` 放入非运行时文件
 - [ ] 无 `console.log` / `debugger` 残留
-- [ ] 安全红线已遵守（nonce + capability、输入 sanitize、输出 esc、SQL prepare、统一 `WPCA_TEXT_DOMAIN`）
+- [ ] 安全基线（见 `CONTRIBUTING.md` §4.4）已遵守：nonce + capability、输入 sanitize、输出 esc、SQL prepare、统一 `WPCA_TEXT_DOMAIN`
 
 ## 关联
 

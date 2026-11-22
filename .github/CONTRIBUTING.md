@@ -1,146 +1,45 @@
-# 贡献指南（Contributing Guide）
+# 贡献指南（GitHub 入口）
 
-感谢你考虑为 **WP Clean Admin** 做出贡献！本文件说明参与本项目开发的流程与规范。
+> **适用基线**：1.9.17　|　**更新日期**：2026-11-22　|　**状态**：快速参考
+> 本文只提供 GitHub 仓库特有说明与规范索引。**所有开发规范（编码、命名、目录、提交、分支、审查、测试、版本与发布）以根 [`CONTRIBUTING.md`](../CONTRIBUTING.md) 为唯一权威来源**，本文不重复其条文。
 
-## 目录
+## 1. 规范索引
 
-- [项目简介](#项目简介)
-- [开发环境](#开发环境)
-- [分支策略](#分支策略)
-- [提交信息规范](#提交信息规范)
-- [编码规范](#编码规范)
-- [版本管理](#版本管理)
-- [测试](#测试)
-- [Pull Request 流程](#pull-request-流程)
-- [文档与规范](#文档与规范)
+| 主题 | 权威位置 |
+|------|----------|
+| 文档优先级、术语表、格式 | `CONTRIBUTING.md` §0、§10 |
+| 项目事实基线与架构定论 E-1 | `CONTRIBUTING.md` §1 |
+| 目录组织与硬约束 | `CONTRIBUTING.md` §2 |
+| 命名约定、语义化 ID、类名→文件名映射 | `CONTRIBUTING.md` §3 |
+| 编码风格、安全基线、>200 行拆分范式 | `CONTRIBUTING.md` §4（安全基线为 §4.4） |
+| 提交信息格式 | `CONTRIBUTING.md` §5 |
+| 分支管理与直推 `main` 条件 | `CONTRIBUTING.md` §6 |
+| 提交前自检、PR 流程、审查要点 | `CONTRIBUTING.md` §7 |
+| 测试命令与 CI 矩阵 | `CONTRIBUTING.md` §8 |
+| 版本同步清单、SemVer、自动发布 | `CONTRIBUTING.md` §9 |
 
-## 项目简介
+## 2. GitHub 仓库特有约定
 
-WP Clean Admin 是一个 WordPress 后台清理与优化插件，遵循 GPL-2.0-or-later 许可证。
-插件运行时代码位于 `wpcleanadmin/`，项目级文档（原型、规范、CHANGELOG 等）位于仓库根目录的
-`prototype/`、`openspec/`、`docs/`。详见根目录 `AGENTS.md` 的目录边界约定。
+- 唯一长期分支为 `main`；不存在 `develop`。短生命周期分支用 `feature/<简述>`、`fix/<简述>`、`docs/<简述>`、`refactor/<简述>`、`chore/<简述>`。
+- PR 标题遵循 `CONTRIBUTING.md` §5；描述填写 [`.github/PULL_REQUEST_TEMPLATE.md`](PULL_REQUEST_TEMPLATE.md)。
+- CI 由 `.github/workflows/ci.yml` 执行 `php-lint` / `phpcs` / `phpunit`；`main` 全绿后由 `release.yml` 自动发布（见 `CONTRIBUTING.md` §9.4）。`phpcs` 当前非阻塞，审查者须手动确认其输出。
+- 安全要求见 `CONTRIBUTING.md` §4.4「安全基线（强制）」；漏洞报告见 [`.github/SECURITY.md`](SECURITY.md)。
+- Community Health Files 驻 `.github/`；**禁止创建 `.github/readme.md`**。
 
-> 注意：**请勿在 `.github/` 目录下创建 `readme.md`**，避免与仓库根目录 `README.md` 重复或产生误导。
-> 其他 Community Health Files（CODE_OF_CONDUCT、CONTRIBUTING、SECURITY、SUPPORT、FUNDING 等）可放此目录。
+## 3. 环境与快速命令
 
-## 开发环境
-
-- PHP >= 7.0
-- 本地 WordPress 开发环境（如 Local、WP_ENV、Laravel Valet 等）
-- Composer（用于开发依赖与 PSR-4 自动加载）
+最低 PHP 7.4 / WordPress 5.0。依赖与命令在插件子目录执行：
 
 ```bash
-composer install        # 安装 phpunit / wpcs 等开发依赖
-composer test           # 运行单元测试
-composer phpcbf         # 自动修复代码风格
-composer phpcs          # 检查代码风格
+cd wpcleanadmin
+composer install
+composer test      # PHPUnit
+composer phpcs     # WPCS 检查
+composer phpcbf    # 自动修复格式
 ```
 
-## 分支策略
+本机无 PHP/Composer 运行时，不得声称测试通过；按 `CONTRIBUTING.md` §7.1 在提交信息标注「待 CI/PHP 环境验证」。
 
-| 分支          | 用途                         |
-| ------------- | ---------------------------- |
-| `main`        | 生产环境代码                 |
-| `develop`     | 集成分支                     |
-| `feature/*`   | 新功能开发                   |
-| `fix/*`       | 修复分支                     |
-| `hotfix/*`    | 紧急生产修复                 |
-| `release/*`   | 发布准备                     |
+## 4. 变更提案
 
-请在 `develop` 或对应的 `feature/*` / `fix/*` 分支上工作，再向 `main` 或 `develop` 发起 PR。
-
-## 提交信息规范
-
-提交信息须遵循以下格式（不超过 72 字符）：
-
-```
-<type>: <description>
-
-[可选正文]
-
-[可选页脚]
-```
-
-类型（type）取值：
-
-| 类型      | 描述                 |
-| --------- | -------------------- |
-| `feat`    | 新增功能             |
-| `fix`     | 修复 bug             |
-| `docs`    | 文档更新             |
-| `style`   | 代码风格调整         |
-| `refactor`| 代码重构             |
-| `test`    | 测试相关             |
-| `chore`   | 构建/依赖/配置变更   |
-| `perf`    | 性能优化             |
-| `ci`      | CI/CD 配置变更       |
-| `revert`  | 回滚提交             |
-
-示例：
-
-```
-feat: 新增媒体清理任务模块
-
-- 从 class-wpca-cleanup 抽离媒体清理逻辑
-- 复用 Cleanup_Helpers trait
-
-Closes #123
-```
-
-## 编码规范
-
-- 遵循 [WordPress 编码规范](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/)
-- 使用 PSR-4 自动加载，命名空间前缀 `WPCleanAdmin\` 映射到 `includes/`
-- 类名使用 `PascalCase`，方法名使用 `camelCase`，函数/变量使用 `snake_case`
-- 所有类与方法必须有 PHPDoc 注释（含 `@param` / `@return`）
-- 源文件单文件超过 200 行时按职责拆分为更小模块（仅代码文件，文档不拆）
-- 主要 DOM 容器添加语义化 `id`，便于调试与测试
-- 提交前确保 `composer phpcs` 与 `composer test` 通过
-
-### 安全红线
-
-- 所有用户输入必须校验与清理（sanitize/escape）
-- 数据库查询使用 `$wpdb->prepare()`（SQL 标识符不可参数化，须白名单校验）
-- 所有表单与 AJAX 请求使用 nonce 校验
-- 检查权限 `current_user_can()`
-- 输出到页面的内容必须转义（如 `esc_html()`）
-- 代码与日志中不得包含密钥、Token
-
-## 版本管理
-
-本项目采用语义化版本（SemVer，MAJOR.MINOR.PATCH）：
-
-- `PATCH`：修复、文档、重构、样式、配置、依赖等任意修改
-- `MINOR`：新功能、向后兼容的变更
-- `MAJOR`：破坏性变更
-
-版本号权威来源：插件主文件 `wpcleanadmin/wp-clean-admin.php` 的 `WPCA_VERSION` 常量。
-每次修改均须同步升级最小版本号，并同步更新 `package.json`（若存在）、`README` 徽章与页脚、
-`CHANGELOG.md`、以及被改动文件的头注释 `// path vX.Y.Z`。
-
-## 测试
-
-- 单元测试基于 PHPUnit，配置见 `phpunit.xml.dist`，引导文件 `tests/bootstrap.php`
-- 新增功能或修复 bug 时，请补充或更新对应测试
-- 本地运行：`composer test`
-
-## Pull Request 流程
-
-1. `git add` → 提交（遵循提交规范）→ `git push`
-2. 向 `main` 或 `develop` 创建 PR
-3. PR 标题格式同提交规范；PR 描述包含：变更总结 + 动机 + 测试说明
-4. 等待 CI 检查（`test` + `lint` + `build`）通过后由维护者审查合并
-
-PR 审查清单：
-
-- [ ] 测试已添加或更新
-- [ ] 无 `console.log` / `debugger` 语句
-- [ ] 代码风格（phpcs）全部通过
-- [ ] `CHANGELOG.md` 已更新
-- [ ] 版本号已同步
-
-## 文档与规范
-
-重大功能、破坏性变更或架构调整，请先在 `openspec/changes/` 下提交变更提案
-（`proposal.md` + `tasks.md`），审批后补充 `openspec/specs/` 规范文档。
-详见 `AGENTS.md` 的工作流程章节。
+重大功能、破坏性变更或架构调整，先在 `openspec/changes/` 建立提案（`proposal.md` + `tasks.md`），流程见 [`openspec/AGENTS.md`](../openspec/AGENTS.md)。文档索引见 [`docs/README.md`](../docs/README.md)。

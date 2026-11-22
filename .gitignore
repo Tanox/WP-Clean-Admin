@@ -11,6 +11,8 @@ logs/
 *.log
 
 # Temporary files
+# 统一临时目录约定：仓库根 tmp/（详见 docs/临时文件管理规范.md），可自动创建、随时可删、不入库
+/tmp/
 temp/
 test/
 *.tmp

@@ -88,7 +88,7 @@
 
 | 变更类型 | 必须更新的文档 |
 |----------|----------------|
-| 版本号变化 | `CHANGELOG.md`、`README.md`、`README.en.md`、`AGENTS.md` §3、`prototype/index.html`、`wpcleanadmin/readme.txt`、`.github/SECURITY.md`、本文与 `CONTRIBUTING.md` 的适用基线 |
+| 版本号变化 | 按 `CONTRIBUTING.md` §9.2 清单：`wp-clean-admin.php`、`readme.txt`、`README.md`/`README.en.md`、`CHANGELOG.md`、`prototype/index.html`、`AGENTS.md` §3、语言文件头、`CONTRIBUTING.md`/`docs/README.md`/`docs/tasks.md` 适用基线、改动 PHP 文件头 `@version` |
 | 目录结构变化 | `CONTRIBUTING.md` §2、`DEVELOPMENT.md`、`AGENTS.md` §2、本文 §1、`wpcleanadmin/includes/modules/README.md` |
 | 新增/修改公开 API | `CHANGELOG.md`、对应 `openspec/specs/<功能>/spec.md` |
 | 治理拆分完成 | `docs/tasks.md`（移出）→ `docs/tasks-done.md`（归档）、`CHANGELOG.md` |
@@ -104,7 +104,7 @@
 | `DEVELOPMENT.md` | 引用不存在的 `prototype/php/`、`prototype/ui/`、`USE_MOCK`、`Core::init_modules()` | 已按当前代码重写 |
 | `AGENTS.md` | 两个 `## 3.`、§5.2 声称所有文档须带 OPENSPEC 标记、§7 模块表为已归档 legacy 类名 | 已修正 |
 | `.github/PULL_REQUEST_TEMPLATE.md` | 引用当时不存在的 `CONTRIBUTING.md` | 已补建该文件 |
-| `README.md` / `README.en.md` / `SECURITY.md` / `openspec/AGENTS.md` | 版本标注分别为 1.9.13 / 1.9.10 / 1.8.x / 1.8.5 | 已统一为 1.9.14 |
+| `README.md` / `README.en.md` / `SECURITY.md` / `openspec/AGENTS.md` | 历史版本标注不一致（1.9.13 / 1.9.10 / 1.8.x / 1.8.5） | 2026-11-07 治理节点统一至 1.9.14，此后随版本继续同步（当前 1.9.17） |
 | `wpcleanadmin/includes/modules/README.md` | 描述不存在的 `frontend/`、`admin/ajax/` 与 `Core::init_modules()` | 已按实际目录重写 |
 | `.github/workflows/ci.yml` | 触发不存在的 `develop` 分支 | 已对齐为 `main` + PR |
 | `docs/设计规范_20260808.md`、`审计报告_20260808.md` | 基于 1.8.3 基线，描述已废弃的原型目录结构 | 已标注历史快照 |

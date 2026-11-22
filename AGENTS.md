@@ -1,4 +1,3 @@
-<!-- OPENSPEC:START -->
 # WP Clean Admin AI 助手指令
 
 > **适用基线**：1.9.17　|　**更新日期**：2026-11-07
@@ -159,5 +158,3 @@ openspec/
 ## 10. 许可证
 
 WP Clean Admin 遵循 GPLv2 或更高版本许可证（见 [`LICENSE`](LICENSE)）。
-
-<!-- OPENSPEC:END -->

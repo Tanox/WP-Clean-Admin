@@ -5,7 +5,7 @@
 
 > **适用基线**：1.9.17　|　**更新日期**：2026-11-07
 > 本目录仅承载**需求与设计层**规范。开发规范（编码、命名、目录、提交、分支、审查）以根 `CONTRIBUTING.md` 为唯一权威来源；版本变更历史以根 `CHANGELOG.md` 为准；工程文档索引见 `docs/README.md`。
-> 下方目录树中 `技术栈报告_YYYYMMDD_HHMM.md` 与 `diagnostics/` 等条目为历史规划，实际目录以本仓库文件为准。
+> 下方目录树以本仓库实际文件为准；`archive/` 为只读历史归档，不得作为当前事实依据。
 
 ## 文档结构
 
@@ -14,12 +14,12 @@ openspec/
 ├── README.md              # 本文档
 ├── project.md             # 项目上下文和约定
 ├── AGENTS.md              # AI 助手指令
-├── CHANGELOG.md           # 版本更新记录
-├── 技术栈报告_YYYYMMDD_HHMM.md  # 技术栈分析报告
-├── specs/                 # 功能规范文档
+├── CHANGELOG.md           # 仅记录 OpenSpec 文档自身调整
+├── specs/                 # 功能规范文档（9 个功能域）
 │   ├── admin-cleanup/     # 后台清理规范
 │   ├── api/               # API 接口规范
 │   ├── database-management/ # 数据库管理规范
+│   ├── diagnostics/       # 诊断规范
 │   ├── menu-customization/  # 菜单定制规范
 │   ├── performance-optimization/ # 性能优化规范
 │   ├── permission-management/ # 权限管理规范
@@ -50,18 +50,16 @@ openspec/
 ### 命名规范
 
 - 规范文档使用小写字母和连字符
-- 报告文件包含时间戳：`报告名_YYYYMMDD_HHMM.md`
+- 带日期快照用 `名称_YYYYMMDD.md`，历史文件保留原名
 - 变更提案使用描述性名称
 
 ### 文档格式
 
-所有文档必须包含 `<!-- OPENSPEC:START -->` 和 `<!-- OPENSPEC:END -->` 标记。
+`openspec/` 目录下的所有规范与提案必须包含 `<!-- OPENSPEC:START -->` 和 `<!-- OPENSPEC:END -->` 标记；根目录与 `docs/` 文档不得使用。
 
 ### 版本管理
 
-- 主版本号 (MAJOR): 不兼容的 API 变更
-- 次版本号 (MINOR): 向后兼容的新功能
-- 修订号 (PATCH): 向后兼容的 bug 修复
+插件版本语义与同步清单以根 `CONTRIBUTING.md` §9 为唯一权威；纯文档变更不提升插件版本，仅写入根 `CHANGELOG.md` 的 `[Unreleased]` 段。
 
 ## 相关链接
 

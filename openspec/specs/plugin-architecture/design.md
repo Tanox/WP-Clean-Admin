@@ -8,7 +8,7 @@ WP Clean Admin 是一个基于模块化设计的 WordPress 插件，旨在提供
 - 提供全面的 WordPress 后台清理和优化功能
 - 采用模块化设计，便于维护和扩展
 - 遵循 WordPress 安全最佳实践
-- 兼容 WordPress 5.0+ 和 PHP 7.0+
+- 兼容 WordPress 5.0+ 和 PHP 7.4+
 - 提供钩子和 API，允许开发者扩展功能
 
 ### Non-Goals
@@ -340,9 +340,9 @@ wpca_restrict_specific_admin_pages();
 - **功能降级**：根据 WordPress 版本提供不同功能
 
 ### PHP 版本兼容性
-- **最低版本**：PHP 7.0+
+- **最低版本**：PHP 7.4+
 - **兼容性检查**：使用 `function_exists()` 检查函数是否存在
-- **语法兼容**：使用兼容 PHP 7.0+ 的语法
+- **语法兼容**：使用兼容 PHP 7.4+ 的语法
 
 ### 浏览器兼容性
 - **支持浏览器**：Chrome, Firefox, Safari, Edge

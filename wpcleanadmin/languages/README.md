@@ -1,5 +1,8 @@
 # WP Clean Admin - Translation Guide
 
+> **适用基线**：1.9.17　|　**更新日期**：2026-11-22
+> 本文说明翻译文件结构与编译方式；开发规范以根 [`CONTRIBUTING.md`](../../CONTRIBUTING.md) 为准。
+
 ## 翻译文件结构
 
 本目录包含 WP Clean Admin 插件的国际化翻译文件：
@@ -10,7 +13,7 @@
 
 ## 为什么翻译未生效？
 
-WordPress 需要编译后的 `.mo` 文件来加载翻译，而不是 `.po` 文件。当前目录中缺少这些编译后的文件。
+WordPress 需要编译后的 `.mo` 文件来加载翻译，而不是 `.po` 文件。本目录已提供 `wp-clean-admin-en_US.mo` 与 `wp-clean-admin-zh_CN.mo`；字符串变更后须重新编译并提交。
 
 ## 如何编译 .mo 文件
 
