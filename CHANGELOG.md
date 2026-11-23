@@ -5,9 +5,9 @@
 
 ## [Unreleased]
 
+- docs: 任务清单治理（2026-11-23）——C 类 2 项与 D 类已完成项（CI 7.4 lint 矩阵）归档至 `docs/tasks-done.md`；B 类功能增强提案批量落地 15/16：新增 6 份规范（T001 `error-handling`、T002 `performance-monitoring`、T003 `security-audit`、T004 `developer-guide`、T006 `theme-template-optimization`、T007 `composer-dependency`），补齐 T009 `phpstan.neon.dist` 与 composer `phpstan` 脚本（T010/T011 配置既有），新增 T013 `docs/user-guide.md`、T014 `docs/api-reference.md`、T016 `examples/sample-extension.php`；T015 视频教程阻塞（待制作资源）。差距复核后 T003/T004 定位为 CONTRIBUTING §4.4 的执行检查表与快速上手索引，不重复既有条款
+- docs: 文档索引登记 `docs/user-guide.md` / `docs/api-reference.md`
 - docs: 规范文档整理——重写 `openspec/AGENTS.md`（仅保留 OpenSpec 流程，消除与 `CONTRIBUTING.md` 重复的过时规范）；将 `.github/CONTRIBUTING.md` 改为权威规范指针；修正 `openspec/README.md` 目录树与命名格式、`openspec/project.md` 与 plugin-architecture 设计文档的 PHP 7.0/develop/camelCase 等过时表述；根 `AGENTS.md` 与 `docs/审计报告_20260808.md` 移除误用的 OPENSPEC 标记；补齐多份文档的适用基线头与安全章节引用（§4.4）
-- docs: 记忆文档整理——重写仓库 `.codebuddy/memory/MEMORY.md`，按核心决策/事实速查/时间线/环境约束归类并标注时效与可信度，删除已被 E-1 归档结论覆盖的「双体系并存」等失效内容；全局记忆索引按主题重排并更新治理记忆至 A-3 收官状态
-- docs: 纯文档变更，不提升插件版本
 
 ## [1.9.17] - 2026-11-08
 

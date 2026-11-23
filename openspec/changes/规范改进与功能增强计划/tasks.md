@@ -7,37 +7,37 @@
 
 | 任务 | 描述 | 状态 | 负责人 |
 |------|------|------|--------|
-| T001 | 完善错误处理规范文档 | 待办 | Sut |
-| T002 | 添加性能监控规范 | 待办 | Sut |
-| T003 | 编写安全审计清单 | 待办 | Sut |
-| T004 | 更新开发者指南 | 待办 | Sut |
+| T001 | 完善错误处理规范文档 | 已完成（specs/error-handling/spec.md） | Sut |
+| T002 | 添加性能监控规范 | 已完成（specs/performance-monitoring/spec.md） | Sut |
+| T003 | 编写安全审计清单 | 已完成（specs/security-audit/spec.md，差距复核后为 CONTRIBUTING §4.4 的执行检查表） | Sut |
+| T004 | 更新开发者指南 | 已完成（specs/developer-guide/spec.md，差距复核后定位为快速上手索引，不与 CONTRIBUTING 重复） | Sut |
 
 ### 第二阶段：功能模块规范（3 周）
 
 | 任务 | 描述 | 状态 | 负责人 |
 |------|------|------|--------|
-| T005 | Elementor 优化模块规范 | 待办 | Sut |
-| T006 | 主题模板优化模块规范 | 待办 | Sut |
-| T007 | Composer 依赖管理规范 | 待办 | Sut |
-| T008 | 扩展 API 接口规范 | 待办 | Sut |
+| T005 | Elementor 优化模块规范 | 已完成（specs/elementor-optimization/spec.md，1.9.13 前已落地） | Sut |
+| T006 | 主题模板优化模块规范 | 已完成（specs/theme-template-optimization/spec.md） | Sut |
+| T007 | Composer 依赖管理规范 | 已完成（specs/composer-dependency/spec.md） | Sut |
+| T008 | 扩展 API 接口规范 | 已完成（specs/extension-api/spec.md，1.9.13 前已落地） | Sut |
 
 ### 第三阶段：开发工具集成（2 周）
 
 | 任务 | 描述 | 状态 | 负责人 |
 |------|------|------|--------|
-| T009 | 集成 PHPStan 静态分析 | 待办 | Sut |
-| T010 | 配置 PHPCS 代码检查 | 待办 | Sut |
-| T011 | 设置自动化测试流程 | 待办 | Sut |
-| T012 | 完善 CI/CD 流水线 | 待办 | Sut |
+| T009 | 集成 PHPStan 静态分析 | 已完成（配置）：phpstan.neon.dist + composer `phpstan` 脚本；规则集调优与实跑验证阻塞于无 PHP 环境 | Sut |
+| T010 | 配置 PHPCS 代码检查 | 已完成（配置）：phpcs.xml.dist（既有）+ composer `phpcs/phpcbf` 脚本；实跑验证阻塞于无 PHP 环境 | Sut |
+| T011 | 设置自动化测试流程 | 已完成（配置）：phpunit.xml.dist + PluginAutoloadSmokeTest + composer `test`；实跑验证阻塞于无 PHP 环境 | Sut |
+| T012 | 完善 CI/CD 流水线 | 部分完成：ci.yml（含 7.4 lint 矩阵）+ release.yml 已建立；WP 版本矩阵、发布打包与 pot 同步校验阻塞于无 PHP 环境（docs/tasks.md §D） | Sut |
 
 ### 第四阶段：文档与测试（2 周）
 
 | 任务 | 描述 | 状态 | 负责人 |
 |------|------|------|--------|
-| T013 | 编写用户使用文档 | 待办 | Sut |
-| T014 | 编写 API 参考文档 | 待办 | Sut |
-| T015 | 创建视频教程 | 待办 | Sut |
-| T016 | 完善示例代码 | 待办 | Sut |
+| T013 | 编写用户使用文档 | 已完成（docs/user-guide.md，含排障与卸载） | Sut |
+| T014 | 编写 API 参考文档 | 已完成（docs/api-reference.md，仅登记代码真实存在的接口；扩展 API 标注规范阶段） | Sut |
+| T015 | 创建视频教程 | 阻塞（需视频制作资源与工具链，非代码库可交付项） | Sut |
+| T016 | 完善示例代码 | 已完成（examples/sample-extension.php：wpca_update_settings 过滤器 + Cache + Helpers 用法） | Sut |
 
 ## 时间估算
 

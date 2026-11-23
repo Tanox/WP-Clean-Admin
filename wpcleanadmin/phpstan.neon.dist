@@ -1,0 +1,17 @@
+parameters:
+    level: 5
+    paths:
+        - includes
+    excludePaths:
+        # IDE 函数桩不参与静态分析；legacy 归档位于仓库根 archive/，天然不在分析路径内
+        - includes/wpca-wordpress-stubs.php
+    tmpDir: ../tmp/phpstan
+
+    # WordPress 全局函数/类由运行环境提供，动态加载不视为未定义
+    ignoreErrors:
+        - '#Function (wp_|esc_|sanitize_|current_user_can|add_action|add_filter|get_option|update_option|delete_option|__|_e|_n|wp_json_encode|wp_mkdir_p|wp_send_json|wp_verify_nonce|admin_url|site_url|remove_meta_box|remove_action|add_role|get_role|remove_role|wp_get_current_user|get_plugin_data|is_plugin_active_for_network|plugin_basename|submit_button|settings_fields|do_settings_sections|wp_parse_args|wp_delete_post|wp_remote_get|wp_remote_retrieve_response_code|wp_remote_retrieve_body|is_wp_error|current_time|flush_rewrite_rules|register_activation_hook|register_deactivation_hook)\w* not found#'
+        - '#Class WP_Roles not found#'
+        - '#Class WP_Admin_Bar not found#'
+        - '#Class wpdb not found#'
+        - '#Access to an undefined property WP_Admin_Bar|wpdb#'
+        - '#Undefined variable \$wp_version|\$wp_roles|\$shortcode_tags|\$menu|\$submenu|\$wp_admin_bar#'
