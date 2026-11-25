@@ -85,6 +85,32 @@ if ( ! function_exists( 'esc_attr' ) ) {
     }
 }
 
+if ( ! function_exists( 'esc_textarea' ) ) {
+    function esc_textarea( $text ) {
+        return htmlspecialchars( (string) $text, ENT_QUOTES );
+    }
+}
+
+if ( ! function_exists( 'checked' ) ) {
+    function checked( $checked, $current = true, $echo = true ) {
+        $result = (string) $checked === (string) $current ? ' checked="checked"' : '';
+        if ( $echo ) {
+            echo $result;
+        }
+        return $result;
+    }
+}
+
+if ( ! function_exists( 'selected' ) ) {
+    function selected( $selected, $current = true, $echo = true ) {
+        $result = (string) $selected === (string) $current ? ' selected="selected"' : '';
+        if ( $echo ) {
+            echo $result;
+        }
+        return $result;
+    }
+}
+
 if ( ! function_exists( 'sanitize_html_class' ) ) {
     function sanitize_html_class( $class, $fallback = '' ) {
         $sanitized = preg_replace( '/[^A-Za-z0-9\-_]/', '', (string) $class );

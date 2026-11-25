@@ -114,13 +114,29 @@ class Settings_Fields {
      * @param array $args
      */
     public function render_field( $args ) {
-        $value    = isset( $args['value'] ) ? $args['value'] : '';
-        $callback = 'render_' . $args['type'] . '_field';
-
-        if ( method_exists( $this->renderers, $callback ) ) {
-            $args['value'] = \get_option( $args['id'], $value );
-            $this->renderers->{$callback}( $args );
+        $callback = 'render_' . ( isset( $args['type'] ) ? $args['type'] : '' ) . '_field';
+        if ( ! method_exists( $this->renderers, $callback ) ) {
+            return;
         }
+
+        $id      = isset( $args['id'] ) ? $args['id'] : '';
+        $group   = isset( $args['group'] ) ? $args['group'] : 'general';
+        $default = isset( $args['value'] ) ? $args['value'] : '';
+
+        $settings = function_exists( '\wpca_get_settings' )
+            ? \wpca_get_settings()
+            : \get_option( 'wpca_settings', array() );
+
+        $nested = ( is_array( $settings ) && isset( $settings[ $group ] )
+            && is_array( $settings[ $group ] ) && array_key_exists( $id, $settings[ $group ] ) )
+            ? $settings[ $group ][ $id ]
+            : null;
+
+        // 嵌套值优先；未保存时回退到独立 option 键（array_key_exists 保证 0/false 正确回显）
+        $args['value'] = null !== $nested ? $nested : \get_option( $id, $default );
+        $args['name']  = 'wpca_settings[' . $group . '][' . $id . ']';
+
+        $this->renderers->{$callback}( $args );
     }
 
     /**
