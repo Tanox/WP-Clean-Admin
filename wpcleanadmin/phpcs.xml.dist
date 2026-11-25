@@ -31,6 +31,12 @@
         <exclude name="WordPress.WhiteSpace.OperatorSpacing"/>
         <exclude name="WordPress.Arrays.ArrayIndentation"/>
         <exclude name="WordPress.Arrays.MultipleStatementAlignment"/>
+        <!--
+            The project convention documents the author as `@author Tanox` plus
+            `@author URI: ...` (77 of 103 PHP files), which the Squiz sniff
+            rejects. The convention is intentional, so the sniff is disabled.
+        -->
+        <exclude name="Squiz.Commenting.FileComment.DuplicateAuthorTag"/>
     </rule>
 
     <!-- Keep security-relevant sniffs enabled -->

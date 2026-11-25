@@ -53,13 +53,14 @@ jobs:
         run: vendor/bin/phpcs --config-set installed_paths "$(pwd)/vendor/wp-coding-standards/wpcs,$(pwd)/vendor/phpcsstandards/phpcsutils,$(pwd)/vendor/phpcsstandards/phpcsextra"
       - name: Run phpcs
         working-directory: wpcleanadmin
-        # Mirror the head of the report into ::error:: annotations (public
-        # check-run API readable).
+        # Aggregate violations by sniff source into ::error:: annotations:
+        # the full report overflows the public check-run annotation limit,
+        # while the per-sniff counts are exactly what drives ruleset tuning.
         run: |
           s=0
-          vendor/bin/phpcs > /tmp/phpcs.log 2>&1 || s=$?
+          vendor/bin/phpcs --report=csv > /tmp/phpcs.csv 2>&1 || s=$?
           if [ $s -ne 0 ]; then
-            head -n 50 /tmp/phpcs.log | while IFS= read -r l; do echo "::error::$l"; done
+            awk -F, 'NR>1 {print $5}' /tmp/phpcs.csv | sort | uniq -c | sort -rn | head -n 20 | while IFS= read -r l; do echo "::error::$l"; done
           fi
           exit $s
 
@@ -119,10 +120,13 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover /tmp/clover.xml
       - name: Check coverage threshold
         working-directory: wpcleanadmin
+        # Surface the measured value in the annotation: the baseline number is
+        # needed before this gate can be made blocking (see docs/tasks.md).
         run: |
           s=0
-          php tools/check-coverage.php /tmp/clover.xml 70 || s=$?
+          out=$(php tools/check-coverage.php /tmp/clover.xml 70) || s=$?
+          echo "$out"
           if [ $s -ne 0 ]; then
-            echo "::error::coverage gate failed (threshold 70%)"
+            echo "::error::coverage gate failed — $out"
           fi
           exit $s
