@@ -21,6 +21,10 @@ class RestApiRestrictionTest extends TestCase {
         $GLOBALS['wpca_test_actions']      = array();
         $GLOBALS['wpca_test_filters']      = array();
         $GLOBALS['wpca_test_logged_in']   = false;
+
+        // 设置读取带请求级记忆化（OPT-008），用例改写选项后必须失效缓存，
+        // 否则会读到上一个用例遗留的快照。
+        wpca_flush_settings_cache();
     }
 
     public function test_filter_registered_on_rest_api_init_when_enabled(): void {

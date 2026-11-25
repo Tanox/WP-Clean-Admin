@@ -16,20 +16,21 @@
         modern PHP (camelCase methods, PascalCase classes). The WordPress standard
         is used as the base, but the naming/formatting rules that conflict with
         PSR-4 are disabled. Security-relevant sniffs stay enabled on purpose.
+
+        Note: only exclude sniffs that exist in the installed WordPress Coding
+        Standards (^3.0). Excluding a removed sniff aborts PHPCS with
+        "Referenced sniff ... does not exist" (exit code 3) and disables the
+        whole ruleset. Sniffs removed in WPCS 3.x are therefore simply not
+        excluded here; the generic PHPCS equivalents are excluded instead.
     -->
     <rule ref="WordPress">
         <exclude name="WordPress.Files.FileName"/>
         <exclude name="WordPress.NamingConventions.ValidFunctionName"/>
         <exclude name="WordPress.NamingConventions.ValidVariableName"/>
-        <exclude name="WordPress.NamingConventions.ValidClassName"/>
-        <exclude name="WordPress.Functions.FunctionDeclarationArgumentSpacing"/>
-        <exclude name="WordPress.WhiteSpace.ScopeIndent"/>
         <exclude name="WordPress.WhiteSpace.ControlStructureSpacing"/>
         <exclude name="WordPress.WhiteSpace.OperatorSpacing"/>
         <exclude name="WordPress.Arrays.ArrayIndentation"/>
         <exclude name="WordPress.Arrays.MultipleStatementAlignment"/>
-        <exclude name="WordPress.PHP.DisallowShortTernary"/>
-        <exclude name="WordPress.PHP.DisallowInlineTernary"/>
     </rule>
 
     <!-- Keep security-relevant sniffs enabled -->
