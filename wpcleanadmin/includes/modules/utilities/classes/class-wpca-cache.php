@@ -19,6 +19,7 @@ require_once __DIR__ . '/class-wpca-cache-api-tasks.php';
 require_once __DIR__ . '/class-wpca-cache-memory-tasks.php';
 require_once __DIR__ . '/class-wpca-cache-database-tasks.php';
 require_once __DIR__ . '/class-wpca-cache-file-tasks.php';
+require_once __DIR__ . '/class-wpca-cache-file-cleanup-tasks.php';
 
 /**
  * Cache manager class
@@ -29,6 +30,7 @@ class Cache {
     use CacheMemoryTasks;
     use CacheDatabaseTasks;
     use CacheFileTasks;
+    use CacheFileCleanupTasks;
 
     /**
      * Singleton instance

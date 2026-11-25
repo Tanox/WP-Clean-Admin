@@ -3,7 +3,7 @@
  * WPCleanAdmin Settings Fields
  *
  * @package WPCleanAdmin\Modules\Admin\Settings
- * @version 1.9.16
+ * @version 1.9.18
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
@@ -17,11 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/class-wpca-settings-field-renderers.php';
+require_once __DIR__ . '/class-wpca-settings-field-definitions.php';
+require_once __DIR__ . '/class-wpca-settings-fields-render-tasks.php';
 
 /**
  * Settings Fields class
  */
 class Settings_Fields {
+
+    use SettingsFieldsRenderTasks;
 
     /**
      * 字段渲染器
@@ -51,50 +55,7 @@ class Settings_Fields {
             );
         }
 
-        $fields = array(
-            array(
-                'id'          => 'clean_admin_bar',
-                'title'       => \__( 'Clean Admin Bar', 'wp-clean-admin' ),
-                'type'        => 'checkbox',
-                'description' => \__( 'Remove unnecessary items from the admin bar.', 'wp-clean-admin' ),
-                'section'     => 'wpca_general_section',
-                'group'       => 'general',
-            ),
-            array(
-                'id'          => 'clean_dashboard',
-                'title'       => \__( 'Clean Dashboard', 'wp-clean-admin' ),
-                'type'        => 'checkbox',
-                'description' => \__( 'Remove unnecessary dashboard widgets.', 'wp-clean-admin' ),
-                'section'     => 'wpca_general_section',
-                'group'       => 'general',
-            ),
-            array(
-                'id'          => 'remove_wp_logo',
-                'title'       => \__( 'Remove WP Logo', 'wp-clean-admin' ),
-                'type'        => 'checkbox',
-                'description' => \__( 'Remove the WordPress logo from the admin bar.', 'wp-clean-admin' ),
-                'section'     => 'wpca_general_section',
-                'group'       => 'general',
-            ),
-            array(
-                'id'          => 'log_level',
-                'title'       => \__( 'Log Level', 'wp-clean-admin' ),
-                'type'        => 'select',
-                'options'     => array(
-                    'debug'    => \__( 'Debug', 'wp-clean-admin' ),
-                    'info'     => \__( 'Info', 'wp-clean-admin' ),
-                    'notice'   => \__( 'Notice', 'wp-clean-admin' ),
-                    'warning'  => \__( 'Warning', 'wp-clean-admin' ),
-                    'error'    => \__( 'Error', 'wp-clean-admin' ),
-                    'critical' => \__( 'Critical', 'wp-clean-admin' ),
-                ),
-                'description' => \__( 'Select the minimum log level to record.', 'wp-clean-admin' ),
-                'section'     => 'wpca_general_section',
-                'group'       => 'general',
-            ),
-        );
-
-        foreach ( $fields as $field ) {
+        foreach ( Settings_Field_Definitions::general_fields() as $field ) {
             if ( function_exists( '\add_settings_field' ) ) {
                 \add_settings_field(
                     $field['id'],
@@ -145,59 +106,4 @@ class Settings_Fields {
     public function render_general_section() {
         echo '<p>' . \esc_html( \__( 'Configure general plugin behavior.', 'wp-clean-admin' ) ) . '</p>';
     }
-
-    /**
-     * Render text field (delegated)
-     */
-    public function render_text_field( $args ) { $this->renderers->render_text_field( $args ); }
-
-    /**
-     * Render textarea field (delegated)
-     */
-    public function render_textarea_field( $args ) { $this->renderers->render_textarea_field( $args ); }
-
-    /**
-     * Render checkbox field (delegated)
-     */
-    public function render_checkbox_field( $args ) { $this->renderers->render_checkbox_field( $args ); }
-
-    /**
-     * Render radio field (delegated)
-     */
-    public function render_radio_field( $args ) { $this->renderers->render_radio_field( $args ); }
-
-    /**
-     * Render select field (delegated)
-     */
-    public function render_select_field( $args ) { $this->renderers->render_select_field( $args ); }
-
-    /**
-     * Render number field (delegated)
-     */
-    public function render_number_field( $args ) { $this->renderers->render_number_field( $args ); }
-
-    /**
-     * Render color field (delegated)
-     */
-    public function render_color_field( $args ) { $this->renderers->render_color_field( $args ); }
-
-    /**
-     * Render date field (delegated)
-     */
-    public function render_date_field( $args ) { $this->renderers->render_date_field( $args ); }
-
-    /**
-     * Render email field (delegated)
-     */
-    public function render_email_field( $args ) { $this->renderers->render_email_field( $args ); }
-
-    /**
-     * Render URL field (delegated)
-     */
-    public function render_url_field( $args ) { $this->renderers->render_url_field( $args ); }
-
-    /**
-     * Render password field (delegated)
-     */
-    public function render_password_field( $args ) { $this->renderers->render_password_field( $args ); }
 }
