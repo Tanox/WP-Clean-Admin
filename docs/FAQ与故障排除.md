@@ -44,7 +44,7 @@
 `Helpers::is_network_activated()` 提供网络激活检测；设置按站点存入各自 `wpca_settings`。请逐站验证角色、菜单与登录保护，不要假设网络级统一配置已实现。
 
 **Q10：如何确认 AJAX 请求被正确鉴权？**
-打开浏览器开发者工具 Network，检查 `admin-ajax.php` 请求：表单需含 `_wpnonce`（动作 `wpca_ajax_nonce`）；无 nonce 返回 `{"success":false,"data":"Invalid nonce"}`，权限不足返回 `Insufficient permissions`。
+打开浏览器开发者工具 Network，检查 `admin-ajax.php` 请求：表单需含 `_wpnonce`（动作 `wpca_ajax_nonce`）。1.9.18 起响应统一为 `{success, error_code?, message, data}` DTO：无 nonce 返回 `{"success":false,"error_code":1007,"message":"Invalid nonce","data":{}}`，权限不足返回 `error_code:1002`（`Insufficient permissions`）。
 
 **Q11：仪表盘很慢？**
 1.9.18 起统计结果改为 15 分钟 transient 缓存（`wpca_dashboard_stats`），命中缓存时不再执行 `information_schema` 求和与前导通配符 `LIKE '%transient%'` 扫描，孤儿 meta 统计改用索引友好的 `NOT EXISTS`（OPT-010）。首次访问仍会计算一次；如仍缓慢，可暂时关闭对应小部件。

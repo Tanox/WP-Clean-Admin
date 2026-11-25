@@ -25,18 +25,18 @@
 | 文件 | 职责 | 说明 |
 |------|------|------|
 | `README.md`（本文） | 文档索引、编写格式、术语与状态标注规则 | 元规范 |
+| `README.en.md` | 本文的英文镜像（索引、格式约定与术语表） | 元规范（英） |
 | `tasks.md` | 进行中 / 待办任务清单 | 仅保留未完成项 |
 | `tasks-done.md` | 已完成任务归档 | 只增不改，保持主清单精简 |
-| [`项目概述.md`](项目概述.md) | 背景、目标、技术栈选型、架构设计与目录速览 | 现行文档 |
-| [`安装部署指南.md`](安装部署指南.md) | 环境依赖、安装配置、多环境方案与验证方法 | 现行文档 |
+| [`项目概述.md`](项目概述.md) / [`overview.en.md`](overview.en.md) | 背景、目标、技术栈选型、架构设计与目录速览 | 现行文档（中/英） |
+| [`安装部署指南.md`](安装部署指南.md) / [`installation-guide.en.md`](installation-guide.en.md) | 环境依赖、安装配置、多环境方案与验证方法 | 现行文档（中/英） |
 | [`功能模块说明.md`](功能模块说明.md) | 按模块的核心功能、业务流程图与关键逻辑 | 现行文档 |
 | [`API接口文档.md`](API接口文档.md) / [`openapi.yaml`](openapi.yaml) | HTTP 接口：路径/方法/参数/响应/错误码/示例；OpenAPI 3.1 机器可读契约 | 现行文档 |
-| [`user-guide.md`](user-guide.md) | 角色权限、操作流程图与详细步骤（含 T013 内容） | 现行文档 |
-| [`FAQ与故障排除.md`](FAQ与故障排除.md) | 常见问题、排障矩阵、诊断方法与紧急恢复 | 现行文档 |
-| [`优化建议.md`](优化建议.md) | 代码/架构/性能/UX 评估结论与 12 项优化建议（背景/方案/效果/优先级） | 评估结论（待实施） |
-| `api-reference.md` | 全局函数、过滤器、选项与核心类速查（T014） | 快速参考；HTTP 契约以上方 OpenAPI 文档为准 |
-| `设计规范_20260808.md` | UI 设计系统：设计令牌、组件库、交互与可访问性规范 | **历史基线快照（1.8.3）** |
-| `审计报告_20260808.md` | 2026-08 代码审查记录与处置过程 | **历史快照**，不代表当前状态 |
+| [`user-guide.md`](user-guide.md) / [`user-guide.en.md`](user-guide.en.md) | 角色权限、操作流程图与详细步骤（含 T013 内容） | 现行文档（中/英） |
+| [`FAQ与故障排除.md`](FAQ与故障排除.md) / [`faq-troubleshooting.en.md`](faq-troubleshooting.en.md) | 常见问题、排障矩阵、诊断方法与紧急恢复 | 现行文档（中/英） |
+| [`优化建议.md`](优化建议.md) | 代码/架构/性能/UX 评估结论与 12 项优化建议（背景/方案/效果/优先级/实施状态） | 评估结论（12 项已于 1.9.18 实施） |
+| [`api-reference.md`](api-reference.md) / [`api-reference.en.md`](api-reference.en.md) | 全局函数、过滤器、选项与核心类速查（T014） | 快速参考；HTTP 契约以上方 OpenAPI 文档为准 |
+| [`临时文件管理规范.md`](临时文件管理规范.md) | 仓库临时文件目录、命名与清理约定 | 快速参考 |
 
 ### 1.3 其它目录
 
@@ -56,13 +56,14 @@
 | 站点管理员 | [`用户操作指南`](user-guide.md) → [`安装部署指南`](安装部署指南.md) → [`FAQ与故障排除`](FAQ与故障排除.md) |
 | 开发者 / 扩展作者 | [`项目概述`](项目概述.md) → [`功能模块说明`](功能模块说明.md) → [`API接口文档`](API接口文档.md) + [`openapi.yaml`](openapi.yaml) |
 | 贡献者 / AI 助手 | 根 [`CONTRIBUTING.md`](../CONTRIBUTING.md) → 本文 → [`tasks.md`](tasks.md) → [`优化建议.md`](优化建议.md) |
+| 英文读者 | [`README.en.md`](README.en.md) → [`user-guide.en.md`](user-guide.en.md) → [`installation-guide.en.md`](installation-guide.en.md) → [`faq-troubleshooting.en.md`](faq-troubleshooting.en.md) → [`api-reference.en.md`](api-reference.en.md) → [`overview.en.md`](overview.en.md) |
 
 ---
 
 ## 2. 文档编写格式（统一）
 
 1. **标题**：ATX（`#`），章节连续编号，**同一文档内不得重复编号**；`##` 为一级章节，`###` 为子节。
-2. **语言**：简体中文为主；`README.en.md` 为英文镜像。技术标识符（类名、函数名、路径、命令）使用行内代码反引号。
+2. **语言**：简体中文为主；英文文档采用 `<原文件名>.en.md` 命名（如 `user-guide.en.md`），与中文原文逐节对应。技术标识符（类名、函数名、路径、命令）使用行内代码反引号。
 3. **路径引用**：使用仓库根相对路径，写成 `` `wpcleanadmin/includes/autoload.php:46` `` 形式（路径:行号）。禁止引用已不存在的路径（如 `prototype/ui/`、`prototype/php/`）。
 4. **表格**：用于清单、映射、状态对照；表头与分隔行齐全，状态值统一为 `待办` / `进行中` / `已完成` / `阻塞`。
 5. **任务清单**：使用 `- [ ]` / `- [x]`；`docs/tasks.md` 只放未完成项，完成项移入 `docs/tasks-done.md`。
@@ -106,11 +107,12 @@
 | 变更类型 | 必须更新的文档 |
 |----------|----------------|
 | 版本号变化 | 按 `CONTRIBUTING.md` §9.2 清单：`wp-clean-admin.php`、`readme.txt`、`README.md`/`README.en.md`、`CHANGELOG.md`、`prototype/index.html`、`AGENTS.md` §3、语言文件头、`CONTRIBUTING.md`/`docs/README.md`/`docs/tasks.md` 适用基线、改动 PHP 文件头 `@version` |
+| 新增/变更英文镜像 | 对应中文原文的 `.en.md` 文件（含「适用基线」头与文末版本控制表）；新增中文文档时同步登记英文镜像状态（未翻译须在本文 §1.2 明确标注） |
 | 目录结构变化 | `CONTRIBUTING.md` §2、`DEVELOPMENT.md`、`AGENTS.md` §2、本文 §1、`wpcleanadmin/includes/modules/README.md` |
 | 新增/修改公开 API | `CHANGELOG.md`、对应 `openspec/specs/<功能>/spec.md` |
 | 治理拆分完成 | `docs/tasks.md`（移出）→ `docs/tasks-done.md`（归档）、`CHANGELOG.md` |
 | CI / 分支策略变化 | `.github/workflows/ci.yml`、`CONTRIBUTING.md` §6/§7、`docs/tasks.md` |
-| 原型结构变化 | `prototype/index.html`、`DEVELOPMENT.md`、`docs/设计规范_20260808.md` §7、本文 §1.3 |
+| 原型结构变化 | `prototype/index.html`、`DEVELOPMENT.md`、本文 §1.3 |
 
 ---
 
@@ -121,7 +123,16 @@
 | `DEVELOPMENT.md` | 引用不存在的 `prototype/php/`、`prototype/ui/`、`USE_MOCK`、`Core::init_modules()` | 已按当前代码重写 |
 | `AGENTS.md` | 两个 `## 3.`、§5.2 声称所有文档须带 OPENSPEC 标记、§7 模块表为已归档 legacy 类名 | 已修正 |
 | `.github/PULL_REQUEST_TEMPLATE.md` | 引用当时不存在的 `CONTRIBUTING.md` | 已补建该文件 |
-| `README.md` / `README.en.md` / `SECURITY.md` / `openspec/AGENTS.md` | 历史版本标注不一致（1.9.13 / 1.9.10 / 1.8.x / 1.8.5） | 2026-11-07 治理节点统一至 1.9.14，此后随版本继续同步（当前 1.9.17） |
+| `README.md` / `README.en.md` / `SECURITY.md` / `openspec/AGENTS.md` | 历史版本标注不一致（1.9.13 / 1.9.10 / 1.8.x / 1.8.5） | 2026-11-07 治理节点统一至 1.9.14，此后随版本继续同步（当前 1.9.18） |
 | `wpcleanadmin/includes/modules/README.md` | 描述不存在的 `frontend/`、`admin/ajax/` 与 `Core::init_modules()` | 已按实际目录重写 |
 | `.github/workflows/ci.yml` | 触发不存在的 `develop` 分支 | 已对齐为 `main` + PR |
-| `docs/设计规范_20260808.md`、`审计报告_20260808.md` | 基于 1.8.3 基线，描述已废弃的原型目录结构 | 已标注历史快照 |
+| `docs/设计规范_20260808.md`、`docs/审计报告_20260808.md` | 基于 1.8.3 基线，描述已废弃的原型目录结构 | 已于 2026-11-25 删除（内容已失效且与现行原型不符），本索引同步移除引用 |
+
+---
+
+## 7. 文档版本控制
+
+| 文档版本 | 适用插件版本 | 日期 | 维护人 | 变更摘要 |
+|----------|--------------|------|--------|----------|
+| 1.1 | 1.9.18 | 2026-11-25 | Tanox | 新增英文镜像章节与索引行（`README.en.md` 等 6 份）；移除已删除历史快照文档的索引与同步清单引用；登记 `临时文件管理规范.md`；`优化建议.md` 状态更新为已实施 |
+| 1.0 | 1.9.17 | 2026-11-25 | Tanox | 首版：文档地图、编写格式、版本与状态标注、术语表、同步清单与历史偏差 |
