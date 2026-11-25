@@ -5,7 +5,7 @@
  * 统一 AJAX JSON 响应契约：{success, message, data} / {success, error_code, message, data}
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.9.17

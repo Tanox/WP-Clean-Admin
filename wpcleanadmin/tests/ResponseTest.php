@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * 统一 AJAX 响应契约测试（OPT-002）
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  */
 
 use PHPUnit\Framework\TestCase;

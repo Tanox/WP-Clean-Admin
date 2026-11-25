@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * 错误处理器唯一化回归测试（OPT-004）
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  */
 
 use PHPUnit\Framework\TestCase;

@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * 菜单定制器单 option 源、默认 AJAX 注册与 legacy 迁移回归测试
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  */
 
 use PHPUnit\Framework\TestCase;

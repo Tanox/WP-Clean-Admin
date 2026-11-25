@@ -5,7 +5,7 @@
  * 承载菜单结构构建、排序与分组逻辑，从 Menu_Customizer 主类抽取。
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

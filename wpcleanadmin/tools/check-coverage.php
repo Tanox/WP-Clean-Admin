@@ -7,7 +7,7 @@
  * 用法：php tools/check-coverage.php /tmp/clover.xml 70
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  */
 
 if ( 'cli' !== PHP_SAPI ) {

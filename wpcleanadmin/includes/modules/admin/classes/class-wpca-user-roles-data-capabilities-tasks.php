@@ -6,7 +6,7 @@
  * 主类 `User_Roles_Data` 通过 `use UserRolesDataCapabilitiesTasks;` 组合。
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

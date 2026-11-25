@@ -6,7 +6,7 @@
  * 从 Error_Handler 中抽取，保持单一职责。
  *
  * @package WPCleanAdmin\Modules\Core\Classes
- * @version  1.9.16
+ * @version  1.9.18
  * @author Tanox
  * @since 1.8.0
  */

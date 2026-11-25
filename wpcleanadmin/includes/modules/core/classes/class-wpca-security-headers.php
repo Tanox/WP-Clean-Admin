@@ -5,7 +5,7 @@
  * 承载安全 HTTP 头发送逻辑，从 Core 主类抽取。
  *
  * @package WPCleanAdmin\Modules\Core\Classes
- * @version  1.9.16
+ * @version  1.9.18
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15

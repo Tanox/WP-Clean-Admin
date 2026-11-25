@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * 设置字段回显回归测试（OPT-003）
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  */
 
 use PHPUnit\Framework\TestCase;

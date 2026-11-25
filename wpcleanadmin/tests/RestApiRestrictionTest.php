@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * REST 访问限制回归测试（OPT-005）
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  */
 
 use PHPUnit\Framework\TestCase;

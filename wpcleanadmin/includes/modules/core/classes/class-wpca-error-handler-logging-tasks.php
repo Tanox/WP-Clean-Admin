@@ -6,7 +6,7 @@
  * 主类 `Error_Handler` 通过 `use ErrorLoggingTasks;` 组合。
  *
  * @package WPCleanAdmin\Modules\Core\Classes
- * @version 1.9.16
+ * @version 1.9.18
  * @author Tanox
  * @since 1.8.0
  */

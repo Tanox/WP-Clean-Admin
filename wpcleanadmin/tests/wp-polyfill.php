@@ -8,7 +8,7 @@
  * 真实 WP 环境下这些函数已由 WP 核心提供，本文件全部守卫跳过，不生效。
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -5,7 +5,7 @@
  * 承载错误日志级别的管理与判定，从 Error_Handler 主类抽取。
  *
  * @package WPCleanAdmin\Modules\Core\Classes
- * @version 1.9.16
+ * @version 1.9.18
  * @author Tanox
  * @since 1.8.0
  */

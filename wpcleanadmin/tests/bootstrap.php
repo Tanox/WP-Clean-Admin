@@ -6,7 +6,7 @@
  * 核心函数，使单元测试（无需完整 WP 环境）可独立运行并验证插件逻辑。
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  */
 
 // 提前定义 ABSPATH：阻止 autoloader 加载空白 IDE stub，并确保核心函数文件不 exit

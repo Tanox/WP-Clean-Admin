@@ -9,7 +9,7 @@
  * 相关断言随之移除。
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

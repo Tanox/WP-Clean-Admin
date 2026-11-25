@@ -3,7 +3,7 @@
  * WPCleanAdmin PSR-4 Autoloader
  *
  * @package WPCleanAdmin
- * @version 1.9.17
+ * @version 1.9.18
  * @author Tanox
  * @author URI: https://github.com/Tanox
  * @since 1.7.15
