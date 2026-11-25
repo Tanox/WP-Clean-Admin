@@ -47,7 +47,7 @@ class Settings_Fields {
                 'wpca_general_section',
                 \__( 'General Settings', 'wp-clean-admin' ),
                 array( $this, 'render_general_section' ),
-                'wp-clean-admin'
+                'wp-clean-admin-general'
             );
         }
 
@@ -100,7 +100,7 @@ class Settings_Fields {
                     $field['id'],
                     $field['title'],
                     array( $this, 'render_field' ),
-                    'wp-clean-admin',
+                    'wp-clean-admin-' . ( isset( $field['group'] ) ? $field['group'] : 'general' ),
                     $field['section'],
                     $field
                 );

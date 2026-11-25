@@ -31,6 +31,12 @@ class Dashboard_Data {
     public function get_dashboard_stats(): array {
         global $wpdb;
 
+        // 15 分钟 transient 缓存，避免每次访问后台都执行重型统计查询
+        $cached = function_exists( '\get_transient' ) ? \get_transient( 'wpca_dashboard_stats' ) : false;
+        if ( is_array( $cached ) && ! empty( $cached ) ) {
+            return $cached;
+        }
+
         $stats = array();
 
         // Get database size
@@ -40,14 +46,18 @@ class Dashboard_Data {
         );
         $stats['database_size'] = ( function_exists( '\size_format' ) ? \size_format( $result['size'], 2 ) : $result['size'] );
 
-        // Get transients count
-        $stats['transients'] = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE '%transient%'" );
+        // Get transients count（前缀匹配，可命中索引）
+        $stats['transients'] = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE '\_transient\_%' OR option_name LIKE '\_transient\_timeout\_%'" );
 
-        // Get orphaned postmeta count
-        $stats['orphaned_postmeta'] = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->postmeta} LEFT JOIN {$wpdb->posts} ON {$wpdb->postmeta}.post_id = {$wpdb->posts}.ID WHERE {$wpdb->posts}.ID IS NULL" );
+        // Get orphaned postmeta count（NOT EXISTS 可利用索引，避免全表 JOIN）
+        $stats['orphaned_postmeta'] = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE NOT EXISTS (SELECT 1 FROM {$wpdb->posts} WHERE {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id)" );
 
         // Get orphaned termmeta count
-        $stats['orphaned_termmeta'] = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->termmeta} LEFT JOIN {$wpdb->terms} ON {$wpdb->termmeta}.term_id = {$wpdb->terms}.term_id WHERE {$wpdb->terms}.term_id IS NULL" );
+        $stats['orphaned_termmeta'] = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->termmeta} WHERE NOT EXISTS (SELECT 1 FROM {$wpdb->terms} WHERE {$wpdb->terms}.term_id = {$wpdb->termmeta}.term_id)" );
+
+        if ( function_exists( '\set_transient' ) ) {
+            \set_transient( 'wpca_dashboard_stats', $stats, 900 );
+        }
 
         return $stats;
     }

@@ -74,11 +74,11 @@ paths:
                   - $ref: '#/components/schemas/ExportSuccess'
               examples:
                 saveOk:
-                  value: { success: true, data: { message: 'Menu customizer settings saved successfully' } }
+                  value: { success: true, message: 'Menu customizer settings saved successfully', data: {} }
                 invalidNonce:
-                  value: { success: false, data: 'Invalid nonce' }
+                  value: { success: false, error_code: 1007, message: 'Invalid nonce', data: {} }
                 insufficientPermission:
-                  value: { success: false, data: 'Insufficient permissions' }
+                  value: { success: false, error_code: 1002, message: 'Insufficient permissions', data: {} }
         '403':
           description: 未登录或非 `manage_options` 用户（示意；实际实现以 200 + success=false 返回）
           content:
@@ -145,26 +145,25 @@ components:
               description: JSON 字符串或已解析数组，写入 wpca_menu_customizer_settings
     AjaxSuccess:
       type: object
-      required: [success, data]
+      required: [success, message, data]
       properties:
         success: { type: boolean, const: true }
+        message: { type: string }
         data:
           type: object
-          properties:
-            message: { type: string }
+          additionalProperties: true
     AjaxError:
       type: object
-      required: [success, data]
+      required: [success, error_code, message, data]
       properties:
         success: { type: boolean, const: false }
+        error_code:
+          type: integer
+          description: WPCA_Errors 错误码（1002 权限 / 1005 AJAX / 1007 认证 / 9999 未知）
+        message: { type: string }
         data:
-          oneOf:
-            - type: string
-              examples: ['Invalid nonce', 'Insufficient permissions', 'Failed to save menu customizer settings']
-            - type: object
-              properties:
-                message: { type: string }
-      description: 当前已注册 handler 使用字符串载荷，未携带 error_code（详见 x-known-issues）
+          type: object
+          additionalProperties: true
     ExportSuccess:
       type: object
       required: [success, data]
@@ -186,10 +185,10 @@ components:
         1005 AJAX / 1006 校验 / 1007 认证 / 9999 未知。
         标准 DTO 位于 Helpers，当前已注册 handler 未使用该字段。
 
-  x-known-issues:
+  x-resolved-issues:
     - id: OPT-001
-      priority: P0
-      summary: 菜单定制器保存/渲染 option 键不一致且 AJAX 默认未注册（settings.menu_customizer 不在默认配置中）
+      resolved_in: 1.9.18
+      summary: 菜单定制器统一 wpca_menu_customizer_settings 单一数据源，4 个 action 无条件注册，含 legacy 迁移
     - id: OPT-002
-      priority: P1
-      summary: 响应契约三套并存；settings-ajax.php 的 3 个处理器已定义但未挂载任何 wp_ajax_* action
+      resolved_in: 1.9.18
+      summary: 统一 WPCleanAdmin\AJAX\Response 契约（success/message/data 与 success/error_code/message/data），移除未挂载的 settings handler

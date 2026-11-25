@@ -40,6 +40,13 @@ class Error_Handler {
     private static $instance = null;
 
     /**
+     * 注册状态标记（避免重复注册全局处理器）
+     *
+     * @var bool
+     */
+    private static $registered = false;
+
+    /**
      * 文件日志器
      *
      * @var File_Logger
@@ -78,6 +85,11 @@ class Error_Handler {
      * Initialize error handler
      */
     public function init() {
+        if ( self::$registered ) {
+            return;
+        }
+        self::$registered = true;
+
         // Set error handler
         \set_error_handler( array( $this, 'error_handler' ) );
 

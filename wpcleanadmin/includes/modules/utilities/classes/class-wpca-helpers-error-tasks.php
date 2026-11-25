@@ -110,17 +110,15 @@ trait HelpersErrorTasks {
     }
 
     /**
-     * Register error handler for WordPress
+     * 已废弃：全局错误处理器唯一注册点为 Error_Handler
      *
-     * Sets custom error handler and exception handler for consistent error management
-     *
-     * @uses set_error_handler() To set custom error handler
-     * @uses set_exception_handler() To set custom exception handler
+     * @deprecated 1.9.17 请使用 WPCleanAdmin\Modules\Core\Classes\Error_Handler::getInstance()
      * @return void
      */
     public function register_error_handler() {
-        \set_error_handler( array( $this, 'custom_error_handler' ) );
-        \set_exception_handler( array( $this, 'custom_exception_handler' ) );
+        if ( function_exists( '\\_deprecated_function' ) ) {
+            \_deprecated_function( __METHOD__, '1.9.17', 'WPCleanAdmin\\Modules\\Core\\Classes\\Error_Handler::getInstance()' );
+        }
     }
 
     /**
@@ -167,7 +165,8 @@ trait HelpersErrorTasks {
 
         $this->log( $message, 'php-error' );
 
-        return true;
+        // 不吞错误：交回 PHP 默认处理器与其他处理器链
+        return false;
     }
 
     /**

@@ -62,6 +62,9 @@ class Resources {
         if ( function_exists( 'add_action' ) ) {
             \add_action( 'wp_enqueue_scripts', array( $this, 'optimize_frontend_resources' ), 999 );
             \add_action( 'admin_enqueue_scripts', array( $this, 'optimize_admin_resources' ), 999 );
+
+            // REST 限制必须在 rest_api_init 阶段注册，纯 /wp-json 请求不触发脚本入队
+            \add_action( 'rest_api_init', array( $this, 'register_rest_restriction' ), 1 );
         }
     }
 }

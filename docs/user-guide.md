@@ -1,6 +1,6 @@
 # WP Clean Admin 用户操作指南
 
-> **适用基线**：1.9.17　|　**更新日期**：2026-11-25　|　**状态**：用户文档
+> **适用基线**：1.9.18　|　**更新日期**：2026-11-25　|　**状态**：用户文档
 > 本文面向站点管理员与编辑用户。安装部署见 [`安装部署指南.md`](安装部署指南.md)；常见问题见 [`FAQ与故障排除.md`](FAQ与故障排除.md)；功能背景见 [`功能模块说明.md`](功能模块说明.md)。
 
 ## 目录
@@ -67,8 +67,7 @@ sequenceDiagram
     A->>A: nonce + manage_options 校验
     A->>O: 消毒后保存
     O-->>U: success=true
-    Note over U,O: 当前版本渲染读取 wpca_settings 而非该键，
-    保存结果可能不生效（OPT-001，P0）；修复前请谨慎依赖此功能
+    Note over U,O: 1.9.18 起该键为唯一数据源，保存结果立即生效（OPT-001 已修复）
 ```
 
 ### 3.3 管理员启用 TOTP 双因素流程
@@ -105,7 +104,7 @@ sequenceDiagram
 2. 选择菜单项 → 设置隐藏、标题、图标或排序；可按分组组织。
 3. 点击保存（AJAX action `wpca_save_menu_customizer`），提示区显示成功/失败。
 4. 导出：点击导出获得 JSON；导入：粘贴 JSON 后提交。
-5. **限制**：当前版本保存写入 `wpca_menu_customizer_settings`，渲染读取 `wpca_settings`，故“保存后不生效/导出导入不闭环”；且 4 个 AJAX action 受未默认启用的 `menu_customizer` 设置守卫，默认可能完全不可调用。详见 [`API接口文档.md`](API接口文档.md) §9 与 OPT-001（P0）。修复前建议仅用于试验，不依赖其作为唯一菜单管理方式。
+5. **限制**：1.9.18 起菜单定制已统一 `wpca_menu_customizer_settings` 单一数据源、4 个接口无条件注册，保存后即时生效；若站点为旧版本遗留数据，首次打开时会自动迁移，无需手工处理。
 
 ## 6. 数据库与安全操作
 
@@ -126,7 +125,7 @@ sequenceDiagram
 
 ### 6.3 REST 限制
 
-`security.restrict_rest_api` 当前通过 `rest_authentication_errors` 过滤未登录请求；该过滤挂在脚本入队钩子上，纯 `/wp-json` 请求可能不触发（OPT-005，P1）。不要将此开关视为严格的 REST 禁用边界。
+`security.restrict_rest_api` 在 `rest_api_init` 阶段注册 `rest_authentication_errors` 过滤，匿名请求返回 403（错误码 `rest_not_logged_in`），已登录用户不受影响。若需彻底关闭 REST，仍建议在服务器层额外限制。
 
 ## 7. 保存、重置与导入导出
 
@@ -135,10 +134,11 @@ sequenceDiagram
 | 保存设置 | 写 `wpca_settings`；经递归消毒与 `wpca_update_settings` 过滤器 | 无 nonce/权限时不执行 |
 | 重置设置 | 删除对应选项并回落默认 | 会丢失已有配置，请先导出备份 |
 | 重置菜单 | 清空 `wpca_menu_items` / `wpca_menu_customizer_settings` | 不可撤销 |
-| 导入菜单配置 | JSON 写入 `wpca_menu_customizer_settings` | 当前读键不一致（OPT-001），可能看不到效果 |
+| 导入菜单配置 | JSON 写入 `wpca_menu_customizer_settings` | 1.9.18 起读键一致，导入即时生效（OPT-001） |
 
 ## 8. 文档版本控制
 
 | 文档版本 | 适用插件版本 | 日期 | 维护人 | 变更摘要 |
 |----------|--------------|------|--------|----------|
+| 1.1 | 1.9.18 | 2026-11-25 | Tanox | OPT-001 落地后更新菜单定制保存/导入说明；REST 限制章节改为 403 语义 |
 | 1.0 | 1.9.17 | 2026-11-25 | Tanox | 首版：角色权限表、操作流程图、五 Tab 详细步骤、数据库/安全操作与限制说明 |

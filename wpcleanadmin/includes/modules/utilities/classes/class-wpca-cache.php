@@ -84,7 +84,33 @@ class Cache {
         // Load cache settings
         $this->load_cache_settings();
 
-        // Clean expired cache on init
+        // 过期清理由定时任务承担，避免每请求全目录扫描
+        $this->register_cache_cleanup_cron();
+    }
+
+    /**
+     * 注册缓存清理定时任务
+     *
+     * @return void
+     */
+    private function register_cache_cleanup_cron(): void {
+        if ( ! function_exists( '\add_action' ) || ! function_exists( '\wp_schedule_event' ) || ! function_exists( '\wp_next_scheduled' ) ) {
+            return;
+        }
+
+        \add_action( 'wpca_cache_cleanup', array( $this, 'run_cache_cleanup' ) );
+
+        if ( ! \wp_next_scheduled( 'wpca_cache_cleanup' ) ) {
+            \wp_schedule_event( \time() + 3600, 'hourly', 'wpca_cache_cleanup' );
+        }
+    }
+
+    /**
+     * 执行缓存清理（定时任务入口）
+     *
+     * @return void
+     */
+    public function run_cache_cleanup(): void {
         $this->clean_expired_cache();
     }
 

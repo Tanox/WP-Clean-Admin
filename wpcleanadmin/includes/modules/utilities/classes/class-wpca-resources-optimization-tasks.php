@@ -53,13 +53,6 @@ trait ResourcesOptimizationTasks {
                 }
             }
 
-            // Disable REST API
-            if ( isset( $settings['resources']['disable_rest_api'] ) && $settings['resources']['disable_rest_api'] ) {
-                if ( function_exists( 'add_filter' ) ) {
-                    \add_filter( 'rest_authentication_errors', array( $this, 'disable_rest_api' ) );
-                }
-            }
-
             // Disable heartbeat
             if ( isset( $settings['resources']['disable_heartbeat'] ) && $settings['resources']['disable_heartbeat'] ) {
                 if ( function_exists( 'wp_deregister_script' ) && function_exists( 'remove_action' ) ) {
@@ -104,17 +97,47 @@ trait ResourcesOptimizationTasks {
     }
 
     /**
+     * 注册 REST 访问限制
+     *
+     * 在 rest_api_init 阶段注册，确保纯 /wp-json 请求同样生效。
+     *
+     * @return void
+     */
+    public function register_rest_restriction(): void {
+        if ( ! function_exists( '\add_filter' ) ) {
+            return;
+        }
+
+        $settings = function_exists( '\wpca_get_settings' ) ? \wpca_get_settings() : array();
+        $enabled  = ! empty( $settings['security']['restrict_rest_api'] )
+            || ! empty( $settings['resources']['disable_rest_api'] );
+
+        if ( $enabled ) {
+            \add_filter( 'rest_authentication_errors', array( $this, 'disable_rest_api' ), 10, 1 );
+        }
+    }
+
+    /**
      * Disable REST API
+     *
+     * 匿名请求返回 403；已认证用户与既有错误保持原样。
      *
      * @param mixed $result Authentication result
      * @return mixed Modified authentication result
      */
     public function disable_rest_api( $result ) {
-        if ( function_exists( 'is_user_logged_in' ) && ! \is_user_logged_in() ) {
-            if ( class_exists( 'WP_Error' ) ) {
-                return new \WP_Error( 'rest_not_logged_in', \__( 'REST API is disabled for non-authenticated users', \WPCA_TEXT_DOMAIN ), array( 'status' => 401 ) );
-            }
+        if ( function_exists( '\is_wp_error' ) && \is_wp_error( $result ) ) {
+            return $result;
         }
+
+        if ( function_exists( '\is_user_logged_in' ) && \is_user_logged_in() ) {
+            return $result;
+        }
+
+        if ( class_exists( 'WP_Error' ) ) {
+            return new \WP_Error( 'rest_not_logged_in', \__( 'REST API is disabled for non-authenticated users', \WPCA_TEXT_DOMAIN ), array( 'status' => 403 ) );
+        }
+
         return $result;
     }
 }

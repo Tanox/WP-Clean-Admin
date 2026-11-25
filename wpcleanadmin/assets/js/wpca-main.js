@@ -58,10 +58,21 @@
          * Initialize AJAX functionality
          */
         initAjax: function() {
-            // AJAX error handling
+            // AJAX error handling: non-blocking inline notice (no alert dialog)
             $(document).ajaxError(function(event, xhr, settings, error) {
                 console.error('WPCA AJAX Error:', error);
-                alert(wpca_settings_vars.ajax_error || 'An AJAX error occurred. Please try again.');
+
+                var $notice = $('#wpca-ajax-notice');
+                if (!$notice.length) {
+                    $notice = $('<div>')
+                        .attr('id', 'wpca-ajax-notice')
+                        .attr('role', 'status')
+                        .attr('aria-live', 'polite')
+                        .addClass('wpca-inline-message wpca-inline-error');
+                    $('body').append($notice);
+                }
+                $notice.text(wpca_settings_vars.ajax_error || 'An AJAX error occurred. Please try again.');
+                $notice.show();
             });
         }
     };

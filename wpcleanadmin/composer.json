@@ -32,6 +32,10 @@
     },
     "scripts": {
         "test": "phpunit",
+        "test:coverage": [
+            "phpunit --coverage-clover clover.xml",
+            "php tools/check-coverage.php clover.xml 70"
+        ],
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
         "phpstan": "phpstan analyse --memory-limit=512M"

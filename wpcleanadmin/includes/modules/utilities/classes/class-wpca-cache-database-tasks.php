@@ -93,20 +93,62 @@ trait CacheDatabaseTasks {
      * @return bool
      */
     private function clear_database_cache(): bool {
-        if ( ! function_exists( 'get_option' ) && ! function_exists( 'delete_option' ) ) {
+        if ( ! function_exists( 'delete_option' ) ) {
             return false;
         }
 
-        // Get all cache options
+        // 分批查询并删除，避免一次无界扫描
         global $wpdb;
-        if ( isset( $wpdb ) ) {
-            $cache_keys = $wpdb->get_col( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE 'wpca_cache_%'" );
+        if ( ! isset( $wpdb ) || ! is_object( $wpdb ) || ! method_exists( $wpdb, 'get_col' ) ) {
+            return true;
+        }
+
+        $like = $wpdb->esc_like( 'wpca_cache_' ) . '%';
+
+        do {
+            $cache_keys = $wpdb->get_col(
+                $wpdb->prepare( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s LIMIT 500", $like )
+            );
+            $cache_keys = is_array( $cache_keys ) ? $cache_keys : array();
 
             foreach ( $cache_keys as $cache_key ) {
                 \delete_option( $cache_key );
             }
-        }
+        } while ( count( $cache_keys ) === 500 );
 
         return true;
+    }
+
+    /**
+     * 清理过期的数据库缓存条目
+     *
+     * @return int 删除条目数
+     */
+    private function clean_expired_database_cache(): int {
+        global $wpdb;
+        if ( ! isset( $wpdb ) || ! is_object( $wpdb ) || ! method_exists( $wpdb, 'get_results' ) ) {
+            return 0;
+        }
+
+        $like  = $wpdb->esc_like( 'wpca_cache_' ) . '%';
+        $removed = 0;
+
+        do {
+            $rows = $wpdb->get_results(
+                $wpdb->prepare( "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE %s LIMIT 500", $like )
+            );
+            $rows = is_array( $rows ) ? $rows : array();
+
+            foreach ( $rows as $row ) {
+                $value = function_exists( 'maybe_unserialize' ) ? \maybe_unserialize( $row->option_value ) : $row->option_value;
+
+                if ( is_array( $value ) && isset( $value['expiration'] ) && $value['expiration'] < \time() ) {
+                    \delete_option( $row->option_name );
+                    $removed++;
+                }
+            }
+        } while ( count( $rows ) === 500 );
+
+        return $removed;
     }
 }

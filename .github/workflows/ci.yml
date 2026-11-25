@@ -94,3 +94,35 @@ jobs:
             tail -n 30 /tmp/test.log | while IFS= read -r l; do echo "::error::$l"; done
           fi
           exit $s
+
+  coverage:
+    name: Coverage Gate (>= 70%)
+    runs-on: ubuntu-latest
+    # First run only reports the baseline: keep non-blocking until the measured
+    # value is confirmed >= 70%, then remove `continue-on-error` (see docs/tasks.md).
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+          extensions: mysqli
+          coverage: pcov
+      - name: Install dependencies
+        working-directory: wpcleanadmin
+        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Run PHPUnit with coverage
+        working-directory: wpcleanadmin
+        run: vendor/bin/phpunit --coverage-clover /tmp/clover.xml
+      - name: Check coverage threshold
+        working-directory: wpcleanadmin
+        run: |
+          s=0
+          php tools/check-coverage.php /tmp/clover.xml 70 || s=$?
+          if [ $s -ne 0 ]; then
+            echo "::error::coverage gate failed (threshold 70%)"
+          fi
+          exit $s

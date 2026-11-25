@@ -18,6 +18,7 @@ class SettingsFieldsEchoTest extends TestCase {
 
     protected function setUp(): void {
         $GLOBALS['wpca_test_options'] = array();
+        wpca_flush_settings_cache();
     }
 
     public function test_echo_prefers_nested_wpca_settings_value(): void {

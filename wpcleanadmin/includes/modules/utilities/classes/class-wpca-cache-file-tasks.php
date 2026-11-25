@@ -76,7 +76,19 @@ trait CacheFileTasks {
             'created_at' => \time()
         );
 
-        return \file_put_contents( $cache_file, \wp_json_encode( $cache ) ) !== false;
+        // 原子写入：先写临时文件再重命名，避免并发读到半截内容
+        $temp_file = $cache_file . '.' . \uniqid( 'tmp', true ) . '.part';
+
+        if ( false === \file_put_contents( $temp_file, \wp_json_encode( $cache ) ) ) {
+            return false;
+        }
+
+        if ( ! \rename( $temp_file, $cache_file ) ) {
+            \unlink( $temp_file );
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -135,11 +147,35 @@ trait CacheFileTasks {
      * @return string
      */
     private function get_cache_directory(): string {
-        $cache_dir = WPCA_PLUGIN_DIR . 'cache';
+        $cache_dir = '';
+
+        // 优先使用 uploads 目录，避免插件目录需要写权限
+        if ( function_exists( '\wp_upload_dir' ) ) {
+            $upload_dir = \wp_upload_dir();
+
+            if ( ! empty( $upload_dir['basedir'] ) ) {
+                $cache_dir = \rtrim( $upload_dir['basedir'], '/\\' ) . '/wpca-cache';
+            }
+        }
+
+        if ( empty( $cache_dir ) ) {
+            $cache_dir = WPCA_PLUGIN_DIR . 'cache';
+        }
 
         // Create cache directory if it doesn't exist
         if ( ! \is_dir( $cache_dir ) ) {
             \wp_mkdir_p( $cache_dir );
+
+            // 目录保护：阻止目录列举与直接访问
+            $index_file = $cache_dir . '/index.php';
+            if ( ! \file_exists( $index_file ) ) {
+                \file_put_contents( $index_file, "<?php\n// Silence is golden.\n" );
+            }
+
+            $htaccess_file = $cache_dir . '/.htaccess';
+            if ( ! \file_exists( $htaccess_file ) ) {
+                \file_put_contents( $htaccess_file, "Deny from all\n" );
+            }
         }
 
         return $cache_dir;
@@ -152,7 +188,8 @@ trait CacheFileTasks {
         // Clean expired file cache
         $this->clean_expired_file_cache();
 
-        // Clean expired database cache (done via cron)
+        // Clean expired database cache
+        $this->clean_expired_database_cache();
     }
 
     /**
@@ -161,24 +198,44 @@ trait CacheFileTasks {
     private function clean_expired_file_cache() {
         $cache_dir = $this->get_cache_directory();
 
-        if ( \is_dir( $cache_dir ) ) {
-            $files = \glob( $cache_dir . '/*' );
+        if ( ! \is_dir( $cache_dir ) ) {
+            return;
+        }
 
-            foreach ( $files as $file ) {
-                if ( \is_file( $file ) ) {
-                    $cache_data = \file_get_contents( $file );
-                    $cache = \json_decode( $cache_data, true );
+        try {
+            $iterator = new \FilesystemIterator( $cache_dir, \FilesystemIterator::SKIP_DOTS );
+        } catch ( \Exception $e ) {
+            return;
+        }
 
-                    // 无效（含旧序列化格式）文件直接清理
-                    if ( ! \is_array( $cache ) ) {
-                        \unlink( $file );
-                        continue;
-                    }
+        foreach ( $iterator as $file ) {
+            if ( ! $file->isFile() ) {
+                continue;
+            }
 
-                    if ( isset( $cache['expiration'] ) && $cache['expiration'] < \time() ) {
-                        \unlink( $file );
-                    }
-                }
+            $path = $file->getPathname();
+
+            // 清理写入中断留下的临时文件
+            if ( '.part' === substr( $path, -5 ) ) {
+                \unlink( $path );
+                continue;
+            }
+
+            if ( '.cache' !== substr( $path, -6 ) ) {
+                continue;
+            }
+
+            $cache_data = \file_get_contents( $path );
+            $cache = \json_decode( $cache_data, true );
+
+            // 无效（含旧序列化格式）文件直接清理
+            if ( ! \is_array( $cache ) ) {
+                \unlink( $path );
+                continue;
+            }
+
+            if ( isset( $cache['expiration'] ) && $cache['expiration'] < \time() ) {
+                \unlink( $path );
             }
         }
     }

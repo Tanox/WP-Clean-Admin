@@ -1,6 +1,6 @@
 # WP Clean Admin API 接口文档
 
-> **适用基线**：1.9.17　|　**更新日期**：2026-11-25　|　**状态**：现行文档
+> **适用基线**：1.9.18　|　**更新日期**：2026-11-25　|　**状态**：现行文档
 > 机器可读契约：[`openapi.yaml`](openapi.yaml)（OpenAPI 3.1）。本文只登记**当前代码真实存在**的接口；规范阶段能力见文末与 [`优化建议.md`](优化建议.md)。
 
 ## 目录
@@ -23,8 +23,8 @@
 | 接口类型 | 当前状态 | 依据 |
 |----------|----------|------|
 | REST API | **不存在**：运行时代码无 `register_rest_route` / `rest_api_init` 注册 | 全仓运行时扫描为 0 匹配 |
-| AJAX | **4 个已注册**（均登录用户可用，无 `wp_ajax_nopriv_*`） | `modules/admin/classes/class-wpca-menu-customizer.php:95-100` |
-| 设置 AJAX 处理器 | 3 个方法已定义但**未挂载 action** | `includes/ajax/settings-ajax.php:29/73/112` |
+| AJAX | **4 个已注册**（均登录用户可用，无 `wp_ajax_nopriv_*`；1.9.18 起无条件注册） | `modules/admin/classes/class-wpca-menu-customizer.php` |
+| 设置 AJAX 处理器 | 原 3 个方法已于 1.9.18 移除，仅保留消毒代理 | `includes/ajax/settings-ajax.php` |
 | 全局 `wpca_*` 函数 | 运行期加载，供插件内部与扩展代码调用 | `includes/wpca-core-*-functions.php` |
 | 对外过滤器 | 1 个：`wpca_update_settings` | `includes/wpca-core-settings-functions.php:73` |
 
@@ -37,15 +37,15 @@
 | HTTP 方法 | POST（handler 仅读取 `$_POST`） |
 | 登录状态 | 必须已登录；未注册 `wp_ajax_nopriv_*` 变体 |
 | Nonce | 字段 `_wpnonce`，动作串 `wpca_ajax_nonce`；菜单定制器用 `wp_verify_nonce()` 手动校验（非 `check_ajax_referer`） |
-| 能力 | `current_user_can('manage_options')`，不满足返回 `wp_send_json_error('Insufficient permissions')` |
+| 能力 | `current_user_can('manage_options')`，不满足返回 `{success:false, error_code:1002, ...}` |
 | 内容类型 | `application/x-www-form-urlencoded` |
-| 标准响应 DTO | `Helpers\create_success_response()` / `create_error_response()`：`{success, message, data}` / `{success, error_code, message, data}`（**仅部分代码使用**，见 §9） |
+| 统一响应 DTO | `WPCleanAdmin\AJAX\Response`（`includes/ajax/response-ajax.php`）：成功 `{success:true, message, data}`；失败 `{success:false, error_code, message, data}`；4 个 handler 全部使用 |
 
 Nonce 生成示例（后台页面内）：`wp_create_nonce( 'wpca_ajax_nonce' )`；渲染处见 `modules/admin/classes/class-wpca-dashboard-widget-tasks.php:108`。
 
 ## 3. 已注册 AJAX 接口
 
-四个接口共用私有校验 `MenuCustomizerAjaxTasks::verify_ajax_request()`（`modules/admin/classes/class-wpca-menu-customizer-ajax-tasks.php:31-49`）：nonce 失败 → `wp_send_json_error('Invalid nonce')`；权限不足 → `wp_send_json_error('Insufficient permissions')`。
+四个接口共用私有校验 `MenuCustomizerAjaxTasks::verify_ajax_request()`（`modules/admin/classes/class-wpca-menu-customizer-ajax-tasks.php:31-49`）：nonce 失败 → `{success:false, error_code:1007, message:"Invalid nonce"}`；权限不足 → `{success:false, error_code:1002, message:"Insufficient permissions"}`。响应统一经 `WPCleanAdmin\AJAX\Response` 输出。
 
 ### 3.1 保存菜单定制设置
 
@@ -54,9 +54,9 @@ Nonce 生成示例（后台页面内）：`wp_create_nonce( 'wpca_ajax_nonce' )`
 | 路径 / 方法 | `POST /wp-admin/admin-ajax.php` |
 | `action` | `wpca_save_menu_customizer` |
 | 参数 | `_wpnonce`（string，必填）；`settings`（array，必填，递归消毒；非数组置空） |
-| 成功响应 | `{"success":true,"data":{"message":"Menu customizer settings saved successfully"}}` |
-| 失败响应 | `{"success":false,"data":"Failed to save menu customizer settings"}` |
-| 代码 | 注册 `class-wpca-menu-customizer.php:95`；实现 `class-wpca-menu-customizer-ajax-tasks.php:54-74` |
+| 成功响应 | `{"success":true,"message":"Menu customizer settings saved successfully","data":{}}` |
+| 失败响应 | `{"success":false,"error_code":1005,"message":"Failed to save menu customizer settings","data":{}}` |
+| 代码 | 注册 `class-wpca-menu-customizer.php`（无条件注册）；实现 `class-wpca-menu-customizer-ajax-tasks.php` |
 
 调用示例（后台页面 JS）：
 
@@ -74,9 +74,9 @@ jQuery.post( ajaxurl, {
 |------|------|
 | `action` | `wpca_reset_menu_customizer` |
 | 参数 | `_wpnonce` |
-| 成功响应 | `{"success":true,"data":{"message":"Menu customizer settings reset to default"}}` |
-| 失败响应 | `{"success":false,"data":"Failed to reset menu customizer settings"}` |
-| 代码 | `class-wpca-menu-customizer.php:96`；`class-wpca-menu-customizer-ajax-tasks.php:80-93` |
+| 成功响应 | `{"success":true,"message":"Menu customizer settings reset to default","data":{}}` |
+| 失败响应 | `{"success":false,"error_code":1005,"message":"Failed to reset menu customizer settings","data":{}}` |
+| 代码 | `class-wpca-menu-customizer.php`；`class-wpca-menu-customizer-ajax-tasks.php` |
 
 ### 3.3 导出菜单定制设置
 
@@ -84,9 +84,9 @@ jQuery.post( ajaxurl, {
 |------|------|
 | `action` | `wpca_export_menu_customizer` |
 | 参数 | `_wpnonce` |
-| 成功响应 | `{"success":true,"data":{"menu_items":{},"submenu_items":{},"admin_bar_items":{},"menu_order":[],"menu_groups":{}}}` |
-| 实现 | `class-wpca-menu-customizer-ajax-tasks.php:100-106`；数据结构见 `class-wpca-menu-customizer-render.php:142-154` |
-| 已知问题 | 导出读取 `wpca_settings`，与保存键不一致（OPT-001） |
+| 成功响应 | `{"success":true,"message":"","data":{"menu_items":{},"submenu_items":{},"admin_bar_items":{},"menu_order":[],"menu_groups":{}}}` |
+| 实现 | `class-wpca-menu-customizer-ajax-tasks.php`；数据结构见 `class-wpca-menu-customizer-render.php` |
+| 存储 | 统一读写 `wpca_menu_customizer_settings`（单一数据源，OPT-001 已修复） |
 
 ### 3.4 导入菜单定制设置
 
@@ -94,21 +94,19 @@ jQuery.post( ajaxurl, {
 |------|------|
 | `action` | `wpca_import_menu_customizer` |
 | 参数 | `_wpnonce`；`import_data`（JSON 字符串或数组，解码后写入 `wpca_menu_customizer_settings`） |
-| 成功响应 | `{"success":true,"data":{"message":"Menu customizer settings imported successfully"}}` |
-| 失败响应 | `{"success":false,"data":"Failed to import menu customizer settings"}` |
-| 实现 | `class-wpca-menu-customizer-ajax-tasks.php:113-135` |
+| 成功响应 | `{"success":true,"message":"Menu customizer settings imported successfully","data":{}}` |
+| 失败响应 | `{"success":false,"error_code":1005,"message":"Failed to import menu customizer settings","data":{}}` |
+| 实现 | `class-wpca-menu-customizer-ajax-tasks.php` |
 
-## 4. 未挂载的设置处理器
+## 4. 已移除的设置处理器
 
-`WPCleanAdmin\AJAX\Settings`（`includes/ajax/settings-ajax.php`）定义以下方法，但**仓库中无对应 `wp_ajax_*` 注册**，因此当前不可通过 HTTP 调用；它们仍被菜单定制器复用 `sanitize_settings()`。
+`WPCleanAdmin\AJAX\Settings`（`includes/ajax/settings-ajax.php`）原定义 `save_settings()` / `get_settings()` / `reset_settings()` 三个方法，但从未注册 `wp_ajax_*`，且其写入路径绕过 `register_setting` 的验证白名单。**1.9.18 起已移除这三个处理器**，文件仅保留向后兼容的消毒代理：
 
-| 方法 | 预期 action（未注册） | 参数 | 行为 |
-|------|----------------------|------|------|
-| `Settings::save_settings()` | `wpca_save_settings`（示意，勿当真实现调用） | `_wpnonce`、`settings` | 消毒后 `update_option('wpca_settings')`，`:29-63` |
-| `Settings::get_settings()` | `wpca_get_settings`（示意） | `_wpnonce` | 返回 `{"settings":{…}}`，`:73-102` |
-| `Settings::reset_settings()` | `wpca_reset_settings`（示意） | `_wpnonce` | `delete_option('wpca_settings')`，`:112-140` |
+```php
+WPCleanAdmin\AJAX\Settings::sanitize_settings( $value ); // 委托 Helpers::getInstance()->sanitize_settings()
+```
 
-> 三者均校验 nonce（`wpca_ajax_nonce`）与 `manage_options`；响应使用 `wp_send_json_success/error`。是否注册或删除这些 handler 见 OPT-002。
+递归消毒的唯一实现位于 `WPCleanAdmin\Modules\Utilities\Classes\Helpers::sanitize_settings()`（`modules/utilities/classes/class-wpca-helpers-validation-tasks.php`）。
 
 ## 5. 错误码定义
 
@@ -126,7 +124,7 @@ jQuery.post( ajaxurl, {
 | `ERROR_AUTH` | 1007 | Authentication failed. Please log in again. |
 | `ERROR_UNKNOWN` | 9999 | An unknown error occurred. Please try again.（兜底） |
 
-> 注意：当前 4 个已注册 AJAX handler 的错误响应为字符串载荷，**未携带 `error_code`**；错误码主要由 Helpers DTO 使用。统一契约见 OPT-002。
+> 说明：1.9.18 起 4 个 handler 的错误响应统一携带 `error_code`（`WPCA_Errors`），客户端可直接按错误码分支处理。
 
 ## 6. 全局函数 API
 
@@ -167,14 +165,14 @@ jQuery.post( ajaxurl, {
 
 ## 9. 契约差异与已知问题
 
-| 问题 | 影响 | 跟踪 |
-|------|------|------|
-| 4 个 AJAX handler 的字符串错误载荷与 Helpers DTO 不一致 | 客户端无法按 `error_code` 分支处理 | OPT-002（P1） |
-| 设置 AJAX 3 个方法未注册 action | 文档承诺的接口不可调用 | OPT-002（P1） |
-| 菜单定制器保存/读取 option 键不一致、AJAX 默认未注册 | 接口可调用性/闭环受损 | OPT-001（P0） |
-| 无 REST 端点与 OpenAPI 历史缺失 | 外部系统无法机器可读集成 | OPT-012（P2）；本文 `openapi.yaml` 已补 AJAX 契约 |
+| 问题 | 状态（1.9.18） | 说明 |
+|------|---------------|------|
+| 响应载荷不统一 | **已修复** | 4 个 handler 统一经 `WPCleanAdmin\AJAX\Response` 输出，错误响应携带 `error_code` |
+| 设置 AJAX 死 handler | **已移除** | 删除 3 个未注册处理器，`sanitize_settings()` 下沉至 `Helpers` 并保留静态代理 |
+| 菜单定制 option 键不一致 / AJAX 未注册 | **已修复** | 统一 `wpca_menu_customizer_settings` 单一数据源，4 个 action 无条件注册，并提供 legacy 迁移 |
+| 无 REST 端点 | 仍为设计取舍 | 本插件对外仅提供 AJAX；如需 REST 可按 `docs/优化建议.md` OPT-012 提案新增 `wpca/v1` 命名空间 |
 
-> 调用方请以 `openapi.yaml` 与本节「已注册」清单为准；`docs/api-reference.md` 中“统一响应结构”描述为**目标契约**，当前仅有部分实现。
+> 调用方请以 `openapi.yaml` 与本节「已注册」清单为准。
 
 ## 10. 文档版本控制
 

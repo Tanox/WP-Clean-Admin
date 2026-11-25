@@ -22,13 +22,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return mixed Plugin settings or specific setting value
  */
 function wpca_get_settings( $key = '', $default = false ) {
-    $settings = function_exists( 'get_option' ) ? \get_option( 'wpca_settings', array() ) : array();
-    
+    // 请求级记忆化：避免同一请求内重复读取全量设置
+    if ( ! array_key_exists( 'wpca_settings_cache', $GLOBALS ) ) {
+        $settings = function_exists( 'get_option' ) ? \get_option( 'wpca_settings', array() ) : array();
+        $GLOBALS['wpca_settings_cache'] = is_array( $settings ) ? $settings : array();
+    }
+
+    $settings = $GLOBALS['wpca_settings_cache'];
+
     if ( empty( $key ) ) {
         return $settings;
     }
-    
+
     return isset( $settings[ $key ] ) ? $settings[ $key ] : $default;
+}
+
+/**
+ * 失效请求级设置缓存（写路径调用）
+ *
+ * @return void
+ */
+function wpca_flush_settings_cache() {
+    unset( $GLOBALS['wpca_settings_cache'] );
 }
 
 /**
@@ -73,7 +88,12 @@ function wpca_update_settings( $settings ) {
         $validated_settings = \apply_filters( 'wpca_update_settings', $validated_settings );
     }
     
-    return function_exists( 'update_option' ) ? \update_option( 'wpca_settings', $validated_settings ) : false;
+    $updated = function_exists( 'update_option' ) ? \update_option( 'wpca_settings', $validated_settings ) : false;
+
+    // 写路径后失效请求级缓存，保证同请求内读取到最新设置
+    wpca_flush_settings_cache();
+
+    return $updated;
 }
 
 /**

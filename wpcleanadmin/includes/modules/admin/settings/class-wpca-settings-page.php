@@ -39,59 +39,59 @@ class Settings_Page {
                 ?>
 
                 <!-- Settings Tabs -->
-                <div class="wpca-settings-tabs">
-                    <div class="wpca-tabs-nav">
-                        <button type="button" class="wpca-tab-button active" data-tab="general">
+                <div class="wpca-settings-tabs" id="wpca-settings-tabs">
+                    <div class="wpca-tabs-nav" id="wpca-tabs-nav" role="tablist">
+                        <button type="button" class="wpca-tab-button active" id="wpca-tab-btn-general" role="tab" aria-selected="true" aria-controls="wpca-tab-general" data-tab="general">
                             <span class="dashicons dashicons-admin-generic"></span>
                             <?php echo \esc_html( \__( 'General', $text_domain ) ); ?>
                         </button>
-                        <button type="button" class="wpca-tab-button" data-tab="cleanup">
+                        <button type="button" class="wpca-tab-button" id="wpca-tab-btn-cleanup" role="tab" aria-selected="false" aria-controls="wpca-tab-cleanup" data-tab="cleanup">
                             <span class="dashicons dashicons-clipboard"></span>
                             <?php echo \esc_html( \__( 'Cleanup', $text_domain ) ); ?>
                         </button>
-                        <button type="button" class="wpca-tab-button" data-tab="performance">
+                        <button type="button" class="wpca-tab-button" id="wpca-tab-btn-performance" role="tab" aria-selected="false" aria-controls="wpca-tab-performance" data-tab="performance">
                             <span class="dashicons dashicons-chart-line"></span>
                             <?php echo \esc_html( \__( 'Performance', $text_domain ) ); ?>
                         </button>
-                        <button type="button" class="wpca-tab-button" data-tab="security">
+                        <button type="button" class="wpca-tab-button" id="wpca-tab-btn-security" role="tab" aria-selected="false" aria-controls="wpca-tab-security" data-tab="security">
                             <span class="dashicons dashicons-shield"></span>
                             <?php echo \esc_html( \__( 'Security', $text_domain ) ); ?>
                         </button>
                     </div>
 
-                    <div class="wpca-tabs-content">
+                    <div class="wpca-tabs-content" id="wpca-tabs-content">
                         <!-- General Tab -->
-                        <div class="wpca-tab-content active" id="wpca-tab-general">
+                        <div class="wpca-tab-content active" id="wpca-tab-general" role="tabpanel" aria-labelledby="wpca-tab-btn-general">
                             <?php
                             if ( function_exists( 'do_settings_sections' ) ) {
-                                \do_settings_sections( 'wp-clean-admin' );
+                                \do_settings_sections( 'wp-clean-admin-general' );
                             }
                             ?>
                         </div>
 
                         <!-- Cleanup Tab -->
-                        <div class="wpca-tab-content" id="wpca-tab-cleanup">
+                        <div class="wpca-tab-content" id="wpca-tab-cleanup" role="tabpanel" aria-labelledby="wpca-tab-btn-cleanup">
                             <?php
                             if ( function_exists( 'do_settings_sections' ) ) {
-                                \do_settings_sections( 'wp-clean-admin' );
+                                \do_settings_sections( 'wp-clean-admin-cleanup' );
                             }
                             ?>
                         </div>
 
                         <!-- Performance Tab -->
-                        <div class="wpca-tab-content" id="wpca-tab-performance">
+                        <div class="wpca-tab-content" id="wpca-tab-performance" role="tabpanel" aria-labelledby="wpca-tab-btn-performance">
                             <?php
                             if ( function_exists( 'do_settings_sections' ) ) {
-                                \do_settings_sections( 'wp-clean-admin' );
+                                \do_settings_sections( 'wp-clean-admin-performance' );
                             }
                             ?>
                         </div>
 
                         <!-- Security Tab -->
-                        <div class="wpca-tab-content" id="wpca-tab-security">
+                        <div class="wpca-tab-content" id="wpca-tab-security" role="tabpanel" aria-labelledby="wpca-tab-btn-security">
                             <?php
                             if ( function_exists( 'do_settings_sections' ) ) {
-                                \do_settings_sections( 'wp-clean-admin' );
+                                \do_settings_sections( 'wp-clean-admin-security' );
                             }
                             ?>
                         </div>
@@ -105,7 +105,7 @@ class Settings_Page {
                         \submit_button( \__( 'Save Changes', $text_domain ), 'primary', 'submit', false, array( 'id' => 'wpca-save-button' ) );
                     }
                     ?>
-                    <div class="wpca-save-message" id="wpca-save-message"></div>
+                    <div class="wpca-save-message" id="wpca-save-message" role="status" aria-live="polite"></div>
                 </div>
             </form>
         </div>

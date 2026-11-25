@@ -189,7 +189,7 @@
      */
     WPCleanAdmin.Settings.showSaving = function() {
         const saveMessage = $('#wpca-save-message');
-        saveMessage.html('<span class="wpca-saving">' + wpcaSettingsLocalize.savingText + '</span>');
+        saveMessage.empty().append($('<span>').addClass('wpca-saving').text(wpcaSettingsLocalize.savingText));
         saveMessage.show();
     };
 
@@ -198,8 +198,8 @@
      */
     WPCleanAdmin.Settings.showSuccess = function() {
         const saveMessage = $('#wpca-save-message');
-        saveMessage.html('<span class="wpca-success">' + wpcaSettingsLocalize.successText + '</span>');
-        
+        saveMessage.empty().append($('<span>').addClass('wpca-success').text(wpcaSettingsLocalize.successText));
+
         setTimeout(function() {
             WPCleanAdmin.Settings.hideSaveMessage();
         }, 3000);
@@ -210,7 +210,7 @@
      */
     WPCleanAdmin.Settings.showError = function() {
         const saveMessage = $('#wpca-save-message');
-        saveMessage.html('<span class="wpca-error">' + wpcaSettingsLocalize.errorText + '</span>');
+        saveMessage.empty().append($('<span>').addClass('wpca-error').text(wpcaSettingsLocalize.errorText));
     };
 
     /**
@@ -218,21 +218,14 @@
      */
     WPCleanAdmin.Settings.hideSaveMessage = function() {
         const saveMessage = $('#wpca-save-message');
-        saveMessage.hide().html('');
+        saveMessage.hide().empty();
     };
 
     /**
-     * Setup save message styles
+     * Save message styles moved to assets/css/wpca-settings.css
      */
     WPCleanAdmin.Settings.setupSaveMessage = function() {
-        const style = `
-            <style>
-                .wpca-saving { color: #007cba; font-weight: 500; }
-                .wpca-success { color: #46b450; font-weight: 500; }
-                .wpca-error { color: #dc3232; font-weight: 500; }
-            </style>
-        `;
-        $('head').append(style);
+        return;
     };
 
     /**

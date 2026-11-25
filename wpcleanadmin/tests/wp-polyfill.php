@@ -209,6 +209,44 @@ if ( ! function_exists( 'wp_send_json' ) ) {
     }
 }
 
+if ( ! function_exists( 'is_user_logged_in' ) ) {
+    function is_user_logged_in() {
+        return ! empty( $GLOBALS['wpca_test_logged_in'] );
+    }
+}
+
+if ( ! function_exists( 'is_wp_error' ) ) {
+    function is_wp_error( $thing ) {
+        return $thing instanceof WP_Error;
+    }
+}
+
+if ( ! class_exists( 'WP_Error' ) ) {
+    class WP_Error {
+        protected $code;
+        protected $message;
+        protected $data;
+
+        public function __construct( $code = '', $message = '', $data = '' ) {
+            $this->code    = $code;
+            $this->message = $message;
+            $this->data    = $data;
+        }
+
+        public function get_error_code() {
+            return $this->code;
+        }
+
+        public function get_error_message() {
+            return $this->message;
+        }
+
+        public function get_error_data() {
+            return $this->data;
+        }
+    }
+}
+
 if ( ! isset( $GLOBALS['wpca_test_json'] ) ) {
     $GLOBALS['wpca_test_json'] = null;
 }

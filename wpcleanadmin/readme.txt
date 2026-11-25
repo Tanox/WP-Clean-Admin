@@ -4,7 +4,7 @@ Tags: admin, cleanup, optimization, performance, security, menu
 Requires at least: 5.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.9.17
+Stable tag: 1.9.18
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,7 +52,7 @@ https://github.com/Tanox/WP-Clean-Admin/blob/main/CHANGELOG.md
 
 == Upgrade Notice ==
 
-= 1.9.17 =
+= 1.9.18 =
 E-2 闭环：恢复活设置页内联资源抽离（CSS/JS 抽离至 assets），CI 增加 PHP 7.4 语法 lint。
 
 = 1.9.16 =

@@ -39,7 +39,7 @@ trait SettingsRegistrationTasks {
     public function register_settings() {
         $text_domain = defined( 'WPCA_TEXT_DOMAIN' ) ? WPCA_TEXT_DOMAIN : 'wp-clean-admin';
 
-        // Register settings sections
+        // Register settings sections（每个 Tab 使用独立页面标识，避免字段重复渲染）
         $sections = array(
             'general' => array(
                 'id' => 'wpca_general_settings',
@@ -63,13 +63,13 @@ trait SettingsRegistrationTasks {
             )
         );
 
-        foreach ( $sections as $section ) {
+        foreach ( $sections as $tab => $section ) {
             if ( function_exists( 'add_settings_section' ) ) {
                 \add_settings_section(
                     $section['id'],
                     $section['title'],
                     $section['callback'],
-                    'wp-clean-admin'
+                    'wp-clean-admin-' . $tab
                 );
             }
         }
