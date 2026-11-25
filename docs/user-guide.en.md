@@ -1,6 +1,6 @@
 # WP Clean Admin User Guide (English)
 
-> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-25  |  **Status**: User documentation
+> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-26  |  **Status**: User documentation
 > This document is aimed at site administrators and editors. See [`installation-guide.en.md`](installation-guide.en.md) for installation and [`faq-troubleshooting.en.md`](faq-troubleshooting.en.md) for common questions.
 > The Simplified Chinese original is [`user-guide.md`](user-guide.md); when the two diverge, the Chinese original wins.
 
@@ -12,6 +12,11 @@
 - [4. Settings Page: Step by Step](#4-settings-page-step-by-step)
 - [5. Menu Customizer](#5-menu-customizer)
 - [6. Database and Security Operations](#6-database-and-security-operations)
+  - [6.1 Database backup / restore / delete](#61-database-backup--restore--delete)
+  - [6.2 Login protection](#62-login-protection)
+  - [6.3 REST restriction](#63-rest-restriction)
+  - [6.4 Cache backend and cleanup](#64-cache-backend-and-cleanup)
+  - [6.5 Diagnostics panel](#65-diagnostics-panel)
 - [7. Save, Reset, Import and Export](#7-save-reset-import-and-export)
 - [8. Document Version Control](#8-document-version-control)
 
@@ -112,9 +117,14 @@ sequenceDiagram
 
 ### 6.1 Database backup / restore / delete
 
-- Entry point: the database management panel; operations include backup, restore and deleting backup files.
-- Deletion is guarded: only file names matching a whitelist with the `.sql` extension are allowed, and the `realpath` directory boundary is validated (fixed in 1.9.2).
+| Operation | Steps | Notes |
+|-----------|-------|-------|
+| Backup | Open the database management panel → click "Backup" → wait for the inline progress indicator → note the generated `.sql` file name | Backups are written to the plugin `backups/` directory; large tables take longer, so keep the page open |
+| Restore | Select the target `.sql` file in the backup list → click "Restore" → confirm the impact and execute | **Overwrites the current database content** — take a fresh backup first |
+| Delete backup | Select a file in the backup list → click "Delete" | Only file names with the `.sql` extension pass the whitelist, plus a `realpath` directory-boundary check (fixed in 1.9.2); files outside the directory cannot be deleted |
+
 - Uninstalling the plugin **does not** delete backup files; clean up `wpcleanadmin/backups/` yourself (if it exists).
+- Feedback is shown via inline status messages since 1.9.18 (no more `alert()`); watch the status area for long-running operations.
 
 ### 6.2 Login protection
 
@@ -129,6 +139,20 @@ sequenceDiagram
 
 `security.restrict_rest_api` registers the `rest_authentication_errors` filter during `rest_api_init`. Anonymous requests receive HTTP 403 (error code `rest_not_logged_in`); logged-in users are unaffected. To close REST entirely, still add restrictions at the server layer.
 
+### 6.4 Cache backend and cleanup
+
+1. Set `performance.cache_enabled` and `cache_expiration` (seconds; values ≤ 0 fall back to 3600) on the Performance tab.
+2. The `Cache` module dispatches uniformly across the three backends (memory / database / file). The file backend writes to `wp-content/uploads/wpca-cache/` and needs that directory to be writable.
+3. To flush manually, delete the `.cache` files under `uploads/wpca-cache/`; database cache entries use the `wpca_cache_%` prefix.
+4. Expired entries are reclaimed by the hourly WP-Cron event `wpca_cache_cleanup`; the event is unscheduled when the plugin is deactivated or uninstalled.
+
+### 6.5 Diagnostics panel
+
+1. Open the Diagnostics tab and confirm `diagnostics.enable_diagnostics=1`; `auto_run_diagnostics` controls automatic execution.
+2. Filter alerts by severity with `severity_filter`; `show_warnings` controls whether they are displayed.
+3. Combine with the WordPress `WP_DEBUG`, browser Network and database checks in [`faq-troubleshooting.en.md`](faq-troubleshooting.en.md) §3 to locate problems.
+4. Diagnostics are read-only — they never modify site configuration automatically.
+
 ## 7. Save, Reset, Import and Export
 
 | Operation | Result | Risk note |
@@ -142,4 +166,5 @@ sequenceDiagram
 
 | Document version | Applies to plugin version | Date | Maintainer | Summary |
 |------------------|---------------------------|------|------------|---------|
+| 1.1 | 1.9.18 | 2026-11-26 | Tanox | Expanded database backup/restore/delete steps, added cache backend and diagnostics sections; aligned with `user-guide.md` v1.2 |
 | 1.0 | 1.9.18 | 2026-11-25 | Tanox | English mirror of `user-guide.md`: roles and capabilities, operation flow diagrams, five-tab walkthrough, database/security operations and limitations |

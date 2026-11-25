@@ -1,6 +1,6 @@
 # WP Clean Admin FAQ and Troubleshooting Guide (English)
 
-> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-25  |  **Status**: User documentation
+> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-26  |  **Status**: User documentation
 > Read first: [`installation-guide.en.md`](installation-guide.en.md), [`user-guide.en.md`](user-guide.en.md). This document lists **known behaviours of the current version**; defect tracking lives in [`优化建议.md`](优化建议.md) and [`tasks.md`](tasks.md).
 > The Simplified Chinese original is [`FAQ与故障排除.md`](FAQ与故障排除.md); when the two diverge, the Chinese original wins.
 
@@ -30,7 +30,7 @@ Settings are written to `wpca_settings` and read on the next request through `wp
 Check whether the PHP GD extension is installed. Without it, image generation is skipped safely and login validation rejects requests that carry no captcha. Install GD, restart the web server and retry (see `modules/admin/classes/class-wpca-login-captcha.php`).
 
 **Q5: I enabled 2FA and can no longer log in.**
-Use the 6-digit rotating code from your authenticator app; the form nonce field is `wpca_nonce`. If the binding is lost, clear that user's 2FA user meta through the database (back up first) or ask an administrator to help restore access; a recovery-code flow is planned for a future release.
+Use the 6-digit rotating code from your authenticator app; the form nonce field is `wpca_nonce`. If the binding is lost, clear that user's 2FA user meta through the database (back up first) or ask an administrator to help restore access. **Recovery codes are not provided in the current release**; file a request in [`tasks.md`](tasks.md) if you need that capability.
 
 **Q6: The file cache misbehaves or serves stale content.**
 Since 1.9.18 the file cache directory lives at `wp-content/uploads/wpca-cache/` (with `index.php` and `.htaccess` protection), writes use a temporary file plus an atomic `rename()`, and cleanup is handled by the hourly cron job. Delete the `.cache` files in that directory to flush it; corrupted or legacy serialized files are discarded automatically on read. If problems persist, switch the `performance` cache backend to database or memory. The old `wpcleanadmin/cache/` directory can be removed manually.
@@ -52,6 +52,9 @@ Since 1.9.18 the statistics are cached in a 15-minute transient (`wpca_dashboard
 
 **Q12: How do I know whether a feature is enabled?**
 Inspect the `wpca_settings` option (the `wp_options` row, or `wpca_get_settings()`); activation defaults are listed in [`installation-guide.en.md`](installation-guide.en.md) §4.2.
+
+**Q13: What happens to menu and cache data after upgrading from an older version?**
+Legacy menu customization data is migrated **idempotently** from `wpca_settings.menu_customizer` to `wpca_menu_customizer_settings` on first read; the old data is kept, not deleted. Activation defaults never overwrite existing settings. The file cache moved to `uploads/wpca-cache/`; the old `wpcleanadmin/cache/` directory is no longer used and can be removed manually after verification. If customizations do not appear after upgrading, flush the object cache and retry (see Q2).
 
 ## 2. Troubleshooting Matrix
 
@@ -99,4 +102,5 @@ Inspect the `wpca_settings` option (the `wp_options` row, or `wpca_get_settings(
 
 | Document version | Applies to plugin version | Date | Maintainer | Summary |
 |------------------|---------------------------|------|------------|---------|
+| 1.1 | 1.9.18 | 2026-11-26 | Tanox | Added the post-upgrade data migration entry (Q13); corrected the 2FA recovery-code statement; aligned with `FAQ与故障排除.md` v1.2 |
 | 1.0 | 1.9.18 | 2026-11-25 | Tanox | English mirror of `FAQ与故障排除.md`: 12 FAQ entries, troubleshooting matrix, diagnostics, emergency recovery and the pre-submission checklist |

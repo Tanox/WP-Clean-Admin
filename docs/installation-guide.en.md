@@ -1,6 +1,6 @@
 # WP Clean Admin Installation and Deployment Guide (English)
 
-> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-25  |  **Status**: Current document
+> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-26  |  **Status**: Current document
 > Audience: site administrators, operations staff and developers. Read [§1 Environment Requirements](#1-environment-requirements) before installing; feature details live in [`功能模块说明.md`](功能模块说明.md).
 > The Simplified Chinese original is [`安装部署指南.md`](安装部署指南.md); when the two diverge, the Chinese original wins.
 
@@ -115,7 +115,7 @@ sequenceDiagram
 | Staging | Same-version Release zip as production | Copy production configuration with sensitive data redacted; enable diagnostics `show_warnings` | Same PHP/WP version as production; cache/database cleanup does not delete anything unintended |
 | Production (single site) | Release zip uploaded through the admin | Enable only verified switches; `WP_DEBUG=false` | First-screen performance, login flow, REST/captcha behaviour, backup restore drill |
 | Production (multisite) | Network activation or per-site activation | `Helpers::is_network_activated()` provides network-activation detection; settings are stored per site | Each site's `wpca_settings` is independent; verify roles and menu customization per site |
-| CI | `composer install` + `composer test/phpstan/phpcs` | Uses `phpunit.xml.dist` / `phpstan.neon.dist` / `phpcs.xml.dist` | CI must be fully green before `release.yml` publishes automatically |
+| CI | `composer install` + `composer test/phpstan/phpcs` | Uses `phpunit.xml.dist` / `phpstan.neon.dist` / `phpcs.xml.dist` | The workflow must succeed before `release.yml` publishes automatically; `PHP_CodeSniffer` and `Coverage Gate` are currently non-blocking (`continue-on-error: true`), see [`tasks.md`](tasks.md) |
 
 > Always use the same package version across environments; configuration differences are managed through WordPress options rather than environment-variable branches in code.
 
@@ -142,4 +142,5 @@ sequenceDiagram
 
 | Document version | Applies to plugin version | Date | Maintainer | Summary |
 |------------------|---------------------------|------|------------|---------|
+| 1.1 | 1.9.18 | 2026-11-26 | Tanox | Aligned the CI row with the two non-blocking gates; confirmed the cache directory as `uploads/wpca-cache/` |
 | 1.0 | 1.9.18 | 2026-11-25 | Tanox | English mirror of `安装部署指南.md`: environment requirements, installation, configuration, multi-environment deployment, verification and upgrade/rollback/uninstall |
