@@ -138,8 +138,7 @@ This project ships a high-fidelity interactive prototype and design specs for de
 - **Design system** (`prototype/wpca-components.css`): the single source of shadcn/ui style tokens
   covering color/typography/spacing/radius/shadow/motion tokens, component library and responsive rules.
   The plugin's `wpcleanadmin/assets/css/wpca-admin.css` reuses the same token classes.
-- **Design spec**: [`docs/设计规范_20260808.md`](docs/设计规范_20260808.md) (historical baseline snapshot)
-- **Contribution rules**: [`CONTRIBUTING.md`](CONTRIBUTING.md) ｜ **Docs index**: [`docs/README.md`](docs/README.md)
+- **Contribution rules**: [`CONTRIBUTING.md`](CONTRIBUTING.md) ｜ **Docs index**: [`docs/README.md`](docs/README.md) ｜ **Docs index (EN)**: [`docs/README.en.md`](docs/README.en.md)
 - **OpenSpec specs**: [`openspec/`](openspec/)
 
 ---

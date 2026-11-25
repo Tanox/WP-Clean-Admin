@@ -3,6 +3,28 @@
 > 版本号唯一来源：`wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION`。
 > 变更格式与同步清单见 `CONTRIBUTING.md` §5 / §9.2；纯文档变更不提升插件版本，记录于 `[Unreleased]`。
 
+## [1.9.18] - 2026-11-26
+
+- fix: **OPT-001 菜单定制器读写键不一致且 AJAX 默认未注册（P0）**——`Menu_Customizer_Options` 成为 `wpca_menu_customizer_settings` 的唯一数据源，Tree / Render / Customize-Tasks 经构造器注入同一实例统一读写；`Menu_Customizer::init()` 移除 `settings['menu_customizer']` 守卫，4 个 AJAX action 改为无条件注册；提供从 `wpca_settings.menu_customizer` 的幂等 legacy 迁移（不删除旧数据）。默认注册 action 数 0→4，保存后定制项生效率 0%→100%
+- fix: **OPT-002 AJAX 响应契约三套并存、设置 handler 未挂载（P1）**——新增 `WPCleanAdmin\AJAX\Response` 统一响应 DTO 工厂（`includes/ajax/response-ajax.php`，成功 `{success, message, data}` / 失败 `{success, error_code, message, data}`），4 个菜单定制 handler 全部迁移；递归消毒下沉至 `Helpers::sanitize_settings()`，`AJAX\Settings` 仅保留向后兼容静态代理；删除 3 个从未注册的 `save/get/reset_settings` handler。JSON 结构种类 3→1
+- fix: **OPT-003 设置字段回显读取错误 option 键（P1）**——`Settings_Fields::render_field()` 改为优先读取嵌套 `wpca_settings[group][id]`，缺失时回退独立 option（`array_key_exists` 保证 `0`/`false` 正确回显），表单 `name` 属性同步为 `wpca_settings[group][id]`；新增 `group` 字段标识
+- fix: **OPT-004 两套全局错误处理器并存且其中一套吞掉所有 PHP 错误（P1）**——`Helpers::register_error_handler()` 降级为 deprecated no-op，`custom_error_handler()` 对已报告错误返回 `false` 交回 PHP 默认处理链；`Error_Handler` 增加 `private static $registered` 防重复注册。全局处理器 2→1
+- fix: **OPT-005「禁用 REST API」在纯 REST 请求上不生效（P1）**——REST 限制过滤改由 `rest_api_init`（priority 1）注册 `rest_authentication_errors`，匿名请求返回 `WP_Error('rest_not_logged_in', …, ['status' => 403])`，已登录用户与既有错误透传不拦截
+- perf: **OPT-006 数据库缓存清理无 LIMIT、无 cron 兜底（P1）**——改为 `LIMIT 500` 分批查询与删除，并注册 hourly WP-Cron 事件 `wpca_cache_cleanup` 负责过期项回收（停用/卸载时 unschedule）
+- perf: **OPT-007 文件缓存位于插件目录、每请求全目录 glob、写入非原子（P1）**——缓存目录迁至 `wp_upload_dir()['basedir']/wpca-cache`（含 `index.php` 与 `.htaccess` 防护），写入改为临时文件 + `rename()` 原子替换，清理改由 cron 限频 + `FilesystemIterator` 承担，插件目录不再需要写权限
+- perf: **OPT-008 同一请求重复读取全量设置（P2）**——`wpca_get_settings()` 增加请求级记忆化（`$GLOBALS['wpca_settings_cache']`），新增 `wpca_flush_settings_cache()`，`wpca_update_settings()` 写后自动失效缓存
+- perf: **OPT-010 仪表盘同步执行重型全表统计（P2）**——统计结果以 15 分钟 transient（`wpca_dashboard_stats`）缓存，transients 改前缀聚合，孤儿 meta 统计改写为索引友好的 `NOT EXISTS`
+- a11y: **OPT-009 设置页四个 Tab 重复渲染全部字段且缺少 ARIA 语义（P1）**——4 个 Tab 改用独立 settings page slug（`wp-clean-admin-general|cleanup|performance|security`）分别注册与渲染，同一字段不再跨 Tab 重复输出（重复输入 16→4）；补齐 `tablist`/`tab`/`aria-selected`/`aria-controls`/`tabpanel`；保存提示改为 `role="status" aria-live="polite"`；内联 `<style>` 从 JS 迁至 `assets/css/wpca-settings.css`
+- security: **OPT-011 前端反馈依赖 alert、无进度且用 `.html()` 注入服务端文本（P1）**——`wpca-dashboard.js` / `wpca-settings.js` / `wpca-main.js` 移除全部 `alert()` 与 `.html()` 插值，改用 jQuery DOM API `.text()`；新增页面内状态与进度提示。未转义插值点 4→0
+- ci: **OPT-012 测试/质量门禁与对外契约缺口（P2，部分闭环）**——新增 Clover 覆盖率门禁工具 `tools/check-coverage.php`（默认阈值 70%）、`composer test:coverage` 脚本与 CI `coverage` 作业（pcov，首次 `continue-on-error: true` 仅报基线）；`docs/openapi.yaml`（OpenAPI 3.1）补齐并与 `docs/API接口文档.md` 同步；`uninstall.php` 补充清理 WP-Cron 事件与文件缓存目录。PHPCS 阻塞化与覆盖率实测基线未完成，已拆分为独立任务
+- refactor: **>200 行治理口径复核与拆分**——以实际行数复核发现历史统计「仅余 2 个登记排除项」不准确：`class-wpca-cache-file-tasks.php`（242 行）与 `class-wpca-settings-fields.php`（203 行）超限但未登记。已拆分为 `CacheFileCleanupTasks`（`class-wpca-cache-file-cleanup-tasks.php`）、`SettingsFieldsRenderTasks`（`class-wpca-settings-fields-render-tasks.php`）与 `Settings_Field_Definitions`（`class-wpca-settings-field-definitions.php`）三个新模块，公开 API 不变；`CONTRIBUTING.md` §4.5 登记第 3 个排除项（`tests/wp-polyfill.php`）并明确统计口径。当前 **0 待办 + 3 个登记排除项**
+- test: 补充回归用例 `tests/ErrorHandlerTest.php`、`tests/RestApiRestrictionTest.php`、`tests/ResponseTest.php`、`tests/MenuCustomizerOptionsTest.php`、`tests/SettingsFieldsEchoTest.php`；测试桩 `tests/wp-polyfill.php` 补 option/action/filter 内存存储、`WP_Error`、`wp_send_json` 捕获与转义函数
+- docs: **英文文档镜像（6 份）**——新增 `docs/README.en.md`、`docs/user-guide.en.md`、`docs/installation-guide.en.md`、`docs/faq-troubleshooting.en.md`、`docs/api-reference.en.md`、`docs/overview.en.md`；`docs/README.md` 增加英文索引行、阅读路径与同步清单条目
+- docs: **视频教程制作稿（T015）**——新增 `docs/video-tutorial.md`：5 集完整分镜脚本（逐字旁白 + 字幕要点 + 技术提示）、字幕与配音规范、素材清单、发布要求与视频索引表
+- docs: 按已落地事实同步 `docs/FAQ与故障排除.md`、`docs/优化建议.md`（各条补「实施状态」）、`docs/api-reference.md`、`docs/项目概述.md`、`docs/安装部署指南.md`、`docs/user-guide.md`、`docs/API接口文档.md`、`docs/功能模块说明.md`、`docs/README.md`；移除已删除历史快照文档的失效引用
+- chore: 版本号统一至 1.9.18（`CONTRIBUTING.md` §9.2 同步清单全部声明位）
+- 说明：本机无 PHP/Composer 运行时，PHPUnit / PHPStan / PHPCS 与覆盖率基线均**待 CI/PHP 环境验证**；未新增 `wpca/v1` REST 路由，对外接口仍为 AJAX
+
 ## [Unreleased]
 
 - docs: 系统性文档完善（2026-11-25）——新增 `docs/项目概述.md`（背景/目标/技术栈/架构）、`docs/安装部署指南.md`（依赖清单/配置步骤/多环境/验证）、`docs/功能模块说明.md`（按模块核心逻辑+Mermaid 业务流程图）、`docs/API接口文档.md` + `docs/openapi.yaml`（OpenAPI 3.1，覆盖 4 个已注册 AJAX action 的路径/方法/参数/响应/错误码/示例，并标注无 REST 路由）、`docs/FAQ与故障排除.md`、`docs/优化建议.md`（12 项建议均含背景/实施方案/量化预期/优先级与未来展望）；扩充 `docs/user-guide.md`（角色权限/操作流程图/详细步骤）；更新 `docs/README.md` 索引与阅读路径、`docs/api-reference.md` 契约差异说明；所有现行文档统一目录、适用基线、状态与文末版本控制表
@@ -31,8 +53,11 @@
 - chore: 版本号统一至 1.9.15（插件头 `Version`、常量 `WPCA_VERSION`、readme.txt `Stable tag`、README/README.en、原型 `index.html`、`languages/*.pot|po`、`AGENTS.md` 等全部当前版本声明位）
 - 说明：本机无 PHP 运行时，待 CI/PHP 环境验证
 
-## [Unreleased] - 2026-11-08
+## [1.9.14] - 2026-11-07
 
+- refactor: 拆分超 200 行源文件（A-3 批次）——modules `Helpers` 抽离 `HelpersFormatTasks`/`HelpersErrorTasks`/`HelpersLoggingTasks`/`HelpersValidationTasks` 四个 trait，主类由 606→93 行；modules `Cache` 抽离 `CacheApiTasks`（统一分发）/`CacheMemoryTasks`/`CacheDatabaseTasks`/`CacheFileTasks` 四个 trait，主类由 540→127 行（`$memory_cache`/`$cache_enabled`/`$cache_expiration` 属性保留在主类）；对外公开 API（类名、方法签名、常量 `WPCA_Errors`）均不变
+- chore: 版本号统一至 1.9.14（插件头 `Version`、常量 `WPCA_VERSION`、readme.txt Stable tag、AGENTS.md、本批改动文件头注释）
+- 待 CI/PHP 环境验证
 - docs: 建立权威文档体系——新增 `CONTRIBUTING.md`（编码风格、命名约定、目录组织、提交信息格式、分支管理、代码审查流程、测试、版本与发布）与 `docs/README.md`（文档索引、编写格式、术语表、同步清单）
 - docs: 重写 `DEVELOPMENT.md`（修正不存在的 `prototype/php/`、`prototype/ui/`、`USE_MOCK`、`Core::init_modules()`，命令执行目录、原型预览、模块注册流程）与 `AGENTS.md`（消除重复章节编号、§5.2 OPENSPEC 标记范围矛盾、失真的模块状态表，代码规范改为索引引用）
 - docs: 重写 `wpcleanadmin/includes/modules/README.md`，对齐 1.9.14 实际目录、加载机制与命名规则；为 `openspec/project.md`、`openspec/specs/plugin-architecture/detailed-design.md`、`openspec/specs/api/spec.md` 及历史提案/审计报告/设计规范标注状态并修正失效路径
@@ -41,15 +66,9 @@
 - chore: 新增 `.gitattributes` 统一仓库行尾为 LF（`core.autocrlf=true` 环境下的可靠保障），并落实发布打包 `export-ignore` 排除项
 - chore: `.gitignore` 为正式文档 `docs/审计报告_20260808.md` 增加例外，使其纳入版本控制（此前被 `*报告*.md` 忽略，但文档索引已引用它）
 - chore: `update_versions.php` / `update_versions.ps1` 标记为废弃并加 fail-fast 保护（原逻辑硬编码 1.8.0→1.8.1，误执行会造成版本回退）
-- 说明：本次为纯文档/规范/配置变更，插件版本保持 1.9.14；待 CI/PHP 环境验证
 - docs: 全量文档审查对齐代码实测——`README.md`/`README.en.md` 环境要求由「PHP 7.0」修正为「PHP 7.4」（与插件头 `Requires PHP: 7.4`、`composer.json`、`readme.txt` 一致）；`DEVELOPMENT.md` 目录注释「wpca-*.php 9 个活文件」修正为「6 个」（实测 includes 根：5 个核心函数库 + 1 个函数桩 + autoload.php + class-wpca-helpers.php 共 8 个）
 - chore: 全库 50 个 PHP 文件头过时 `@version`（1.9.0/1.9.2/1.9.10/1.9.14）统一同步至当前版本（§4.2：`@version` 必须等于当前插件版本）；`@since`（引入版本）一律不动
-
-## [1.9.14] - 2026-11-07
-
-- refactor: 拆分超 200 行源文件（A-3 批次）——modules `Helpers` 抽离 `HelpersFormatTasks`/`HelpersErrorTasks`/`HelpersLoggingTasks`/`HelpersValidationTasks` 四个 trait，主类由 606→93 行；modules `Cache` 抽离 `CacheApiTasks`（统一分发）/`CacheMemoryTasks`/`CacheDatabaseTasks`/`CacheFileTasks` 四个 trait，主类由 540→127 行（`$memory_cache`/`$cache_enabled`/`$cache_expiration` 属性保留在主类）；对外公开 API（类名、方法签名、常量 `WPCA_Errors`）均不变
-- chore: 版本号统一至 1.9.14（插件头 `Version`、常量 `WPCA_VERSION`、readme.txt Stable tag、AGENTS.md、本批改动文件头注释）
-- 待 CI/PHP 环境验证
+- 说明：本次为纯文档/规范/配置变更，插件版本保持 1.9.14；待 CI/PHP 环境验证
 
 ## [1.9.13] - 2026-11-05
 

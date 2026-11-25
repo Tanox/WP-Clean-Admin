@@ -146,9 +146,7 @@ WP Clean Admin 使用 GPL-2.0+ 许可证。
 - **设计系统**（`prototype/wpca-components.css`）：shadcn/ui 风格单一令牌来源，
   含设计令牌（色彩/字体/间距/圆角/阴影/动效）、组件库（card/btn/badge/switch/table/modal/toast 等）、
   交互标准与响应式规范。插件 `wpcleanadmin/assets/css/wpca-admin.css` 复用同源同名类。
-- **设计规范**：[`docs/设计规范_20260808.md`](docs/设计规范_20260808.md)（历史基线快照，路径映射以其中 §7 当前版本为准）
-- **审计报告**：[`docs/审计报告_20260808.md`](docs/审计报告_20260808.md)（历史快照，不代表当前状态）
-- **开发规范**：[`CONTRIBUTING.md`](CONTRIBUTING.md) ｜ **文档索引**：[`docs/README.md`](docs/README.md)
+- **开发规范**：[`CONTRIBUTING.md`](CONTRIBUTING.md) ｜ **文档索引**：[`docs/README.md`](docs/README.md) ｜ **英文索引**：[`docs/README.en.md`](docs/README.en.md)
 - **OpenSpec 规范**：[`openspec/`](openspec/) — 功能提案与规范文档
 
 ---
