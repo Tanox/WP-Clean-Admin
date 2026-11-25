@@ -5,6 +5,8 @@
 
 ## [Unreleased]
 
+- docs: 系统性文档完善（2026-11-25）——新增 `docs/项目概述.md`（背景/目标/技术栈/架构）、`docs/安装部署指南.md`（依赖清单/配置步骤/多环境/验证）、`docs/功能模块说明.md`（按模块核心逻辑+Mermaid 业务流程图）、`docs/API接口文档.md` + `docs/openapi.yaml`（OpenAPI 3.1，覆盖 4 个已注册 AJAX action 的路径/方法/参数/响应/错误码/示例，并标注无 REST 路由）、`docs/FAQ与故障排除.md`、`docs/优化建议.md`（12 项建议均含背景/实施方案/量化预期/优先级与未来展望）；扩充 `docs/user-guide.md`（角色权限/操作流程图/详细步骤）；更新 `docs/README.md` 索引与阅读路径、`docs/api-reference.md` 契约差异说明；所有现行文档统一目录、适用基线、状态与文末版本控制表
+- docs: `docs/tasks.md` 新增 §F：12 项优化项（P0×1/P1×7/P2×4）与 7 项待验证细节，逐项标注优先级、责任人、计划完成时间；更新优先级建议、统计摘要与进度日志
 - docs: 任务清单治理（2026-11-23）——C 类 2 项与 D 类已完成项（CI 7.4 lint 矩阵）归档至 `docs/tasks-done.md`；B 类功能增强提案批量落地 15/16：新增 6 份规范（T001 `error-handling`、T002 `performance-monitoring`、T003 `security-audit`、T004 `developer-guide`、T006 `theme-template-optimization`、T007 `composer-dependency`），补齐 T009 `phpstan.neon.dist` 与 composer `phpstan` 脚本（T010/T011 配置既有），新增 T013 `docs/user-guide.md`、T014 `docs/api-reference.md`、T016 `examples/sample-extension.php`；T015 视频教程阻塞（待制作资源）。差距复核后 T003/T004 定位为 CONTRIBUTING §4.4 的执行检查表与快速上手索引，不重复既有条款
 - docs: 文档索引登记 `docs/user-guide.md` / `docs/api-reference.md`
 - docs: 规范文档整理——重写 `openspec/AGENTS.md`（仅保留 OpenSpec 流程，消除与 `CONTRIBUTING.md` 重复的过时规范）；将 `.github/CONTRIBUTING.md` 改为权威规范指针；修正 `openspec/README.md` 目录树与命名格式、`openspec/project.md` 与 plugin-architecture 设计文档的 PHP 7.0/develop/camelCase 等过时表述；根 `AGENTS.md` 与 `docs/审计报告_20260808.md` 移除误用的 OPENSPEC 标记；补齐多份文档的适用基线头与安全章节引用（§4.4）

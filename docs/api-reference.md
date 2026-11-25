@@ -1,6 +1,7 @@
 # WP Clean Admin API 参考（T014）
 
-> 版本基线 1.9.17　|　扩展能力规范见 [`extension-api/spec.md`](../openspec/changes/规范改进与功能增强计划/specs/extension-api/spec.md)　|　本文仅登记**当前代码真实存在**的对外接口，不做前瞻性承诺。
+> **适用基线**：1.9.17　|　**更新日期**：2026-11-25　|　**状态**：快速参考
+> **HTTP 接口权威契约**见 [`API接口文档.md`](API接口文档.md) 与 [`openapi.yaml`](openapi.yaml)；本文为全局函数/选项/核心类速查。扩展能力规范见 [`extension-api/spec.md`](../openspec/changes/规范改进与功能增强计划/specs/extension-api/spec.md)，不做前瞻性承诺。
 
 ## 全局函数库（`wpca_*` 前缀）
 
@@ -31,7 +32,7 @@
 ## AJAX 约定
 
 - nonce 字段：`wpca_ajax_nonce`；能力要求：`manage_options`。
-- 响应结构：`{ success, error_code?, message, data }`；错误码取自 `WPCA_Errors`（1001 数据库 / 1002 权限 / 1003 输入 / 1004 文件 / 1005 AJAX / 1006 校验 / 1007 认证 / 9999 未知）。
+- 标准响应 DTO（Helpers）：`{ success, error_code?, message, data }`；错误码取自 `WPCA_Errors`（1001 数据库 / 1002 权限 / 1003 输入 / 1004 文件 / 1005 AJAX / 1006 校验 / 1007 认证 / 9999 未知）。**注意**：当前已注册 handler 多返回字符串错误载荷且未挂载 settings action，实际契约与差异见 [`API接口文档.md`](API接口文档.md) §9（OPT-002）。
 
 ## 核心类（`WPCleanAdmin\Modules\*` 权威体系）
 

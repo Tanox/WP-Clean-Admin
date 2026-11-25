@@ -1,0 +1,195 @@
+openapi: 3.1.0
+info:
+  title: WP Clean Admin HTTP API (WordPress admin-ajax)
+  version: 1.9.17
+  summary: 当前运行时真实存在的 AJAX 接口契约（无 REST 路由）
+  description: |
+    插件当前**不注册任何 REST 路由**；所有 HTTP 接口均为 WordPress 后台 `admin-ajax.php` 上的 AJAX action。
+    请求须登录且具备 `manage_options`，并在表单字段中携带 `_wpnonce`（动作串 `wpca_ajax_nonce`）。
+    本文对应 `docs/API接口文档.md`；错误码取自 `WPCA_Errors`，但已注册 handler 当前多使用字符串错误载荷（见 x-known-issues）。
+  license:
+    name: GPL-2.0-or-later
+servers:
+  - url: /wp-admin
+    description: 当前站点的 WordPress 后台目录
+
+tags:
+  - name: MenuCustomizer
+    description: 菜单定制器（当前唯一注册 AJAX 的功能域）
+
+paths:
+  /admin-ajax.php:
+    post:
+      tags: [MenuCustomizer]
+      operationId: wpcaAdminAjax
+      summary: 通过 action 字段分发的菜单定制器接口
+      description: |
+        四个已注册 action：`wpca_save_menu_customizer`、`wpca_reset_menu_customizer`、
+        `wpca_export_menu_customizer`、`wpca_import_menu_customizer`。
+        注册位置：`wpcleanadmin/includes/modules/admin/classes/class-wpca-menu-customizer.php:95-100`。
+      security:
+        - wpcaNonce: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/SaveMenuCustomizerRequest'
+                - $ref: '#/components/schemas/ResetMenuCustomizerRequest'
+                - $ref: '#/components/schemas/ExportMenuCustomizerRequest'
+                - $ref: '#/components/schemas/ImportMenuCustomizerRequest'
+              discriminator:
+                propertyName: action
+                mapping:
+                  wpca_save_menu_customizer: '#/components/schemas/SaveMenuCustomizerRequest'
+                  wpca_reset_menu_customizer: '#/components/schemas/ResetMenuCustomizerRequest'
+                  wpca_export_menu_customizer: '#/components/schemas/ExportMenuCustomizerRequest'
+                  wpca_import_menu_customizer: '#/components/schemas/ImportMenuCustomizerRequest'
+            examples:
+              save:
+                summary: 保存菜单定制设置
+                value:
+                  action: wpca_save_menu_customizer
+                  _wpnonce: 0123456789abcdef
+                  settings:
+                    enabled: true
+                    menu_items:
+                      edit.php: { hidden: false }
+              import:
+                summary: 导入菜单定制设置
+                value:
+                  action: wpca_import_menu_customizer
+                  _wpnonce: 0123456789abcdef
+                  import_data: '{"menu_items":{"edit.php":{"hidden":true}}}'
+      responses:
+        '200':
+          description: 处理完成（success 为 false 表示业务失败，HTTP 状态仍为 200）
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/AjaxSuccess'
+                  - $ref: '#/components/schemas/AjaxError'
+                  - $ref: '#/components/schemas/ExportSuccess'
+              examples:
+                saveOk:
+                  value: { success: true, data: { message: 'Menu customizer settings saved successfully' } }
+                invalidNonce:
+                  value: { success: false, data: 'Invalid nonce' }
+                insufficientPermission:
+                  value: { success: false, data: 'Insufficient permissions' }
+        '403':
+          description: 未登录或非 `manage_options` 用户（示意；实际实现以 200 + success=false 返回）
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AjaxError' }
+
+components:
+  securitySchemes:
+    wpcaNonce:
+      type: apiKey
+      in: query
+      name: _wpnonce
+      description: |
+        实际由 x-www-form-urlencoded 表单字段提交（`wpca_ajax_nonce` 动作串），
+        此处以 query apiKey 近似表达；由 `wp_verify_nonce()` 手动校验。
+    loggedInCookie:
+      type: apiKey
+      in: cookie
+      name: wordpress_logged_in_*
+      description: 必须已登录；无 `wp_ajax_nopriv_*` 匿名变体。
+
+  schemas:
+    RequestBase:
+      type: object
+      required: [action, _wpnonce]
+      properties:
+        action:
+          type: string
+          enum:
+            - wpca_save_menu_customizer
+            - wpca_reset_menu_customizer
+            - wpca_export_menu_customizer
+            - wpca_import_menu_customizer
+          description: 分发动作（由 WordPress admin-ajax 读取）
+        _wpnonce:
+          type: string
+          description: wp_create_nonce('wpca_ajax_nonce') 生成的 nonce
+    SaveMenuCustomizerRequest:
+      allOf:
+        - $ref: '#/components/schemas/RequestBase'
+        - type: object
+          required: [settings]
+          properties:
+            settings:
+              type: object
+              additionalProperties: true
+              description: 菜单定制设置对象；服务端经 Settings::sanitize_settings 递归消毒，非数组视为空数组
+    ResetMenuCustomizerRequest:
+      allOf:
+        - $ref: '#/components/schemas/RequestBase'
+    ExportMenuCustomizerRequest:
+      allOf:
+        - $ref: '#/components/schemas/RequestBase'
+    ImportMenuCustomizerRequest:
+      allOf:
+        - $ref: '#/components/schemas/RequestBase'
+        - type: object
+          required: [import_data]
+          properties:
+            import_data:
+              oneOf:
+                - type: object
+                - type: string
+              description: JSON 字符串或已解析数组，写入 wpca_menu_customizer_settings
+    AjaxSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          properties:
+            message: { type: string }
+    AjaxError:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: false }
+        data:
+          oneOf:
+            - type: string
+              examples: ['Invalid nonce', 'Insufficient permissions', 'Failed to save menu customizer settings']
+            - type: object
+              properties:
+                message: { type: string }
+      description: 当前已注册 handler 使用字符串载荷，未携带 error_code（详见 x-known-issues）
+    ExportSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          properties:
+            menu_items: { type: object }
+            submenu_items: { type: object }
+            admin_bar_items: { type: object }
+            menu_order: { type: array, items: { type: string } }
+            menu_groups: { type: object }
+    ErrorCode:
+      type: integer
+      enum: [0, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 9999]
+      description: |
+        WPCA_Errors：0 无错误 / 1001 数据库 / 1002 权限 / 1003 输入 / 1004 文件 /
+        1005 AJAX / 1006 校验 / 1007 认证 / 9999 未知。
+        标准 DTO 位于 Helpers，当前已注册 handler 未使用该字段。
+
+  x-known-issues:
+    - id: OPT-001
+      priority: P0
+      summary: 菜单定制器保存/渲染 option 键不一致且 AJAX 默认未注册（settings.menu_customizer 不在默认配置中）
+    - id: OPT-002
+      priority: P1
+      summary: 响应契约三套并存；settings-ajax.php 的 3 个处理器已定义但未挂载任何 wp_ajax_* action
