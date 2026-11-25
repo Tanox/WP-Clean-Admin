@@ -197,7 +197,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 ### 4.5 单文件行数与拆分范式
 
 - **单个 PHP 源文件不得超过 200 行**（含注释与空行）。超出必须拆分。
-- 排除项：`wpca-wordpress-stubs.php`（函数桩集合）、`wp-clean-admin.php`（引导主文件）应在任务清单中显式列为排除项，不计入达标统计。
+- 排除项（须在 `docs/tasks.md` 显式列为排除项，不计入达标统计）：
+  - `wpca-wordpress-stubs.php`（WordPress 函数桩集合）
+  - `wp-clean-admin.php`（引导主文件）
+  - `tests/wp-polyfill.php`（测试用 WordPress 函数桩集合）
+- 统计口径：按文件**实际行数**（换行符计数，含注释与空行）统计，覆盖 `wpcleanadmin/` 下全部 `.php`（含 `tests/`）。
 - 标准拆分：主类 `require_once` 引入 trait 文件 + `use XxxTasks;`，公开 API（单例与方法签名）保持不变。
 
 ```php
