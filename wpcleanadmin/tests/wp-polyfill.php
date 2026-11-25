@@ -178,8 +178,13 @@ if ( ! function_exists( 'wp_create_nonce' ) ) {
 
 if ( ! function_exists( 'wp_send_json' ) ) {
     function wp_send_json( $response, $status_code = null ) {
+        $GLOBALS['wpca_test_json'] = $response;
         return;
     }
+}
+
+if ( ! isset( $GLOBALS['wpca_test_json'] ) ) {
+    $GLOBALS['wpca_test_json'] = null;
 }
 
 if ( ! function_exists( 'wp_send_json_error' ) ) {

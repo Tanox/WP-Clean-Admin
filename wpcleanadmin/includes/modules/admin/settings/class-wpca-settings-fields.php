@@ -58,6 +58,7 @@ class Settings_Fields {
                 'type'        => 'checkbox',
                 'description' => \__( 'Remove unnecessary items from the admin bar.', 'wp-clean-admin' ),
                 'section'     => 'wpca_general_section',
+                'group'       => 'general',
             ),
             array(
                 'id'          => 'clean_dashboard',
@@ -65,6 +66,7 @@ class Settings_Fields {
                 'type'        => 'checkbox',
                 'description' => \__( 'Remove unnecessary dashboard widgets.', 'wp-clean-admin' ),
                 'section'     => 'wpca_general_section',
+                'group'       => 'general',
             ),
             array(
                 'id'          => 'remove_wp_logo',
@@ -72,6 +74,7 @@ class Settings_Fields {
                 'type'        => 'checkbox',
                 'description' => \__( 'Remove the WordPress logo from the admin bar.', 'wp-clean-admin' ),
                 'section'     => 'wpca_general_section',
+                'group'       => 'general',
             ),
             array(
                 'id'          => 'log_level',
@@ -87,6 +90,7 @@ class Settings_Fields {
                 ),
                 'description' => \__( 'Select the minimum log level to record.', 'wp-clean-admin' ),
                 'section'     => 'wpca_general_section',
+                'group'       => 'general',
             ),
         );
 

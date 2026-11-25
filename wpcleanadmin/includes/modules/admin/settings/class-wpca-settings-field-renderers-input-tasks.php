@@ -31,7 +31,7 @@ trait SettingsFieldRenderersInputTasks {
         $value    = isset( $args['value'] ) ? $args['value'] : '';
         $desc     = isset( $args['description'] ) ? $args['description'] : '';
         ?>
-        <input type="text" id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( $field_id ); ?>" value="<?php echo \esc_attr( $value ); ?>" class="regular-text" />
+        <input type="text" id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( isset( $args['name'] ) ? $args['name'] : $field_id ); ?>" value="<?php echo \esc_attr( $value ); ?>" class="regular-text" />
         <?php if ( $desc ) : ?>
             <p class="description"><?php echo \wp_kses_post( $desc ); ?></p>
         <?php endif; ?>
@@ -46,7 +46,7 @@ trait SettingsFieldRenderersInputTasks {
         $value    = isset( $args['value'] ) ? $args['value'] : '';
         $desc     = isset( $args['description'] ) ? $args['description'] : '';
         ?>
-        <textarea id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( $field_id ); ?>" class="large-text code" rows="5"><?php echo \esc_textarea( $value ); ?></textarea>
+        <textarea id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( isset( $args['name'] ) ? $args['name'] : $field_id ); ?>" class="large-text code" rows="5"><?php echo \esc_textarea( $value ); ?></textarea>
         <?php if ( $desc ) : ?>
             <p class="description"><?php echo \wp_kses_post( $desc ); ?></p>
         <?php endif; ?>
@@ -62,7 +62,7 @@ trait SettingsFieldRenderersInputTasks {
         $desc     = isset( $args['description'] ) ? $args['description'] : '';
         ?>
         <label for="<?php echo \esc_attr( $field_id ); ?>">
-            <input type="checkbox" id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( $field_id ); ?>" value="1" <?php \checked( $value ); ?> />
+            <input type="checkbox" id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( isset( $args['name'] ) ? $args['name'] : $field_id ); ?>" value="1" <?php \checked( $value ); ?> />
             <?php echo \wp_kses_post( $desc ); ?>
         </label>
         <?php
@@ -81,7 +81,7 @@ trait SettingsFieldRenderersInputTasks {
             <legend class="screen-reader-text"><?php echo \esc_html( $field_id ); ?></legend>
             <?php foreach ( $options as $option_value => $option_label ) : ?>
                 <label>
-                    <input type="radio" name="<?php echo \esc_attr( $field_id ); ?>" value="<?php echo \esc_attr( $option_value ); ?>" <?php \checked( $value, $option_value ); ?> />
+                    <input type="radio" name="<?php echo \esc_attr( isset( $args['name'] ) ? $args['name'] : $field_id ); ?>" value="<?php echo \esc_attr( $option_value ); ?>" <?php \checked( $value, $option_value ); ?> />
                     <?php echo \esc_html( $option_label ); ?>
                 </label><br />
             <?php endforeach; ?>
@@ -101,7 +101,7 @@ trait SettingsFieldRenderersInputTasks {
         $options  = isset( $args['options'] ) ? $args['options'] : array();
         $desc     = isset( $args['description'] ) ? $args['description'] : '';
         ?>
-        <select id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( $field_id ); ?>">
+        <select id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( isset( $args['name'] ) ? $args['name'] : $field_id ); ?>">
             <?php foreach ( $options as $option_value => $option_label ) : ?>
                 <option value="<?php echo \esc_attr( $option_value ); ?>" <?php \selected( $value, $option_value ); ?>><?php echo \esc_html( $option_label ); ?></option>
             <?php endforeach; ?>
@@ -123,7 +123,7 @@ trait SettingsFieldRenderersInputTasks {
         $step     = isset( $args['step'] ) ? $args['step'] : '';
         $desc     = isset( $args['description'] ) ? $args['description'] : '';
         ?>
-        <input type="number" id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( $field_id ); ?>" value="<?php echo \esc_attr( $value ); ?>" class="small-text" min="<?php echo \esc_attr( $min ); ?>" max="<?php echo \esc_attr( $max ); ?>" step="<?php echo \esc_attr( $step ); ?>" />
+        <input type="number" id="<?php echo \esc_attr( $field_id ); ?>" name="<?php echo \esc_attr( isset( $args['name'] ) ? $args['name'] : $field_id ); ?>" value="<?php echo \esc_attr( $value ); ?>" class="small-text" min="<?php echo \esc_attr( $min ); ?>" max="<?php echo \esc_attr( $max ); ?>" step="<?php echo \esc_attr( $step ); ?>" />
         <?php if ( $desc ) : ?>
             <p class="description"><?php echo \wp_kses_post( $desc ); ?></p>
         <?php endif; ?>
