@@ -32,7 +32,7 @@ trait MenuCustomizerTreeCustomizeTasks {
     public function customize_admin_menu(): void {
         global $menu, $submenu;
 
-        $settings = ( function_exists( '\wpca_get_settings' ) ? \wpca_get_settings() : array() );
+        $settings = $this->options->get_settings();
 
         // Customize menu items based on settings
         if ( isset( $settings['menu_items'] ) ) {

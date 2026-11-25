@@ -73,6 +73,29 @@ trait HelpersValidationTasks {
     }
 
     /**
+     * 递归消毒设置数据（保留标量类型）
+     *
+     * @param mixed $value 待消毒值
+     * @return mixed
+     */
+    public function sanitize_settings( $value ) {
+        if ( is_array( $value ) ) {
+            $clean = array();
+            foreach ( $value as $key => $item ) {
+                $clean[ $key ] = $this->sanitize_settings( $item );
+            }
+            return $clean;
+        }
+
+        if ( is_string( $value ) ) {
+            $func = function_exists( '\sanitize_text_field' ) ? '\sanitize_text_field' : null;
+            return $func ? $func( $value ) : strip_tags( trim( $value ) );
+        }
+
+        return $value;
+    }
+
+    /**
      * Validate nonce for AJAX requests
      *
      * @param string $nonce Nonce to verify

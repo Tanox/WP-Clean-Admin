@@ -26,11 +26,20 @@ class Menu_Customizer_Options {
     const OPTION_KEY = 'wpca_menu_customizer_settings';
 
     /**
+     * 请求内迁移标记
+     *
+     * @var bool
+     */
+    private static $legacy_migrated = false;
+
+    /**
      * Get menu customizer settings
      *
      * @return array
      */
     public function get_settings(): array {
+        $this->maybe_migrate_legacy();
+
         $settings = ( function_exists( '\get_option' ) ? \get_option( self::OPTION_KEY, array() ) : array() );
 
         $default_settings = array(
@@ -145,5 +154,34 @@ class Menu_Customizer_Options {
     public function get_menu_groups(): array {
         $settings = $this->get_settings();
         return isset( $settings['menu_groups'] ) ? $settings['menu_groups'] : array();
+    }
+
+    /**
+     * 将旧版 wpca_settings 中的菜单定制数据迁移到独立 option。
+     *
+     * 仅在独立 option 不存在时写入，且不删除旧数据，避免影响其它读取 wpca_settings 的模块。
+     */
+    private function maybe_migrate_legacy(): void {
+        if ( self::$legacy_migrated || ! function_exists( '\get_option' ) || ! function_exists( '\update_option' ) ) {
+            return;
+        }
+        self::$legacy_migrated = true;
+
+        $legacy = \get_option( 'wpca_settings', array() );
+        if ( ! is_array( $legacy ) || ! isset( $legacy['menu_customizer'] ) ) {
+            return;
+        }
+        if ( false !== \get_option( self::OPTION_KEY, false ) ) {
+            return;
+        }
+
+        $migrated = array( 'enabled' => ! empty( $legacy['menu_customizer'] ) );
+        foreach ( array( 'menu_items', 'submenu_items', 'admin_bar_items', 'menu_order', 'menu_groups' ) as $key ) {
+            if ( array_key_exists( $key, $legacy ) ) {
+                $migrated[ $key ] = $legacy[ $key ];
+            }
+        }
+
+        \update_option( self::OPTION_KEY, $migrated );
     }
 }

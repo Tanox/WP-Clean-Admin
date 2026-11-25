@@ -37,14 +37,21 @@ if ( ! function_exists( 'sanitize_text_field' ) ) {
 
 if ( ! function_exists( 'get_option' ) ) {
     function get_option( $key = '', $default = false ) {
-        return $default;
+        return array_key_exists( $key, $GLOBALS['wpca_test_options'] )
+            ? $GLOBALS['wpca_test_options'][ $key ]
+            : $default;
     }
 }
 
 if ( ! function_exists( 'update_option' ) ) {
     function update_option( $key = '', $value = '' ) {
-        return false;
+        $GLOBALS['wpca_test_options'][ $key ] = $value;
+        return true;
     }
+}
+
+if ( ! isset( $GLOBALS['wpca_test_options'] ) ) {
+    $GLOBALS['wpca_test_options'] = array();
 }
 
 if ( ! function_exists( 'sanitize_key' ) ) {

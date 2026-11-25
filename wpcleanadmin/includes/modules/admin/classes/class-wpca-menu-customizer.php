@@ -74,8 +74,8 @@ class Menu_Customizer {
      */
     private function __construct() {
         $this->options = new Menu_Customizer_Options();
-        $this->tree    = new Menu_Customizer_Tree();
-        $this->render  = new Menu_Customizer_Render();
+        $this->tree    = new Menu_Customizer_Tree( $this->options );
+        $this->render  = new Menu_Customizer_Render( $this->options );
         $this->init();
     }
 
@@ -83,21 +83,20 @@ class Menu_Customizer {
      * Initialize the menu customizer module
      */
     public function init() {
-        // Load settings
-        $settings = \wpca_get_settings();
+        $this->options->get_settings();
 
-        if ( isset( $settings['menu_customizer'] ) && function_exists( 'add_action' ) ) {
-            // Add admin menu customization
-            \add_action( 'admin_menu', array( $this, 'customize_admin_menu' ), 999 );
-            \add_action( 'admin_bar_menu', array( $this, 'customize_admin_bar' ), 999 );
-
-            // Add AJAX handlers (wrapped with nonce + capability verification)
-            \add_action( 'wp_ajax_wpca_save_menu_customizer', array( $this, 'ajax_save_settings' ) );
-            \add_action( 'wp_ajax_wpca_reset_menu_customizer', array( $this, 'ajax_reset_settings' ) );
-
-            // Export/Import handlers
-            \add_action( 'wp_ajax_wpca_export_menu_customizer', array( $this, 'ajax_export_settings' ) );
-            \add_action( 'wp_ajax_wpca_import_menu_customizer', array( $this, 'ajax_import_settings' ) );
+        if ( ! function_exists( '\add_action' ) ) {
+            return;
         }
+
+        // 设置缺省为空数组时定制方法天然 no-op，无需旧版 menu_customizer 门禁
+        \add_action( 'admin_menu', array( $this, 'customize_admin_menu' ), 999 );
+        \add_action( 'admin_bar_menu', array( $this, 'customize_admin_bar' ), 999 );
+
+        // 4 个 AJAX 动作无条件注册；nonce + 能力校验保留在 AJAX trait 内
+        \add_action( 'wp_ajax_wpca_save_menu_customizer', array( $this, 'ajax_save_settings' ) );
+        \add_action( 'wp_ajax_wpca_reset_menu_customizer', array( $this, 'ajax_reset_settings' ) );
+        \add_action( 'wp_ajax_wpca_export_menu_customizer', array( $this, 'ajax_export_settings' ) );
+        \add_action( 'wp_ajax_wpca_import_menu_customizer', array( $this, 'ajax_import_settings' ) );
     }
 }

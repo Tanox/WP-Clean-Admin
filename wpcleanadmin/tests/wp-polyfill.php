@@ -17,14 +17,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! function_exists( 'add_action' ) ) {
     function add_action( $tag, $cb = null, $priority = 10, $accepted_args = 1 ) {
+        $GLOBALS['wpca_test_actions'][ $tag ][] = $cb;
         return true;
     }
 }
 
 if ( ! function_exists( 'add_filter' ) ) {
     function add_filter( $tag, $cb = null, $priority = 10, $accepted_args = 1 ) {
+        $GLOBALS['wpca_test_filters'][ $tag ][] = $cb;
         return true;
     }
+}
+
+if ( ! isset( $GLOBALS['wpca_test_actions'] ) ) {
+    $GLOBALS['wpca_test_actions'] = array();
+}
+if ( ! isset( $GLOBALS['wpca_test_filters'] ) ) {
+    $GLOBALS['wpca_test_filters'] = array();
 }
 
 if ( ! function_exists( 'remove_action' ) ) {
@@ -65,6 +74,7 @@ if ( ! function_exists( 'delete_transient' ) ) {
 
 if ( ! function_exists( 'delete_option' ) ) {
     function delete_option( $option ) {
+        unset( $GLOBALS['wpca_test_options'][ $option ] );
         return true;
     }
 }

@@ -17,11 +17,26 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+require_once __DIR__ . '/class-wpca-menu-customizer-options.php';
 
 /**
  * 菜单渲染/导出类
  */
 class Menu_Customizer_Render {
+
+    /**
+     * 设置操作处理器
+     *
+     * @var Menu_Customizer_Options
+     */
+    private $options;
+
+    /**
+     * @param Menu_Customizer_Options|null $options 设置操作处理器
+     */
+    public function __construct( Menu_Customizer_Options $options = null ) {
+        $this->options = $options ?: new Menu_Customizer_Options();
+    }
 
     /**
      * Customize admin bar
@@ -31,7 +46,7 @@ class Menu_Customizer_Render {
     public function customize_admin_bar(): void {
         global $wp_admin_bar;
 
-        $settings = ( function_exists( '\wpca_get_settings' ) ? \wpca_get_settings() : array() );
+        $settings = $this->options->get_settings();
 
         if ( ! isset( $wp_admin_bar ) || ! is_object( $wp_admin_bar ) ) {
             return;
@@ -140,7 +155,7 @@ class Menu_Customizer_Render {
      * @return array
      */
     public function export_settings(): array {
-        $settings = ( function_exists( '\wpca_get_settings' ) ? \wpca_get_settings() : array() );
+        $settings = $this->options->get_settings();
 
         // Build the export data
         $export_data = array(
@@ -166,12 +181,12 @@ class Menu_Customizer_Render {
             return false;
         }
 
-        $current_settings = ( function_exists( '\wpca_get_settings' ) ? \wpca_get_settings() : array() );
+        $current_settings = $this->options->get_settings();
 
         // Merge imported settings
         $merged_settings = array_merge( $current_settings, $import_data );
 
         // Save settings
-        return ( function_exists( '\update_option' ) ? \update_option( 'wpca_menu_customizer_settings', $merged_settings ) : false );
+        return $this->options->save_settings( $merged_settings );
     }
 }

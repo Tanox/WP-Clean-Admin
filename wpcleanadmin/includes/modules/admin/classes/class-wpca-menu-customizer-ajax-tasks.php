@@ -18,6 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use WPCleanAdmin\AJAX\Response;
+use WPCleanAdmin\Modules\Utilities\Classes\Helpers;
+use WPCleanAdmin\Modules\Utilities\Classes\WPCA_Errors;
+
 /**
  * Menu customizer AJAX tasks
  */
@@ -32,16 +36,12 @@ trait MenuCustomizerAjaxTasks {
         $nonce = isset( $_POST['_wpnonce'] ) ? \sanitize_text_field( \wp_unslash( $_POST['_wpnonce'] ) ) : '';
 
         if ( ! function_exists( '\wp_verify_nonce' ) || '' === $nonce || ! \wp_verify_nonce( $nonce, 'wpca_ajax_nonce' ) ) {
-            if ( function_exists( '\wp_send_json_error' ) ) {
-                \wp_send_json_error( \__( 'Invalid nonce', \WPCA_TEXT_DOMAIN ) );
-            }
+            Response::error( WPCA_Errors::ERROR_AUTH, \__( 'Invalid nonce', \WPCA_TEXT_DOMAIN ) );
             return false;
         }
 
         if ( ! function_exists( '\current_user_can' ) || ! \current_user_can( 'manage_options' ) ) {
-            if ( function_exists( '\wp_send_json_error' ) ) {
-                \wp_send_json_error( \__( 'Insufficient permissions', \WPCA_TEXT_DOMAIN ) );
-            }
+            Response::error( WPCA_Errors::ERROR_PERMISSION, \__( 'Insufficient permissions', \WPCA_TEXT_DOMAIN ) );
             return false;
         }
 
@@ -60,18 +60,14 @@ trait MenuCustomizerAjaxTasks {
         if ( ! is_array( $settings ) ) {
             $settings = array();
         }
-        $settings = \WPCleanAdmin\AJAX\Settings::sanitize_settings( $settings );
+        $settings = Helpers::getInstance()->sanitize_settings( $settings );
 
         if ( $this->options->save_settings( $settings ) ) {
-            if ( function_exists( '\wp_send_json_success' ) ) {
-                \wp_send_json_success( array( 'message' => \__( 'Menu customizer settings saved successfully', \WPCA_TEXT_DOMAIN ) ) );
-            }
+            Response::success( array(), \__( 'Menu customizer settings saved successfully', \WPCA_TEXT_DOMAIN ) );
             return;
         }
 
-        if ( function_exists( '\wp_send_json_error' ) ) {
-            \wp_send_json_error( \__( 'Failed to save menu customizer settings', \WPCA_TEXT_DOMAIN ) );
-        }
+        Response::error( WPCA_Errors::ERROR_AJAX, \__( 'Failed to save menu customizer settings', \WPCA_TEXT_DOMAIN ) );
     }
 
     /**
@@ -83,15 +79,11 @@ trait MenuCustomizerAjaxTasks {
         }
 
         if ( $this->options->reset_settings() ) {
-            if ( function_exists( '\wp_send_json_success' ) ) {
-                \wp_send_json_success( array( 'message' => \__( 'Menu customizer settings reset to default', \WPCA_TEXT_DOMAIN ) ) );
-            }
+            Response::success( array(), \__( 'Menu customizer settings reset to default', \WPCA_TEXT_DOMAIN ) );
             return;
         }
 
-        if ( function_exists( '\wp_send_json_error' ) ) {
-            \wp_send_json_error( \__( 'Failed to reset menu customizer settings', \WPCA_TEXT_DOMAIN ) );
-        }
+        Response::error( WPCA_Errors::ERROR_AJAX, \__( 'Failed to reset menu customizer settings', \WPCA_TEXT_DOMAIN ) );
     }
 
     /**
@@ -102,9 +94,7 @@ trait MenuCustomizerAjaxTasks {
             return;
         }
 
-        if ( function_exists( '\wp_send_json_success' ) ) {
-            \wp_send_json_success( $this->render->export_settings() );
-        }
+        Response::success( $this->render->export_settings() );
     }
 
     /**
@@ -123,16 +113,13 @@ trait MenuCustomizerAjaxTasks {
         if ( ! is_array( $import_data ) ) {
             $import_data = array();
         }
+        $import_data = Helpers::getInstance()->sanitize_settings( $import_data );
 
         if ( $this->render->import_settings( $import_data ) ) {
-            if ( function_exists( '\wp_send_json_success' ) ) {
-                \wp_send_json_success( array( 'message' => \__( 'Menu customizer settings imported successfully', \WPCA_TEXT_DOMAIN ) ) );
-            }
+            Response::success( array(), \__( 'Menu customizer settings imported successfully', \WPCA_TEXT_DOMAIN ) );
             return;
         }
 
-        if ( function_exists( '\wp_send_json_error' ) ) {
-            \wp_send_json_error( \__( 'Failed to import menu customizer settings', \WPCA_TEXT_DOMAIN ) );
-        }
+        Response::error( WPCA_Errors::ERROR_AJAX, \__( 'Failed to import menu customizer settings', \WPCA_TEXT_DOMAIN ) );
     }
 }
