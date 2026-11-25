@@ -3,32 +3,53 @@
 > 版本号唯一来源：`wpcleanadmin/wp-clean-admin.php` 的 `Version:` 与 `WPCA_VERSION`。
 > 变更格式与同步清单见 `CONTRIBUTING.md` §5 / §9.2；纯文档变更不提升插件版本，记录于 `[Unreleased]`。
 
-## [1.9.18] - 2026-11-26
+## [1.9.18] - 2026-11-25
 
-- fix: **OPT-001 菜单定制器读写键不一致且 AJAX 默认未注册（P0）**——`Menu_Customizer_Options` 成为 `wpca_menu_customizer_settings` 的唯一数据源，Tree / Render / Customize-Tasks 经构造器注入同一实例统一读写；`Menu_Customizer::init()` 移除 `settings['menu_customizer']` 守卫，4 个 AJAX action 改为无条件注册；提供从 `wpca_settings.menu_customizer` 的幂等 legacy 迁移（不删除旧数据）。默认注册 action 数 0→4，保存后定制项生效率 0%→100%
-- fix: **OPT-002 AJAX 响应契约三套并存、设置 handler 未挂载（P1）**——新增 `WPCleanAdmin\AJAX\Response` 统一响应 DTO 工厂（`includes/ajax/response-ajax.php`，成功 `{success, message, data}` / 失败 `{success, error_code, message, data}`），4 个菜单定制 handler 全部迁移；递归消毒下沉至 `Helpers::sanitize_settings()`，`AJAX\Settings` 仅保留向后兼容静态代理；删除 3 个从未注册的 `save/get/reset_settings` handler。JSON 结构种类 3→1
-- fix: **OPT-003 设置字段回显读取错误 option 键（P1）**——`Settings_Fields::render_field()` 改为优先读取嵌套 `wpca_settings[group][id]`，缺失时回退独立 option（`array_key_exists` 保证 `0`/`false` 正确回显），表单 `name` 属性同步为 `wpca_settings[group][id]`；新增 `group` 字段标识
-- fix: **OPT-004 两套全局错误处理器并存且其中一套吞掉所有 PHP 错误（P1）**——`Helpers::register_error_handler()` 降级为 deprecated no-op，`custom_error_handler()` 对已报告错误返回 `false` 交回 PHP 默认处理链；`Error_Handler` 增加 `private static $registered` 防重复注册。全局处理器 2→1
-- fix: **OPT-005「禁用 REST API」在纯 REST 请求上不生效（P1）**——REST 限制过滤改由 `rest_api_init`（priority 1）注册 `rest_authentication_errors`，匿名请求返回 `WP_Error('rest_not_logged_in', …, ['status' => 403])`，已登录用户与既有错误透传不拦截
-- perf: **OPT-006 数据库缓存清理无 LIMIT、无 cron 兜底（P1）**——改为 `LIMIT 500` 分批查询与删除，并注册 hourly WP-Cron 事件 `wpca_cache_cleanup` 负责过期项回收（停用/卸载时 unschedule）
-- perf: **OPT-007 文件缓存位于插件目录、每请求全目录 glob、写入非原子（P1）**——缓存目录迁至 `wp_upload_dir()['basedir']/wpca-cache`（含 `index.php` 与 `.htaccess` 防护），写入改为临时文件 + `rename()` 原子替换，清理改由 cron 限频 + `FilesystemIterator` 承担，插件目录不再需要写权限
-- perf: **OPT-008 同一请求重复读取全量设置（P2）**——`wpca_get_settings()` 增加请求级记忆化（`$GLOBALS['wpca_settings_cache']`），新增 `wpca_flush_settings_cache()`，`wpca_update_settings()` 写后自动失效缓存
-- perf: **OPT-010 仪表盘同步执行重型全表统计（P2）**——统计结果以 15 分钟 transient（`wpca_dashboard_stats`）缓存，transients 改前缀聚合，孤儿 meta 统计改写为索引友好的 `NOT EXISTS`
-- a11y: **OPT-009 设置页四个 Tab 重复渲染全部字段且缺少 ARIA 语义（P1）**——4 个 Tab 改用独立 settings page slug（`wp-clean-admin-general|cleanup|performance|security`）分别注册与渲染，同一字段不再跨 Tab 重复输出（重复输入 16→4）；补齐 `tablist`/`tab`/`aria-selected`/`aria-controls`/`tabpanel`；保存提示改为 `role="status" aria-live="polite"`；内联 `<style>` 从 JS 迁至 `assets/css/wpca-settings.css`
-- security: **OPT-011 前端反馈依赖 alert、无进度且用 `.html()` 注入服务端文本（P1）**——`wpca-dashboard.js` / `wpca-settings.js` / `wpca-main.js` 移除全部 `alert()` 与 `.html()` 插值，改用 jQuery DOM API `.text()`；新增页面内状态与进度提示。未转义插值点 4→0
-- ci: **OPT-012 测试/质量门禁与对外契约缺口（P2，部分闭环）**——新增 Clover 覆盖率门禁工具 `tools/check-coverage.php`（默认阈值 70%）、`composer test:coverage` 脚本与 CI `coverage` 作业（pcov，首次 `continue-on-error: true` 仅报基线）；`docs/openapi.yaml`（OpenAPI 3.1）补齐并与 `docs/API接口文档.md` 同步；`uninstall.php` 补充清理 WP-Cron 事件与文件缓存目录。PHPCS 阻塞化与覆盖率实测基线未完成，已拆分为独立任务
-- refactor: **>200 行治理口径复核与拆分**——以实际行数复核发现历史统计「仅余 2 个登记排除项」不准确：`class-wpca-cache-file-tasks.php`（242 行）与 `class-wpca-settings-fields.php`（203 行）超限但未登记。已拆分为 `CacheFileCleanupTasks`（`class-wpca-cache-file-cleanup-tasks.php`）、`SettingsFieldsRenderTasks`（`class-wpca-settings-fields-render-tasks.php`）与 `Settings_Field_Definitions`（`class-wpca-settings-field-definitions.php`）三个新模块，公开 API 不变；`CONTRIBUTING.md` §4.5 登记第 3 个排除项（`tests/wp-polyfill.php`）并明确统计口径。当前 **0 待办 + 3 个登记排除项**
-- test: 补充回归用例 `tests/ErrorHandlerTest.php`、`tests/RestApiRestrictionTest.php`、`tests/ResponseTest.php`、`tests/MenuCustomizerOptionsTest.php`、`tests/SettingsFieldsEchoTest.php`；测试桩 `tests/wp-polyfill.php` 补 option/action/filter 内存存储、`WP_Error`、`wp_send_json` 捕获与转义函数
-- fix: **CI 门禁缺陷修复（本轮首次推送后 CI 失败）**——① `RestApiRestrictionTest` 未失效设置请求级记忆化（OPT-008），用例改写 `wpca_settings` 后读到上一个用例的快照，`test_filter_not_registered_when_disabled` 失败；已在 `setUp()` 中调用 `wpca_flush_settings_cache()`。② `ErrorHandlerTest::test_register_error_handler_is_deprecated_noop` 用两次 `set_error_handler(null)` 取基线，第二次必然返回 `null`，断言恒不成立；改为安装哨兵处理器并正确压栈/还原。③ `phpcs.xml.dist` 排除了 WPCS 3.0 已移除的 5 个 sniff（`ValidClassName`、`FunctionDeclarationArgumentSpacing`、`ScopeIndent`、`DisallowShortTernary`、`DisallowInlineTernary`），导致 PHPCS 以配置错误（exit 3）整体中止、规则集完全失效；已移除这些排除项并在注释中说明口径
-- chore: 按 `CONTRIBUTING.md` §4.2 将全仓 95 个 PHP 文件头的 `@version` 同步至 1.9.18（`@since` 一律不动）
-- docs: **英文文档镜像（6 份）**——新增 `docs/README.en.md`、`docs/user-guide.en.md`、`docs/installation-guide.en.md`、`docs/faq-troubleshooting.en.md`、`docs/api-reference.en.md`、`docs/overview.en.md`；`docs/README.md` 增加英文索引行、阅读路径与同步清单条目
-- docs: **视频教程制作稿（T015）**——新增 `docs/video-tutorial.md`：5 集完整分镜脚本（逐字旁白 + 字幕要点 + 技术提示）、字幕与配音规范、素材清单、发布要求与视频索引表
-- docs: 按已落地事实同步 `docs/FAQ与故障排除.md`、`docs/优化建议.md`（各条补「实施状态」）、`docs/api-reference.md`、`docs/项目概述.md`、`docs/安装部署指南.md`、`docs/user-guide.md`、`docs/API接口文档.md`、`docs/功能模块说明.md`、`docs/README.md`；移除已删除历史快照文档的失效引用
-- chore: 版本号统一至 1.9.18（`CONTRIBUTING.md` §9.2 同步清单全部声明位）
-- 说明：本机无 PHP/Composer 运行时，PHPUnit / PHPStan / PHPCS 与覆盖率基线均**待 CI/PHP 环境验证**；未新增 `wpca/v1` REST 路由，对外接口仍为 AJAX
+> 按变更类型分组；`OPT-*` 编号对应 [`docs/优化建议.md`](docs/优化建议.md) 的实施方案，未完成项见 [`docs/tasks.md`](docs/tasks.md)。
+
+### 新增（Added）
+
+- feat: `WPCleanAdmin\AJAX\Response` 统一响应 DTO 工厂（`includes/ajax/response-ajax.php`）：成功 `{success, message, data}`、失败 `{success, error_code, message, data}`；4 个菜单定制 handler 全部迁移（OPT-002）
+- feat: 新增 3 个拆分模块 `CacheFileCleanupTasks`、`SettingsFieldsRenderTasks`、`Settings_Field_Definitions`，公开 API 不变；新增 `wpca_flush_settings_cache()` 请求级缓存失效入口与 hourly WP-Cron 事件 `wpca_cache_cleanup`
+- feat: Clover 覆盖率门禁工具 `tools/check-coverage.php`（阈值 70%）、`composer test:coverage` 脚本、CI `coverage` 作业（pcov，非阻塞基线）与 `docs/openapi.yaml`（OpenAPI 3.1）
+- test: 新增 5 个回归用例文件 `ErrorHandlerTest` / `RestApiRestrictionTest` / `ResponseTest` / `MenuCustomizerOptionsTest` / `SettingsFieldsEchoTest`；测试桩 `tests/wp-polyfill.php` 补 option/action/filter 内存存储、`WP_Error`、`wp_send_json` 捕获与转义函数
+- docs: 英文文档镜像 6 份（`README.en.md`、`user-guide.en.md`、`installation-guide.en.md`、`faq-troubleshooting.en.md`、`api-reference.en.md`、`overview.en.md`）；`docs/video-tutorial.md` 交付 5 集完整分镜脚本
+
+### 修改与优化（Changed）
+
+- perf: OPT-006 数据库缓存清理改 `LIMIT 500` 分批 + cron 过期回收；OPT-007 文件缓存迁至 `uploads/wpca-cache/`（防护文件 + 原子写入，插件目录不再需要写权限）；OPT-008 设置请求级记忆化 + 写路径失效
+- perf: OPT-010 仪表盘统计改 15 分钟 transient（`wpca_dashboard_stats`），孤儿 meta 改索引友好的 `NOT EXISTS`
+- a11y: OPT-009 五个 Tab 改独立 settings page slug，消除字段跨 Tab 重复（16→4）；补齐 `tablist`/`tab`/`tabpanel` 与 `aria-live` 提示；内联样式迁至 `assets/css/wpca-settings.css`
+- security: OPT-011 前端移除全部 `alert()` 与 `.html()` 插值，改用 jQuery DOM API `.text()`，未转义插值点 4→0
+- refactor: >200 行治理口径复核——实际复测发现 2 个超限文件未登记，完成拆分后当前 **0 待办 + 3 个登记排除项**（函数桩 774、引导主文件 236、测试桩 264）
+- chore: 按 `CONTRIBUTING.md` §4.2 同步全仓 95 个 PHP 文件头 `@version` 至 1.9.18（`@since` 不动）；版本号统一至 1.9.18（§9.2 全部声明位）
+- ci: PHPCS 规则集移除 WPCS 3.0 已删除的 5 个 sniff 排除项与项目约定的重复 `@author` 标签，使规则集可实际运行；覆盖率/PHPCS 失败详情写入公开 annotation 便于取基线
+
+### 修复（Fixed）
+
+- fix: OPT-001 菜单定制器读写键不一致且 AJAX 默认未注册（P0）——`Menu_Customizer_Options` 成为唯一数据源，4 个 action 无条件注册，旧键幂等迁移不清数据；默认注册 action 数 0→4
+- fix: OPT-002 删除 3 个从未挂载的 `save/get/reset_settings` handler，递归消毒下沉至 `Helpers::sanitize_settings()`，JSON 响应结构种类 3→1
+- fix: OPT-003 设置字段回显改为优先读 `wpca_settings[group][id]`，缺失回退独立 option（`0`/`false` 正确回显），表单 `name` 同步
+- fix: OPT-004 两套全局错误处理器冲突——Helpers 侧降级 deprecated no-op 且不再吞错，`Error_Handler` 防重复注册；全局处理器 2→1
+- fix: OPT-005 匿名 REST 请求不受限——过滤改在 `rest_api_init`（priority 1）注册，匿名返回 403（`rest_not_logged_in`），已登录与既有错误透传
+- fix: 首次推送后的 CI 门禁失败——`RestApiRestrictionTest` 补 `wpca_flush_settings_cache()` 避免读到上一用例快照；`ErrorHandlerTest` 改哨兵处理器正确取基线；`phpcs.xml.dist` 修正配置错误（exit 3）
+
+### 文档同步（Docs）
+
+- docs: 按已落地事实同步 `FAQ与故障排除.md`、`优化建议.md`（逐条补实施状态）、`api-reference.md`、`项目概述.md`、`安装部署指南.md`、`user-guide.md`、`API接口文档.md`、`功能模块说明.md`、`README.md`；移除失效的历史快照文档引用
+- docs: 本轮补强使用说明——安装指南修正缓存目录权限口径并标注非阻塞门禁；用户指南补数据库备份/恢复/删除、缓存后端与诊断面板操作步骤；FAQ 修正 2FA 恢复码交叉引用并新增升级后数据迁移问答；三份英文镜像同步
+
+### 验证状态
+
+- CI workflow 成功，`release.yml` 自动发布 tag **`v1.9.18`**；PHPUnit 5 个矩阵（PHP 7.4/8.0/8.1/8.2/8.3）与 PHP Syntax Lint 全部通过
+- `PHP_CodeSniffer` 与 `Coverage Gate (>= 70%)` 仍为失败但**非阻塞**（`continue-on-error: true`）：PHPCS 首次实跑 68 errors / 46 lines（已排除重复 `@author` 约定后待复测），覆盖率低于 70%；两项转阻塞前需完成 `TASK-DOC-012A/012B`
+- 本机无 PHP/Composer 运行时，所有 PHP 改动均由 CI 验证；未新增 `wpca/v1` REST 路由，对外接口仍为 AJAX
 
 ## [Unreleased]
 
+- docs: 使用说明与变更记录补强（2026-11-25）——修正安装指南中过时的 `wpcleanadmin/cache/` 权限口径为 `uploads/wpca-cache/`，并标注两个非阻塞 CI 门禁；用户指南补齐数据库备份/恢复/删除、缓存后端与清理、诊断面板操作步骤；FAQ 修正 2FA 恢复码的错误交叉引用并新增 Q13 升级后数据迁移；三份英文镜像同步对应改动。变更记录按「新增 / 修改与优化 / 修复 / 文档同步 / 验证状态」分组重排 1.9.18 段
+- ci: 覆盖率门禁失败时把实测百分比写入 annotation；PHPCS 改用 `--report=csv` 按 sniff 聚合输出，便于取得规则集调优基线；`phpcs.xml.dist` 排除项目约定的 `@author` + `@author URI` 双标签冲突
+- chore: 清理仓库根目录由 shell 重定向产生的 `$null` 临时文件
 - docs: 系统性文档完善（2026-11-25）——新增 `docs/项目概述.md`（背景/目标/技术栈/架构）、`docs/安装部署指南.md`（依赖清单/配置步骤/多环境/验证）、`docs/功能模块说明.md`（按模块核心逻辑+Mermaid 业务流程图）、`docs/API接口文档.md` + `docs/openapi.yaml`（OpenAPI 3.1，覆盖 4 个已注册 AJAX action 的路径/方法/参数/响应/错误码/示例，并标注无 REST 路由）、`docs/FAQ与故障排除.md`、`docs/优化建议.md`（12 项建议均含背景/实施方案/量化预期/优先级与未来展望）；扩充 `docs/user-guide.md`（角色权限/操作流程图/详细步骤）；更新 `docs/README.md` 索引与阅读路径、`docs/api-reference.md` 契约差异说明；所有现行文档统一目录、适用基线、状态与文末版本控制表
 - docs: `docs/tasks.md` 新增 §F：12 项优化项（P0×1/P1×7/P2×4）与 7 项待验证细节，逐项标注优先级、责任人、计划完成时间；更新优先级建议、统计摘要与进度日志
 - docs: 任务清单治理（2026-11-23）——C 类 2 项与 D 类已完成项（CI 7.4 lint 矩阵）归档至 `docs/tasks-done.md`；B 类功能增强提案批量落地 15/16：新增 6 份规范（T001 `error-handling`、T002 `performance-monitoring`、T003 `security-audit`、T004 `developer-guide`、T006 `theme-template-optimization`、T007 `composer-dependency`），补齐 T009 `phpstan.neon.dist` 与 composer `phpstan` 脚本（T010/T011 配置既有），新增 T013 `docs/user-guide.md`、T014 `docs/api-reference.md`、T016 `examples/sample-extension.php`；T015 视频教程阻塞（待制作资源）。差距复核后 T003/T004 定位为 CONTRIBUTING §4.4 的执行检查表与快速上手索引，不重复既有条款

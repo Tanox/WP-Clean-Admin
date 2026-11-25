@@ -1,6 +1,6 @@
 # WP Clean Admin Installation and Deployment Guide (English)
 
-> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-26  |  **Status**: Current document
+> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-25  |  **Status**: Current document
 > Audience: site administrators, operations staff and developers. Read [§1 Environment Requirements](#1-environment-requirements) before installing; feature details live in [`功能模块说明.md`](功能模块说明.md).
 > The Simplified Chinese original is [`安装部署指南.md`](安装部署指南.md); when the two diverge, the Chinese original wins.
 
@@ -142,5 +142,5 @@ sequenceDiagram
 
 | Document version | Applies to plugin version | Date | Maintainer | Summary |
 |------------------|---------------------------|------|------------|---------|
-| 1.1 | 1.9.18 | 2026-11-26 | Tanox | Aligned the CI row with the two non-blocking gates; confirmed the cache directory as `uploads/wpca-cache/` |
+| 1.1 | 1.9.18 | 2026-11-25 | Tanox | Aligned the CI row with the two non-blocking gates; confirmed the cache directory as `uploads/wpca-cache/` |
 | 1.0 | 1.9.18 | 2026-11-25 | Tanox | English mirror of `安装部署指南.md`: environment requirements, installation, configuration, multi-environment deployment, verification and upgrade/rollback/uninstall |

@@ -1,6 +1,6 @@
 # WP Clean Admin FAQ and Troubleshooting Guide (English)
 
-> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-26  |  **Status**: User documentation
+> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-25  |  **Status**: User documentation
 > Read first: [`installation-guide.en.md`](installation-guide.en.md), [`user-guide.en.md`](user-guide.en.md). This document lists **known behaviours of the current version**; defect tracking lives in [`优化建议.md`](优化建议.md) and [`tasks.md`](tasks.md).
 > The Simplified Chinese original is [`FAQ与故障排除.md`](FAQ与故障排除.md); when the two diverge, the Chinese original wins.
 
@@ -102,5 +102,5 @@ Legacy menu customization data is migrated **idempotently** from `wpca_settings.
 
 | Document version | Applies to plugin version | Date | Maintainer | Summary |
 |------------------|---------------------------|------|------------|---------|
-| 1.1 | 1.9.18 | 2026-11-26 | Tanox | Added the post-upgrade data migration entry (Q13); corrected the 2FA recovery-code statement; aligned with `FAQ与故障排除.md` v1.2 |
+| 1.1 | 1.9.18 | 2026-11-25 | Tanox | Added the post-upgrade data migration entry (Q13); corrected the 2FA recovery-code statement; aligned with `FAQ与故障排除.md` v1.2 |
 | 1.0 | 1.9.18 | 2026-11-25 | Tanox | English mirror of `FAQ与故障排除.md`: 12 FAQ entries, troubleshooting matrix, diagnostics, emergency recovery and the pre-submission checklist |

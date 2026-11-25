@@ -1,6 +1,6 @@
 # WP Clean Admin User Guide (English)
 
-> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-26  |  **Status**: User documentation
+> **Applies to**: 1.9.18  |  **Last updated**: 2026-11-25  |  **Status**: User documentation
 > This document is aimed at site administrators and editors. See [`installation-guide.en.md`](installation-guide.en.md) for installation and [`faq-troubleshooting.en.md`](faq-troubleshooting.en.md) for common questions.
 > The Simplified Chinese original is [`user-guide.md`](user-guide.md); when the two diverge, the Chinese original wins.
 
@@ -166,5 +166,5 @@ sequenceDiagram
 
 | Document version | Applies to plugin version | Date | Maintainer | Summary |
 |------------------|---------------------------|------|------------|---------|
-| 1.1 | 1.9.18 | 2026-11-26 | Tanox | Expanded database backup/restore/delete steps, added cache backend and diagnostics sections; aligned with `user-guide.md` v1.2 |
+| 1.1 | 1.9.18 | 2026-11-25 | Tanox | Expanded database backup/restore/delete steps, added cache backend and diagnostics sections; aligned with `user-guide.md` v1.2 |
 | 1.0 | 1.9.18 | 2026-11-25 | Tanox | English mirror of `user-guide.md`: roles and capabilities, operation flow diagrams, five-tab walkthrough, database/security operations and limitations |
